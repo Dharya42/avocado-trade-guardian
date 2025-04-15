@@ -1,4 +1,3 @@
-
 import { Inspection, QualityCheck, Compliance } from '@/types';
 import {
   Card,
@@ -35,6 +34,19 @@ import {
   FileText,
   Info
 } from 'lucide-react';
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
 
 interface InspectionDetailProps {
   inspection: Inspection;
@@ -133,11 +145,7 @@ export const InspectionDetail = ({ inspection }: InspectionDetailProps) => {
             </TableHeader>
             <TableBody>
               {inspection.qualityChecks.map((check, index) => (
-                <TableRow 
-                  key={index}
-                  className={check.details ? "cursor-pointer" : ""}
-                  onClick={() => {}}
-                >
+                <TableRow key={index}>
                   <TableCell className="font-medium">
                     <div className="flex items-center">
                       {getQualityIcon(check.type)}
@@ -147,37 +155,37 @@ export const InspectionDetail = ({ inspection }: InspectionDetailProps) => {
                   <TableCell>{check.value || '—'}</TableCell>
                   <TableCell>{check.threshold || '—'}</TableCell>
                   <TableCell>
-                    <div className={`flex items-center px-2 py-1 rounded ${getStatusColor(check.status)}`}>
-                      {getStatusIcon(check.status)}
-                      <span className={`ml-1 font-medium ${getStatusTextColor(check.status)}`}>{check.status}</span>
+                    <div className="flex items-center justify-between">
+                      <div className={`flex items-center px-2 py-1 rounded ${getStatusColor(check.status)}`}>
+                        {getStatusIcon(check.status)}
+                        <span className={`ml-1 font-medium ${getStatusTextColor(check.status)}`}>{check.status}</span>
+                      </div>
+                      {check.details && (
+                        <Popover>
+                          <PopoverTrigger asChild>
+                            <Button variant="ghost" size="icon" className="h-8 w-8">
+                              <Info className="h-4 w-4" />
+                            </Button>
+                          </PopoverTrigger>
+                          <PopoverContent className="w-80" align="end">
+                            <div className="flex flex-col space-y-2">
+                              <div className="flex items-center">
+                                {getQualityIcon(check.type)}
+                                <span className="ml-2 font-medium">{check.type} Analysis</span>
+                              </div>
+                              <div className={`p-3 rounded-md ${getStatusColor(check.status)} border`}>
+                                <p className="text-sm text-muted-foreground">{check.details}</p>
+                              </div>
+                            </div>
+                          </PopoverContent>
+                        </Popover>
+                      )}
                     </div>
                   </TableCell>
                 </TableRow>
               ))}
             </TableBody>
           </Table>
-          
-          {inspection.qualityChecks.some(check => check.details) && (
-            <div className="p-4 border-t">
-              <div className="text-sm font-medium mb-2 flex items-center">
-                <Info className="h-4 w-4 mr-1" />
-                Detailed Analysis
-              </div>
-              <div className="space-y-3">
-                {inspection.qualityChecks
-                  .filter(check => check.details)
-                  .map((check, index) => (
-                    <div key={index} className={`p-3 rounded-md ${getStatusColor(check.status)} border`}>
-                      <div className="font-medium flex items-center mb-1">
-                        {getQualityIcon(check.type)}
-                        <span className="ml-2">{check.type} Analysis</span>
-                      </div>
-                      <p className="text-sm text-muted-foreground">{check.details}</p>
-                    </div>
-                  ))}
-              </div>
-            </div>
-          )}
         </CardContent>
       </Card>
 
