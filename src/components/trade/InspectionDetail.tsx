@@ -32,7 +32,8 @@ import {
   Shield,
   Wrench,
   Beaker,
-  FileText
+  FileText,
+  Info
 } from 'lucide-react';
 
 interface InspectionDetailProps {
@@ -73,11 +74,22 @@ export const InspectionDetail = ({ inspection }: InspectionDetailProps) => {
   const getStatusColor = (status: 'Passed' | 'Failed' | 'Pending') => {
     switch (status) {
       case 'Passed':
-        return "text-green-500";
+        return "bg-green-50 border-green-200";
       case 'Failed':
-        return "text-red-500";
+        return "bg-red-50 border-red-200";
       case 'Pending':
-        return "text-amber-500";
+        return "bg-amber-50 border-amber-200";
+    }
+  };
+
+  const getStatusTextColor = (status: 'Passed' | 'Failed' | 'Pending') => {
+    switch (status) {
+      case 'Passed':
+        return "text-green-700";
+      case 'Failed':
+        return "text-red-700";
+      case 'Pending':
+        return "text-amber-700";
     }
   };
 
@@ -109,31 +121,35 @@ export const InspectionDetail = ({ inspection }: InspectionDetailProps) => {
             Quality Inspection Results
           </CardTitle>
         </CardHeader>
-        <CardContent>
+        <CardContent className="p-0">
           <Table>
-            <TableHeader>
+            <TableHeader className="bg-muted/50">
               <TableRow>
-                <TableHead>Parameter</TableHead>
-                <TableHead>Value</TableHead>
-                <TableHead>Threshold</TableHead>
-                <TableHead>Status</TableHead>
+                <TableHead className="w-[30%]">Parameter</TableHead>
+                <TableHead className="w-[25%]">Value</TableHead>
+                <TableHead className="w-[25%]">Threshold</TableHead>
+                <TableHead className="w-[20%]">Status</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
               {inspection.qualityChecks.map((check, index) => (
-                <TableRow key={index}>
+                <TableRow 
+                  key={index}
+                  className={check.details ? "cursor-pointer" : ""}
+                  onClick={() => {}}
+                >
                   <TableCell className="font-medium">
                     <div className="flex items-center">
                       {getQualityIcon(check.type)}
                       <span className="ml-2">{check.type}</span>
                     </div>
                   </TableCell>
-                  <TableCell>{check.value}</TableCell>
-                  <TableCell>{check.threshold || 'N/A'}</TableCell>
-                  <TableCell className={getStatusColor(check.status)}>
-                    <div className="flex items-center">
+                  <TableCell>{check.value || '—'}</TableCell>
+                  <TableCell>{check.threshold || '—'}</TableCell>
+                  <TableCell>
+                    <div className={`flex items-center px-2 py-1 rounded ${getStatusColor(check.status)}`}>
                       {getStatusIcon(check.status)}
-                      <span className="ml-1">{check.status}</span>
+                      <span className={`ml-1 font-medium ${getStatusTextColor(check.status)}`}>{check.status}</span>
                     </div>
                   </TableCell>
                 </TableRow>
@@ -142,26 +158,25 @@ export const InspectionDetail = ({ inspection }: InspectionDetailProps) => {
           </Table>
           
           {inspection.qualityChecks.some(check => check.details) && (
-            <Accordion type="single" collapsible className="mt-4">
-              <AccordionItem value="details">
-                <AccordionTrigger>Quality Check Details</AccordionTrigger>
-                <AccordionContent>
-                  <div className="space-y-2">
-                    {inspection.qualityChecks
-                      .filter(check => check.details)
-                      .map((check, index) => (
-                        <div key={index} className="p-3 bg-muted rounded-md">
-                          <div className="font-medium flex items-center mb-1">
-                            {getQualityIcon(check.type)}
-                            <span className="ml-2">{check.type} Check</span>
-                          </div>
-                          <p className="text-sm text-muted-foreground">{check.details}</p>
-                        </div>
-                      ))}
-                  </div>
-                </AccordionContent>
-              </AccordionItem>
-            </Accordion>
+            <div className="p-4 border-t">
+              <div className="text-sm font-medium mb-2 flex items-center">
+                <Info className="h-4 w-4 mr-1" />
+                Detailed Analysis
+              </div>
+              <div className="space-y-3">
+                {inspection.qualityChecks
+                  .filter(check => check.details)
+                  .map((check, index) => (
+                    <div key={index} className={`p-3 rounded-md ${getStatusColor(check.status)} border`}>
+                      <div className="font-medium flex items-center mb-1">
+                        {getQualityIcon(check.type)}
+                        <span className="ml-2">{check.type} Analysis</span>
+                      </div>
+                      <p className="text-sm text-muted-foreground">{check.details}</p>
+                    </div>
+                  ))}
+              </div>
+            </div>
           )}
         </CardContent>
       </Card>
@@ -174,24 +189,28 @@ export const InspectionDetail = ({ inspection }: InspectionDetailProps) => {
             Compliance Information
           </CardTitle>
         </CardHeader>
-        <CardContent>
+        <CardContent className="p-0">
           <Table>
-            <TableHeader>
+            <TableHeader className="bg-muted/50">
               <TableRow>
-                <TableHead>Compliance</TableHead>
-                <TableHead>Status</TableHead>
+                <TableHead className="w-[70%]">Compliance</TableHead>
+                <TableHead className="w-[30%]">Status</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
               {inspection.compliances.map((compliance, index) => (
-                <TableRow key={index}>
+                <TableRow 
+                  key={index}
+                  className={compliance.details ? "cursor-pointer" : ""}
+                  onClick={() => {}}
+                >
                   <TableCell className="font-medium">
                     {compliance.name}
                   </TableCell>
-                  <TableCell className={getStatusColor(compliance.status)}>
-                    <div className="flex items-center">
+                  <TableCell>
+                    <div className={`flex items-center px-2 py-1 rounded ${getStatusColor(compliance.status)}`}>
                       {getStatusIcon(compliance.status)}
-                      <span className="ml-1">{compliance.status}</span>
+                      <span className={`ml-1 font-medium ${getStatusTextColor(compliance.status)}`}>{compliance.status}</span>
                     </div>
                   </TableCell>
                 </TableRow>
@@ -200,25 +219,24 @@ export const InspectionDetail = ({ inspection }: InspectionDetailProps) => {
           </Table>
           
           {inspection.compliances.some(compliance => compliance.details) && (
-            <Accordion type="single" collapsible className="mt-4">
-              <AccordionItem value="details">
-                <AccordionTrigger>Compliance Details</AccordionTrigger>
-                <AccordionContent>
-                  <div className="space-y-2">
-                    {inspection.compliances
-                      .filter(compliance => compliance.details)
-                      .map((compliance, index) => (
-                        <div key={index} className="p-3 bg-muted rounded-md">
-                          <div className="font-medium mb-1">
-                            {compliance.name}
-                          </div>
-                          <p className="text-sm text-muted-foreground">{compliance.details}</p>
-                        </div>
-                      ))}
-                  </div>
-                </AccordionContent>
-              </AccordionItem>
-            </Accordion>
+            <div className="p-4 border-t">
+              <div className="text-sm font-medium mb-2 flex items-center">
+                <Info className="h-4 w-4 mr-1" />
+                Compliance Details
+              </div>
+              <div className="space-y-3">
+                {inspection.compliances
+                  .filter(compliance => compliance.details)
+                  .map((compliance, index) => (
+                    <div key={index} className={`p-3 rounded-md ${getStatusColor(compliance.status)} border`}>
+                      <div className="font-medium mb-1">
+                        {compliance.name}
+                      </div>
+                      <p className="text-sm text-muted-foreground">{compliance.details}</p>
+                    </div>
+                  ))}
+              </div>
+            </div>
           )}
         </CardContent>
       </Card>
