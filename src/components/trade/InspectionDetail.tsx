@@ -21,6 +21,7 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from "@/components/ui/accordion";
+import { Button } from "@/components/ui/button";
 import {
   CheckCircle,
   XCircle,
@@ -30,7 +31,8 @@ import {
   Droplets,
   Shield,
   Wrench,
-  Beaker
+  Beaker,
+  FileText
 } from 'lucide-react';
 
 interface InspectionDetailProps {
@@ -77,6 +79,12 @@ export const InspectionDetail = ({ inspection }: InspectionDetailProps) => {
       case 'Pending':
         return "text-amber-500";
     }
+  };
+
+  const handleDownloadLabReport = () => {
+    console.log('Downloading lab report for:', inspection.type);
+    // Mock download functionality
+    alert(`Downloading lab report for ${inspection.type} inspection`);
   };
 
   return (
@@ -239,9 +247,20 @@ export const InspectionDetail = ({ inspection }: InspectionDetailProps) => {
       {inspection.lab && (
         <Card>
           <CardHeader>
-            <CardTitle className="text-lg flex items-center">
-              <Beaker className="mr-2 h-5 w-5" />
-              Lab Information
+            <CardTitle className="text-lg flex items-center justify-between">
+              <div className="flex items-center">
+                <Beaker className="mr-2 h-5 w-5" />
+                Lab Information
+              </div>
+              <Button 
+                variant="outline" 
+                size="sm" 
+                className="ml-auto" 
+                onClick={handleDownloadLabReport}
+              >
+                <FileText className="h-4 w-4 mr-2" />
+                Download Lab Report
+              </Button>
             </CardTitle>
           </CardHeader>
           <CardContent>

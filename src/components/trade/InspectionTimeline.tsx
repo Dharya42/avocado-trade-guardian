@@ -15,11 +15,13 @@ import { cn } from '@/lib/utils';
 interface InspectionTimelineProps {
   inspections: Inspection[];
   onSelectInspection: (inspection: Inspection) => void;
+  reverse?: boolean;
 }
 
 export const InspectionTimeline = ({ 
   inspections, 
-  onSelectInspection 
+  onSelectInspection,
+  reverse = false
 }: InspectionTimelineProps) => {
   const [selectedId, setSelectedId] = useState<string | null>(
     inspections.length > 0 ? inspections[0].id : null
@@ -59,9 +61,14 @@ export const InspectionTimeline = ({
   };
 
   // Sort inspections by date
-  const sortedInspections = [...inspections].sort((a, b) => 
+  let sortedInspections = [...inspections].sort((a, b) => 
     new Date(a.date).getTime() - new Date(b.date).getTime()
   );
+  
+  // If reverse is true, reverse the order
+  if (reverse) {
+    sortedInspections.reverse();
+  }
 
   return (
     <div className="p-4 border rounded-lg bg-white">
