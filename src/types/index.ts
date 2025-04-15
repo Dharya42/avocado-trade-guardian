@@ -10,6 +10,7 @@ export interface QualityCheck {
   status: InspectionStatus;
   value?: string;
   threshold?: string;
+  details?: string;
 }
 
 export interface Compliance {

@@ -92,6 +92,11 @@ export const InspectionDetail = ({ inspection }: InspectionDetailProps) => {
                     <span className="text-muted-foreground">Result: {check.value}</span>
                     {check.threshold && <span className="text-muted-foreground">Threshold: {check.threshold}</span>}
                   </div>
+                  {check.details && (
+                    <div className="mt-2 text-sm bg-muted p-2 rounded-md">
+                      <p className="text-muted-foreground">{check.details}</p>
+                    </div>
+                  )}
                 </div>
               </div>
             ))}
@@ -117,7 +122,9 @@ export const InspectionDetail = ({ inspection }: InspectionDetailProps) => {
                     {getStatusIcon(compliance.status)}
                   </div>
                   {compliance.details && (
-                    <p className="mt-1 text-sm text-muted-foreground">{compliance.details}</p>
+                    <div className="mt-2 text-sm bg-muted p-2 rounded-md">
+                      <p className="text-muted-foreground">{compliance.details}</p>
+                    </div>
                   )}
                 </div>
               </div>
