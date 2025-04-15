@@ -8,6 +8,20 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table";
+import {
+  Accordion,
+  AccordionContent,
+  AccordionItem,
+  AccordionTrigger,
+} from "@/components/ui/accordion";
+import {
   CheckCircle,
   XCircle,
   Clock,
@@ -54,6 +68,17 @@ export const InspectionDetail = ({ inspection }: InspectionDetailProps) => {
     }
   };
 
+  const getStatusColor = (status: 'Passed' | 'Failed' | 'Pending') => {
+    switch (status) {
+      case 'Passed':
+        return "text-green-500";
+      case 'Failed':
+        return "text-red-500";
+      case 'Pending':
+        return "text-amber-500";
+    }
+  };
+
   return (
     <div className="space-y-6">
       <Card>
@@ -77,30 +102,59 @@ export const InspectionDetail = ({ inspection }: InspectionDetailProps) => {
           </CardTitle>
         </CardHeader>
         <CardContent>
-          <div className="space-y-4">
-            {inspection.qualityChecks.map((check, index) => (
-              <div key={index} className="flex items-start border-b pb-4 last:border-0 last:pb-0">
-                <div className="w-8 h-8 rounded-full bg-muted flex items-center justify-center mr-3">
-                  {getQualityIcon(check.type)}
-                </div>
-                <div className="flex-1">
-                  <div className="flex items-center justify-between">
-                    <h4 className="font-medium">{check.type} Check</h4>
-                    {getStatusIcon(check.status)}
-                  </div>
-                  <div className="mt-1 text-sm flex justify-between">
-                    <span className="text-muted-foreground">Result: {check.value}</span>
-                    {check.threshold && <span className="text-muted-foreground">Threshold: {check.threshold}</span>}
-                  </div>
-                  {check.details && (
-                    <div className="mt-2 text-sm bg-muted p-2 rounded-md">
-                      <p className="text-muted-foreground">{check.details}</p>
+          <Table>
+            <TableHeader>
+              <TableRow>
+                <TableHead>Parameter</TableHead>
+                <TableHead>Value</TableHead>
+                <TableHead>Threshold</TableHead>
+                <TableHead>Status</TableHead>
+              </TableRow>
+            </TableHeader>
+            <TableBody>
+              {inspection.qualityChecks.map((check, index) => (
+                <TableRow key={index}>
+                  <TableCell className="font-medium">
+                    <div className="flex items-center">
+                      {getQualityIcon(check.type)}
+                      <span className="ml-2">{check.type}</span>
                     </div>
-                  )}
-                </div>
-              </div>
-            ))}
-          </div>
+                  </TableCell>
+                  <TableCell>{check.value}</TableCell>
+                  <TableCell>{check.threshold || 'N/A'}</TableCell>
+                  <TableCell className={getStatusColor(check.status)}>
+                    <div className="flex items-center">
+                      {getStatusIcon(check.status)}
+                      <span className="ml-1">{check.status}</span>
+                    </div>
+                  </TableCell>
+                </TableRow>
+              ))}
+            </TableBody>
+          </Table>
+          
+          {inspection.qualityChecks.some(check => check.details) && (
+            <Accordion type="single" collapsible className="mt-4">
+              <AccordionItem value="details">
+                <AccordionTrigger>Quality Check Details</AccordionTrigger>
+                <AccordionContent>
+                  <div className="space-y-2">
+                    {inspection.qualityChecks
+                      .filter(check => check.details)
+                      .map((check, index) => (
+                        <div key={index} className="p-3 bg-muted rounded-md">
+                          <div className="font-medium flex items-center mb-1">
+                            {getQualityIcon(check.type)}
+                            <span className="ml-2">{check.type} Check</span>
+                          </div>
+                          <p className="text-sm text-muted-foreground">{check.details}</p>
+                        </div>
+                      ))}
+                  </div>
+                </AccordionContent>
+              </AccordionItem>
+            </Accordion>
+          )}
         </CardContent>
       </Card>
 
@@ -113,23 +167,51 @@ export const InspectionDetail = ({ inspection }: InspectionDetailProps) => {
           </CardTitle>
         </CardHeader>
         <CardContent>
-          <div className="space-y-4">
-            {inspection.compliances.map((compliance, index) => (
-              <div key={index} className="flex items-start border-b pb-4 last:border-0 last:pb-0">
-                <div className="flex-1">
-                  <div className="flex items-center justify-between">
-                    <h4 className="font-medium">{compliance.name}</h4>
-                    {getStatusIcon(compliance.status)}
-                  </div>
-                  {compliance.details && (
-                    <div className="mt-2 text-sm bg-muted p-2 rounded-md">
-                      <p className="text-muted-foreground">{compliance.details}</p>
+          <Table>
+            <TableHeader>
+              <TableRow>
+                <TableHead>Compliance</TableHead>
+                <TableHead>Status</TableHead>
+              </TableRow>
+            </TableHeader>
+            <TableBody>
+              {inspection.compliances.map((compliance, index) => (
+                <TableRow key={index}>
+                  <TableCell className="font-medium">
+                    {compliance.name}
+                  </TableCell>
+                  <TableCell className={getStatusColor(compliance.status)}>
+                    <div className="flex items-center">
+                      {getStatusIcon(compliance.status)}
+                      <span className="ml-1">{compliance.status}</span>
                     </div>
-                  )}
-                </div>
-              </div>
-            ))}
-          </div>
+                  </TableCell>
+                </TableRow>
+              ))}
+            </TableBody>
+          </Table>
+          
+          {inspection.compliances.some(compliance => compliance.details) && (
+            <Accordion type="single" collapsible className="mt-4">
+              <AccordionItem value="details">
+                <AccordionTrigger>Compliance Details</AccordionTrigger>
+                <AccordionContent>
+                  <div className="space-y-2">
+                    {inspection.compliances
+                      .filter(compliance => compliance.details)
+                      .map((compliance, index) => (
+                        <div key={index} className="p-3 bg-muted rounded-md">
+                          <div className="font-medium mb-1">
+                            {compliance.name}
+                          </div>
+                          <p className="text-sm text-muted-foreground">{compliance.details}</p>
+                        </div>
+                      ))}
+                  </div>
+                </AccordionContent>
+              </AccordionItem>
+            </Accordion>
+          )}
         </CardContent>
       </Card>
 
