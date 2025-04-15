@@ -52,6 +52,19 @@ export default {
 					DEFAULT: 'hsl(var(--card))',
 					foreground: 'hsl(var(--card-foreground))'
 				},
+				avocado: {
+					50: '#F6F9F0',
+					100: '#E9F2DA',
+					200: '#D2E4B6',
+					300: '#B8D78E',
+					400: '#9BC966',
+					500: '#7EBB3F',
+					600: '#659532',
+					700: '#4C7025',
+					800: '#334A19',
+					900: '#19250C',
+					950: '#0D130C'
+				},
 				sidebar: {
 					DEFAULT: 'hsl(var(--sidebar-background))',
 					foreground: 'hsl(var(--sidebar-foreground))',
