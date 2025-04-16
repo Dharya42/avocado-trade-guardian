@@ -19,7 +19,7 @@ const App = () => (
       <Sonner />
       <BrowserRouter>
         <Routes>
-          <Route path="/" element={<Trade />} />
+          <Route path="/avocado-trade-guardian" element={<Trade />} />
           <Route path="/trade/:id" element={<TradeDetail />} />
           <Route path="/kpis" element={<KPI />} />
           <Route path="/tracker" element={<Tracker />} />
