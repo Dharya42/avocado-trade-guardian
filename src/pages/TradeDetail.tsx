@@ -1,6 +1,5 @@
-
 import { useState } from 'react';
-import { useParams, useNavigate } from 'react-router-dom';
+import { useParams, useNavigate, useMatch } from 'react-router-dom';
 import { Layout } from "@/components/layout/Layout";
 import { InspectionTimeline } from "@/components/trade/InspectionTimeline";
 import { InspectionDetail } from "@/components/trade/InspectionDetail";
@@ -22,6 +21,10 @@ const TradeDetail = () => {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
   
+  // Check if we're in TFC or Supplier route
+  const isTFC = useMatch('/tfc/*');
+  const rolePrefix = isTFC ? '/tfc' : '/supplier';
+  
   const trade = mockTrades.find(t => t.id === id);
   
   const [selectedInspection, setSelectedInspection] = useState<Inspection | null>(
@@ -40,7 +43,7 @@ const TradeDetail = () => {
         <DocumentTitle title="Trade Not Found" />
         <div className="text-center p-8">
           <h2 className="text-2xl font-bold mb-4">Trade not found</h2>
-          <Button onClick={() => navigate('/')}>Back to Trade List</Button>
+          <Button onClick={() => navigate(`${rolePrefix}/trades`)}>Back to Trade List</Button>
         </div>
       </Layout>
     );
@@ -68,7 +71,7 @@ const TradeDetail = () => {
             variant="outline" 
             size="sm" 
             className="mb-4"
-            onClick={() => navigate('/')}
+            onClick={() => navigate(`${rolePrefix}/trades`)}
           >
             <ArrowLeft className="h-4 w-4 mr-2" /> Back to Trade List
           </Button>

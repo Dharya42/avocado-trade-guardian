@@ -1,14 +1,29 @@
-
 import { useState } from 'react';
-import { NavLink, useLocation } from 'react-router-dom';
-import { LayoutGrid, BarChart3, AlertCircle, ChevronLeft, ChevronRight, Menu } from 'lucide-react';
+import { NavLink, useLocation, useMatch, useNavigate } from 'react-router-dom';
+import { LayoutGrid, BarChart3, AlertCircle, ChevronLeft, ChevronRight, Menu, LogOut } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { useMobile } from '@/hooks/use-mobile';
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
+import { Button } from "@/components/ui/button";
 
 export const CustomSidebar = ({ collapsed, setCollapsed }: { collapsed: boolean, setCollapsed: (collapsed: boolean) => void }) => {
   const { isMobile } = useMobile();
   const location = useLocation();
+  const navigate = useNavigate();
   const [isSidebarOpen, setIsSidebarOpen] = useState(!isMobile);
+
+  // Check if we're in TFC or Supplier route
+  const isTFC = useMatch('/tfc/*');
+  const rolePrefix = isTFC ? '/tfc' : '/supplier';
+  const roleName = isTFC ? 'TFC' : 'Supplier';
+
+  const handleLogout = () => {
+    navigate('/');
+  };
 
   const toggleSidebar = () => {
     setIsSidebarOpen(!isSidebarOpen);
@@ -21,17 +36,17 @@ export const CustomSidebar = ({ collapsed, setCollapsed }: { collapsed: boolean,
     {
       title: 'Trade',
       icon: <LayoutGrid className="w-5 h-5" />,
-      path: '/',
+      path: `${rolePrefix}/trades`,
     },
     {
       title: 'KPIs',
       icon: <BarChart3 className="w-5 h-5" />,
-      path: '/kpis',
+      path: `${rolePrefix}/kpis`,
     },
     {
       title: 'Tracker',
       icon: <AlertCircle className="w-5 h-5" />,
-      path: '/tracker',
+      path: `${rolePrefix}/tracker`,
     },
   ];
 
@@ -97,15 +112,29 @@ export const CustomSidebar = ({ collapsed, setCollapsed }: { collapsed: boolean,
         </nav>
 
         <div className="p-4 border-t">
-          <div className={cn(
-            "flex items-center", 
-            collapsed ? "justify-center" : "gap-2"
-          )}>
-            <div className="w-8 h-8 rounded-full bg-emerald-100 flex items-center justify-center text-emerald-800 font-semibold">
-              A
-            </div>
-            {!collapsed && <span className="font-medium">Avocado QC</span>}
-          </div>
+          <Popover>
+            <PopoverTrigger asChild>
+              <div className={cn(
+                "flex items-center cursor-pointer", 
+                collapsed ? "justify-center" : "gap-2"
+              )}>
+                <div className="w-8 h-8 rounded-full bg-emerald-100 flex items-center justify-center text-emerald-800 font-semibold">
+                  {roleName[0]}
+                </div>
+                {!collapsed && <span className="font-medium">{roleName}</span>}
+              </div>
+            </PopoverTrigger>
+            <PopoverContent className="w-48" align="start" side="top">
+              <Button 
+                variant="ghost" 
+                className="w-full justify-start text-red-600 hover:text-red-600 hover:bg-red-50"
+                onClick={handleLogout}
+              >
+                <LogOut className="w-4 h-4 mr-2" />
+                Logout
+              </Button>
+            </PopoverContent>
+          </Popover>
         </div>
       </div>
     </>

@@ -1,6 +1,5 @@
-
 import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useMatch } from 'react-router-dom';
 import { 
   Table, 
   TableBody, 
@@ -26,6 +25,10 @@ export const TradeList = ({ trades }: TradeListProps) => {
   const navigate = useNavigate();
   const [searchTerm, setSearchTerm] = useState('');
   
+  // Check if we're in TFC or Supplier route
+  const isTFC = useMatch('/tfc/*');
+  const rolePrefix = isTFC ? '/tfc' : '/supplier';
+
   const filteredTrades = trades.filter(trade => 
     trade.tradeNumber.toLowerCase().includes(searchTerm.toLowerCase()) ||
     trade.supplier.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -84,7 +87,7 @@ export const TradeList = ({ trades }: TradeListProps) => {
                 <TableRow 
                   key={trade.id} 
                   className="cursor-pointer hover:bg-muted transition-colors"
-                  onClick={() => navigate(`/trade/${trade.id}`)}
+                  onClick={() => navigate(`${rolePrefix}/trade/${trade.id}`)}
                 >
                   <TableCell className="font-medium">{trade.tradeNumber}</TableCell>
                   <TableCell>{trade.supplier}</TableCell>
