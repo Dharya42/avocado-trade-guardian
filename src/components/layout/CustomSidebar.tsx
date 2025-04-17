@@ -3,7 +3,7 @@ import { useState } from 'react';
 import { NavLink, useLocation, useMatch, useNavigate } from 'react-router-dom';
 import { LayoutGrid, BarChart3, AlertCircle, ChevronLeft, ChevronRight, Menu, LogOut, ClipboardList } from 'lucide-react';
 import { cn } from '@/lib/utils';
-import { useIsMobile as useMobile } from '@/hooks/use-mobile';
+import { useMobile } from '@/hooks/use-mobile';
 import {
   Popover,
   PopoverContent,
@@ -12,7 +12,7 @@ import {
 import { Button } from "@/components/ui/button";
 
 export const CustomSidebar = ({ collapsed, setCollapsed }: { collapsed: boolean, setCollapsed: (collapsed: boolean) => void }) => {
-  const { isMobile } = useMobile();
+  const isMobile = useMobile();
   const location = useLocation();
   const navigate = useNavigate();
   const [isSidebarOpen, setIsSidebarOpen] = useState(!isMobile);

@@ -20,7 +20,4 @@ export function useIsMobile() {
 }
 
 // Add an alias to support both naming conventions
-export const useMobile = () => {
-  const isMobile = useIsMobile();
-  return { isMobile };
-}
+export const useMobile = useIsMobile
