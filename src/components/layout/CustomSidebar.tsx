@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { NavLink, useLocation, useMatch, useNavigate } from 'react-router-dom';
-import { LayoutGrid, BarChart3, AlertCircle, ChevronLeft, ChevronRight, Menu, LogOut } from 'lucide-react';
+import { LayoutGrid, BarChart3, AlertCircle, ChevronLeft, ChevronRight, Menu, LogOut, ClipboardList } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { useMobile } from '@/hooks/use-mobile';
 import {
@@ -38,6 +38,13 @@ export const CustomSidebar = ({ collapsed, setCollapsed }: { collapsed: boolean,
       icon: <LayoutGrid className="w-5 h-5" />,
       path: `${rolePrefix}/trades`,
     },
+    ...(isTFC ? [] : [
+      {
+        title: 'Orders',
+        icon: <ClipboardList className="w-5 h-5" />,
+        path: `${rolePrefix}/orders`,
+      }
+    ]),
     {
       title: 'KPIs',
       icon: <BarChart3 className="w-5 h-5" />,
@@ -53,90 +60,90 @@ export const CustomSidebar = ({ collapsed, setCollapsed }: { collapsed: boolean,
   return (
     <>
       {isMobile && (
-        <button
-          className="fixed top-4 left-4 z-50 p-2 rounded-md bg-primary text-white"
+        <Button
+          variant="ghost"
+          size="icon"
+          className="fixed top-4 left-4 z-50"
           onClick={toggleSidebar}
         >
-          <Menu className="w-5 h-5" />
-        </button>
+          <Menu className="h-5 w-5" />
+        </Button>
       )}
 
       <div
         className={cn(
-          "fixed inset-y-0 left-0 z-40 flex flex-col bg-card border-r shadow-sm transition-all duration-300",
-          isMobile
-            ? isSidebarOpen
-              ? "translate-x-0"
-              : "-translate-x-full"
-            : collapsed
-            ? "w-16"
-            : "w-64"
+          "fixed inset-y-0 left-0 z-40 flex flex-col bg-background border-r transition-transform duration-300",
+          {
+            "translate-x-0": isSidebarOpen,
+            "-translate-x-full": !isSidebarOpen,
+            "w-64": !collapsed,
+            "w-16": collapsed && !isMobile,
+          }
         )}
       >
-        <div className="flex items-center justify-between h-16 px-4 border-b">
+        <div className="p-4 flex items-center justify-between border-b">
           {!collapsed && (
-            <h2 className="text-lg font-bold truncate">Avocado Trace</h2>
+            <h1 className="text-xl font-semibold">
+              Avocado Trace
+            </h1>
           )}
-          <button
-            onClick={toggleSidebar}
-            className={cn(
-              "p-1.5 rounded-md hover:bg-muted",
-              collapsed && "mx-auto"
-            )}
-          >
-            {collapsed ? (
-              <ChevronRight className="w-5 h-5" />
-            ) : (
-              <ChevronLeft className="w-5 h-5" />
-            )}
-          </button>
+          {!isMobile && (
+            <Button
+              variant="ghost"
+              size="icon"
+              onClick={toggleSidebar}
+            >
+              {collapsed ? (
+                <ChevronRight className="h-4 w-4" />
+              ) : (
+                <ChevronLeft className="h-4 w-4" />
+              )}
+            </Button>
+          )}
         </div>
 
-        <nav className="flex-1 overflow-y-auto p-3 space-y-1">
+        <nav className="flex-1 p-2 space-y-1">
           {menuItems.map((item) => (
             <NavLink
               key={item.path}
               to={item.path}
               className={({ isActive }) =>
                 cn(
-                  "flex items-center gap-x-2 p-2 rounded-md hover:bg-accent hover:text-accent-foreground transition-colors",
-                  isActive && "bg-accent/60 text-accent-foreground",
-                  collapsed && "justify-center"
+                  "flex items-center space-x-2 px-3 py-2 rounded-md transition-colors",
+                  {
+                    "bg-primary text-primary-foreground": isActive,
+                    "hover:bg-muted": !isActive,
+                    "justify-center": collapsed && !isMobile,
+                  }
                 )
               }
             >
               {item.icon}
-              {!collapsed && <span>{item.title}</span>}
+              {(!collapsed || isMobile) && <span>{item.title}</span>}
             </NavLink>
           ))}
         </nav>
 
         <div className="p-4 border-t">
-          <Popover>
-            <PopoverTrigger asChild>
-              <div className={cn(
-                "flex items-center cursor-pointer", 
-                collapsed ? "justify-center" : "gap-2"
-              )}>
-                <div className="w-8 h-8 rounded-full bg-emerald-100 flex items-center justify-center text-emerald-800 font-semibold">
-                  {roleName[0]}
-                </div>
-                {!collapsed && <span className="font-medium">{roleName}</span>}
-              </div>
-            </PopoverTrigger>
-            <PopoverContent className="w-48" align="start" side="top">
-              <Button 
-                variant="ghost" 
-                className="w-full justify-start text-red-600 hover:text-red-600 hover:bg-red-50"
-                onClick={handleLogout}
-              >
-                <LogOut className="w-4 h-4 mr-2" />
-                Logout
-              </Button>
-            </PopoverContent>
-          </Popover>
+          <Button
+            variant="ghost"
+            className={cn("w-full flex items-center space-x-2", {
+              "justify-center": collapsed && !isMobile,
+            })}
+            onClick={handleLogout}
+          >
+            <LogOut className="h-4 w-4" />
+            {(!collapsed || isMobile) && <span>Logout</span>}
+          </Button>
         </div>
       </div>
+
+      {isMobile && isSidebarOpen && (
+        <div
+          className="fixed inset-0 bg-black/50 z-30"
+          onClick={toggleSidebar}
+        />
+      )}
     </>
   );
 };

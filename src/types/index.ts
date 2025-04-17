@@ -1,4 +1,3 @@
-
 export type InspectionType = 'Post-Harvest' | 'Pre-Shipment' | 'On-Arrival' | 'Warehouse';
 
 export type QualityCheckType = 'Physical' | 'Chemical' | 'Moisture';
@@ -86,4 +85,92 @@ export interface ComplianceBreachData {
 export interface KPIData {
   rejectionRates: RejectionData;
   complianceBreaches: ComplianceBreachData;
+}
+
+export type OrderStatus = 'Approved' | 'Pending' | 'Rejected';
+
+export interface CompanyDetails {
+  name: string;
+  addressLine1: string;
+  addressLine2?: string;
+  city: string;
+  country: string;
+  postalCode?: string;
+  phone?: string;
+  email?: string;
+  registrationNumbers: {
+    type: string;
+    value: string;
+  }[];
+}
+
+export interface LineItem {
+  productName: string;
+  grade: string;
+  sizeSpec: string;
+  packagingType: string;
+  hsCode: string;
+  quantity: number;
+  unitPrice: number;
+  totalAmount: number;
+}
+
+export interface ShippingDetails {
+  modeOfTransport: string;
+  vesselOrFlightNumber?: string;
+  blOrAwbNumber?: string;
+  portOfLoading: string;
+  portOfDischarge: string;
+  finalDestination?: string;
+  countryOfOrigin: string;
+  countryOfDestination: string;
+}
+
+export interface TransactionDetails {
+  incoterms: string;
+  termsOfPayment: string;
+  currency: string;
+}
+
+export interface Charges {
+  subtotal: number;
+  freightCharges?: number;
+  insuranceCharges?: number;
+  packingCharges?: number;
+  otherCharges?: number;
+  totalAmount: number;
+}
+
+export interface ShippingMarks {
+  description: string;
+  lotId: string;
+  cartonRange: string;
+}
+
+export interface PurchaseOrder {
+  id: string;
+  status: OrderStatus;
+  invoiceNumber: string;
+  invoiceDate: string;
+  customerPoNumber: string;
+  exporter: CompanyDetails;
+  importer: CompanyDetails;
+  consignee?: CompanyDetails;
+  shipmentDetails: ShippingDetails;
+  transactionDetails: TransactionDetails;
+  lineItems: LineItem[];
+  charges: Charges;
+  shippingMarks: ShippingMarks;
+  declarations: {
+    type: string;
+    reference: string;
+  }[];
+  bankDetails: {
+    bankName: string;
+    accountName: string;
+    accountNumber: string;
+    swiftCode: string;
+  };
+  createdAt: string;
+  updatedAt: string;
 }

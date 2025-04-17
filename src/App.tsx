@@ -7,6 +7,8 @@ import Trade from "./pages/Trade";
 import TradeDetail from "./pages/TradeDetail";
 import KPI from "./pages/KPI";
 import Tracker from "./pages/Tracker";
+import Orders from "./pages/supplier/Orders";
+import OrderDetail from "./pages/supplier/OrderDetail";
 import NotFound from "./pages/NotFound";
 import { LoginSelection } from "./components/auth/LoginSelection";
 import { RoleWrapper } from "./components/auth/RoleWrapper";
@@ -38,6 +40,8 @@ const AppRoutes = () => {
             <Route path="/" element={<Navigate to="trades" replace />} />
             <Route path="trades" element={<Trade />} />
             <Route path="trade/:id" element={<TradeDetail />} />
+            <Route path="orders" element={<Orders />} />
+            <Route path="orders/:orderId" element={<OrderDetail />} />
             <Route path="kpis" element={<KPI />} />
             <Route path="tracker" element={<Tracker />} />
           </Routes>
@@ -49,16 +53,18 @@ const AppRoutes = () => {
   );
 };
 
-const App = () => (
-  <QueryClientProvider client={queryClient}>
-    <TooltipProvider>
-      <RadixToaster />
-      <Sonner />
-      <BrowserRouter>
-        <AppRoutes />
-      </BrowserRouter>
-    </TooltipProvider>
-  </QueryClientProvider>
-);
+const App = () => {
+  return (
+    <BrowserRouter>
+      <QueryClientProvider client={queryClient}>
+        <TooltipProvider>
+          <AppRoutes />
+          <RadixToaster />
+          <Sonner />
+        </TooltipProvider>
+      </QueryClientProvider>
+    </BrowserRouter>
+  );
+};
 
 export default App;
