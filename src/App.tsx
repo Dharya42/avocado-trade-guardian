@@ -12,6 +12,8 @@ import OrderDetail from "./pages/supplier/OrderDetail";
 import NotFound from "./pages/NotFound";
 import { LoginSelection } from "./components/auth/LoginSelection";
 import { RoleWrapper } from "./components/auth/RoleWrapper";
+import PurchaseOrders from "./pages/tfc/PurchaseOrders";
+import PurchaseOrderDetail from "./pages/tfc/PurchaseOrderDetail";
 
 const queryClient = new QueryClient();
 
@@ -27,6 +29,8 @@ const AppRoutes = () => {
             <Route path="/" element={<Navigate to="trades" replace />} />
             <Route path="trades" element={<Trade />} />
             <Route path="trade/:id" element={<TradeDetail />} />
+            <Route path="purchase-orders" element={<PurchaseOrders />} />
+            <Route path="purchase-orders/:orderId" element={<PurchaseOrderDetail />} />
             <Route path="kpis" element={<KPI />} />
             <Route path="tracker" element={<Tracker />} />
           </Routes>

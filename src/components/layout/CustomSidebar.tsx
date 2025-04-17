@@ -1,4 +1,3 @@
-
 import { useState } from 'react';
 import { NavLink, useLocation, useMatch, useNavigate } from 'react-router-dom';
 import { LayoutGrid, BarChart3, AlertCircle, ChevronLeft, ChevronRight, Menu, LogOut, ClipboardList } from 'lucide-react';
@@ -39,7 +38,13 @@ export const CustomSidebar = ({ collapsed, setCollapsed }: { collapsed: boolean,
       icon: <LayoutGrid className="w-5 h-5" />,
       path: `${rolePrefix}/trades`,
     },
-    ...(isTFC ? [] : [
+    ...(isTFC ? [
+      {
+        title: 'Purchase Orders',
+        icon: <ClipboardList className="w-5 h-5" />,
+        path: `${rolePrefix}/purchase-orders`,
+      }
+    ] : [
       {
         title: 'Orders',
         icon: <ClipboardList className="w-5 h-5" />,
