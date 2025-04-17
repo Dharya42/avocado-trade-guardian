@@ -47,6 +47,7 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
+import { PostHarvestDetails } from './PostHarvestDetails';
 
 interface InspectionDetailProps {
   inspection: Inspection;
@@ -124,6 +125,11 @@ export const InspectionDetail = ({ inspection }: InspectionDetailProps) => {
           </CardDescription>
         </CardHeader>
       </Card>
+
+      {/* Post-Harvest Details */}
+      {inspection.type === 'Post-Harvest' && inspection.postHarvestDetails && (
+        <PostHarvestDetails details={inspection.postHarvestDetails} />
+      )}
 
       {/* Quality Checks */}
       <Card>

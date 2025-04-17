@@ -24,6 +24,197 @@ export interface Lab {
   contactPerson?: string;
 }
 
+export interface FarmIdentification {
+  farmName: string;
+  growerName: string;
+  registrationNumbers: {
+    type: string; // e.g., "HCD", "KEPHIS"
+    value: string;
+  }[];
+  location: {
+    coordinates: string;
+    address: string;
+  };
+  areas: {
+    total: number; // in hectares
+    avocado: number; // in hectares
+  };
+  varieties: string[];
+  targetMarkets: string[];
+  associatedPackhouse: string;
+  photos: {
+    type: string; // e.g., "farm_signage", "orchard_overview"
+    url: string;
+  }[];
+}
+
+export interface TraceabilityRecord {
+  systemType: string; // e.g., "Digital", "Paper"
+  recordsAvailable: boolean;
+  recordTypes: string[]; // e.g., ["inputs", "harvest", "staff"]
+  photos: {
+    type: string;
+    url: string;
+  }[];
+}
+
+export interface GAPRecord {
+  siteHistory: string;
+  soilManagement: {
+    fertilizers: {
+      type: string;
+      applicationDate: string;
+      rate: string;
+    }[];
+    storageCompliance: boolean;
+  };
+  waterManagement: {
+    source: string;
+    qualityTestDate: string;
+    irrigationMethod: string;
+    testResults: string;
+  };
+  photos: {
+    type: string;
+    url: string;
+  }[];
+}
+
+export interface PestDiseaseManagement {
+  ipmStrategyPresent: boolean;
+  monitoringLogs: {
+    date: string;
+    findings: string;
+    action: string;
+  }[];
+  pesticides: {
+    storage: {
+      secure: boolean;
+      conditions: string;
+    };
+    records: {
+      product: string;
+      applicationDate: string;
+      phi: number; // Pre-harvest interval in days
+    }[];
+    disposal: string;
+  };
+  calibrationRecords: {
+    equipment: string;
+    date: string;
+    result: string;
+  }[];
+  photos: {
+    type: string;
+    url: string;
+  }[];
+}
+
+export interface PreHarvestAssessment {
+  maturityMethod: string;
+  dryMatterPercentage: number;
+  equipment: {
+    type: string;
+    condition: string;
+    lastMaintenance: string;
+  }[];
+  trainingRecords: {
+    topic: string;
+    date: string;
+    attendees: number;
+  }[];
+  heatRemovalPlan: string;
+  photos: {
+    type: string;
+    url: string;
+  }[];
+}
+
+export interface WorkerWelfare {
+  hygieneTraining: {
+    date: string;
+    topics: string[];
+    trainer: string;
+  }[];
+  facilities: {
+    type: string; // e.g., "toilet", "handwashing"
+    count: number;
+    condition: string;
+    supplies: string[];
+  }[];
+  firstAid: {
+    kitsAvailable: number;
+    trainedPersonnel: number;
+    lastInspection: string;
+  };
+  waterAccess: {
+    points: number;
+    potable: boolean;
+    testDate: string;
+  };
+  photos: {
+    type: string;
+    url: string;
+  }[];
+}
+
+export interface EnvironmentalProtection {
+  wasteManagement: {
+    plan: string;
+    collectionAreas: {
+      type: string;
+      condition: string;
+      lastCleaned: string;
+    }[];
+  };
+  waterProtection: {
+    bufferZones: {
+      location: string;
+      width: number; // in meters
+    }[];
+    measures: string[];
+  };
+  biodiversity: {
+    zones: {
+      type: string;
+      area: number; // in hectares
+      species: string[];
+    }[];
+  };
+  photos: {
+    type: string;
+    url: string;
+  }[];
+}
+
+export interface FinalEvaluation {
+  strengths: string[];
+  weaknesses: string[];
+  nonConformities: {
+    severity: 'Minor' | 'Major' | 'Critical';
+    description: string;
+    correctiveAction: string;
+    deadline: string;
+  }[];
+  exportReadiness: 'Ready' | 'Minor Corrections Needed' | 'Not Ready';
+  evaluator: {
+    name: string;
+    organization: string;
+    date: string;
+  };
+}
+
+export interface PostHarvestInspection {
+  farmIdentification: FarmIdentification;
+  traceability: TraceabilityRecord;
+  gap: GAPRecord;
+  pestManagement: PestDiseaseManagement;
+  preHarvest: PreHarvestAssessment;
+  workerWelfare: WorkerWelfare;
+  environmental: EnvironmentalProtection;
+  finalEvaluation: FinalEvaluation;
+}
+
 export interface Inspection {
   id: string;
   type: InspectionType;
@@ -35,6 +226,7 @@ export interface Inspection {
   inspectionTools: string[];
   lab?: Lab;
   notes?: string;
+  postHarvestDetails?: PostHarvestInspection;
 }
 
 export interface Trade {

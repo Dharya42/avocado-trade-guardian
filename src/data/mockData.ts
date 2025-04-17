@@ -1,4 +1,3 @@
-
 import { Trade, KPIData } from '../types';
 
 export const mockTrades: Trade[] = [
@@ -67,7 +66,243 @@ export const mockTrades: Trade[] = [
           location: 'Nairobi, Kenya',
           contactPerson: 'Dr. Kimani'
         },
-        notes: 'Excellent quality batch, properly sorted and graded according to UAE market preferences. Extra care taken with cold chain management.'
+        notes: 'Excellent quality batch, properly sorted and graded according to UAE market preferences. Extra care taken with cold chain management.',
+        postHarvestDetails: {
+          farmIdentification: {
+            farmName: "Green Highlands Avocado Farm",
+            growerName: "John Kamau",
+            registrationNumbers: [
+              { type: "HCD", value: "HCD/2023/0123" },
+              { type: "KEPHIS", value: "KE-PHY-2023-456" }
+            ],
+            location: {
+              coordinates: "-1.2921,36.8219",
+              address: "Kiambu Road, Kiambu County"
+            },
+            areas: {
+              total: 50,
+              avocado: 35
+            },
+            varieties: ["Hass", "Fuerte"],
+            targetMarkets: ["UAE", "EU"],
+            associatedPackhouse: "Fresh Pack Kenya Ltd",
+            photos: [
+              { type: "farm_signage", url: "/mock/farm-signage.jpg" },
+              { type: "orchard_overview", url: "/mock/orchard.jpg" }
+            ]
+          },
+          traceability: {
+            systemType: "Digital",
+            recordsAvailable: true,
+            recordTypes: ["inputs", "harvest", "staff", "training"],
+            photos: [
+              { type: "block_id", url: "/mock/block-id.jpg" },
+              { type: "logbook", url: "/mock/logbook.jpg" }
+            ]
+          },
+          gap: {
+            siteHistory: "Previously coffee farm, converted to avocados in 2018",
+            soilManagement: {
+              fertilizers: [
+                {
+                  type: "Organic Compost",
+                  applicationDate: "2023-02-15",
+                  rate: "2.5 tons/ha"
+                },
+                {
+                  type: "NPK 17:17:17",
+                  applicationDate: "2023-03-01",
+                  rate: "200 kg/ha"
+                }
+              ],
+              storageCompliance: true
+            },
+            waterManagement: {
+              source: "Borehole",
+              qualityTestDate: "2023-01-15",
+              irrigationMethod: "Drip Irrigation",
+              testResults: "Compliant with drinking water standards"
+            },
+            photos: [
+              { type: "fertilizer_store", url: "/mock/fertilizer-store.jpg" },
+              { type: "irrigation", url: "/mock/irrigation.jpg" }
+            ]
+          },
+          pestManagement: {
+            ipmStrategyPresent: true,
+            monitoringLogs: [
+              {
+                date: "2023-03-20",
+                findings: "Low fruit fly presence",
+                action: "Pheromone traps installed"
+              },
+              {
+                date: "2023-03-15",
+                findings: "No significant pest pressure",
+                action: "Continued monitoring"
+              }
+            ],
+            pesticides: {
+              storage: {
+                secure: true,
+                conditions: "Locked, ventilated store with proper labeling"
+              },
+              records: [
+                {
+                  product: "Copper Oxychloride",
+                  applicationDate: "2023-02-28",
+                  phi: 14
+                }
+              ],
+              disposal: "Triple rinsing, puncturing, and authorized collection"
+            },
+            calibrationRecords: [
+              {
+                equipment: "Backpack Sprayer",
+                date: "2023-02-25",
+                result: "Calibrated to 16L/ha"
+              }
+            ],
+            photos: [
+              { type: "pesticide_store", url: "/mock/pesticide-store.jpg" },
+              { type: "traps", url: "/mock/traps.jpg" }
+            ]
+          },
+          preHarvest: {
+            maturityMethod: "Dry Matter Testing",
+            dryMatterPercentage: 23,
+            equipment: [
+              {
+                type: "Harvesting Poles",
+                condition: "Good",
+                lastMaintenance: "2023-03-15"
+              },
+              {
+                type: "Collection Crates",
+                condition: "Excellent",
+                lastMaintenance: "2023-03-20"
+              }
+            ],
+            trainingRecords: [
+              {
+                topic: "Harvest Maturity Assessment",
+                date: "2023-03-10",
+                attendees: 15
+              },
+              {
+                topic: "Safe Handling Practices",
+                date: "2023-03-11",
+                attendees: 15
+              }
+            ],
+            heatRemovalPlan: "Immediate transfer to on-site cold room within 2 hours of harvest",
+            photos: [
+              { type: "tools", url: "/mock/tools.jpg" },
+              { type: "collection_bins", url: "/mock/bins.jpg" }
+            ]
+          },
+          workerWelfare: {
+            hygieneTraining: [
+              {
+                date: "2023-03-01",
+                topics: ["Personal Hygiene", "Food Safety"],
+                trainer: "Sarah Njeri"
+              }
+            ],
+            facilities: [
+              {
+                type: "Toilet",
+                count: 4,
+                condition: "Good",
+                supplies: ["Toilet Paper", "Soap", "Water"]
+              },
+              {
+                type: "Handwashing Station",
+                count: 6,
+                condition: "Excellent",
+                supplies: ["Soap", "Paper Towels"]
+              }
+            ],
+            firstAid: {
+              kitsAvailable: 3,
+              trainedPersonnel: 2,
+              lastInspection: "2023-03-15"
+            },
+            waterAccess: {
+              points: 8,
+              potable: true,
+              testDate: "2023-02-15"
+            },
+            photos: [
+              { type: "facilities", url: "/mock/facilities.jpg" },
+              { type: "first_aid", url: "/mock/first-aid.jpg" }
+            ]
+          },
+          environmental: {
+            wasteManagement: {
+              plan: "Segregation of organic and inorganic waste, composting of organic materials",
+              collectionAreas: [
+                {
+                  type: "Organic Waste",
+                  condition: "Clean",
+                  lastCleaned: "2023-03-27"
+                },
+                {
+                  type: "Chemical Containers",
+                  condition: "Secure",
+                  lastCleaned: "2023-03-26"
+                }
+              ]
+            },
+            waterProtection: {
+              bufferZones: [
+                {
+                  location: "Stream Border",
+                  width: 10
+                }
+              ],
+              measures: ["Grass Strips", "Contour Planting"]
+            },
+            biodiversity: {
+              zones: [
+                {
+                  type: "Natural Forest",
+                  area: 5,
+                  species: ["Indigenous Trees", "Native Shrubs"]
+                }
+              ]
+            },
+            photos: [
+              { type: "waste_site", url: "/mock/waste.jpg" },
+              { type: "buffer_zone", url: "/mock/buffer.jpg" }
+            ]
+          },
+          finalEvaluation: {
+            strengths: [
+              "Strong traceability system",
+              "Well-maintained facilities",
+              "Comprehensive worker training"
+            ],
+            weaknesses: [
+              "Limited cold storage capacity",
+              "Some record keeping delays"
+            ],
+            nonConformities: [
+              {
+                severity: "Minor",
+                description: "Delayed updating of spray records",
+                correctiveAction: "Implement daily record update policy",
+                deadline: "2023-04-15"
+              }
+            ],
+            exportReadiness: "Minor Corrections Needed",
+            evaluator: {
+              name: "Dr. David Mwangi",
+              organization: "KEPHIS",
+              date: "2023-03-28"
+            }
+          }
+        }
       },
       {
         id: 'insp-002',
