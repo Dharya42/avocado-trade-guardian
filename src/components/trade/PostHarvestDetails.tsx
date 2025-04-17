@@ -29,13 +29,18 @@ import {
   Users,
   TreePine,
   CheckSquare,
-  Image
+  Image,
+  CheckCircle,
+  AlertCircle,
+  XCircle
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
 interface PostHarvestDetailsProps {
   details: PostHarvestInspection;
 }
+
+type SectionStatus = 'Compliant' | 'Issues Found' | 'Not Compliant';
 
 export const PostHarvestDetails = ({ details }: PostHarvestDetailsProps) => {
   const formatDate = (dateString: string) => {
@@ -44,6 +49,83 @@ export const PostHarvestDetails = ({ details }: PostHarvestDetailsProps) => {
       month: 'long',
       day: 'numeric'
     });
+  };
+
+  const getSectionStatus = (section: keyof PostHarvestInspection): SectionStatus => {
+    switch (section) {
+      case 'farmIdentification':
+        // Check if all required fields are present and valid
+        return details.farmIdentification.registrationNumbers.length > 0 ? 'Compliant' : 'Issues Found';
+      
+      case 'traceability':
+        // Check if records are available and system is in place
+        return details.traceability.recordsAvailable ? 'Compliant' : 'Not Compliant';
+      
+      case 'gap':
+        // Check soil management compliance and water management
+        return details.gap.soilManagement.storageCompliance ? 'Compliant' : 'Issues Found';
+      
+      case 'pestManagement':
+        // Check IPM strategy and storage security
+        return details.pestManagement.ipmStrategyPresent && 
+               details.pestManagement.pesticides.storage.secure ? 'Compliant' : 'Issues Found';
+      
+      case 'preHarvest':
+        // Check dry matter percentage and equipment condition
+        return details.preHarvest.dryMatterPercentage >= 21 ? 'Compliant' : 'Issues Found';
+      
+      case 'workerWelfare':
+        // Check facilities and first aid provisions
+        return details.workerWelfare.firstAid.kitsAvailable > 0 && 
+               details.workerWelfare.waterAccess.potable ? 'Compliant' : 'Issues Found';
+      
+      case 'environmental':
+        // Check waste management and water protection measures
+        return details.environmental.waterProtection.measures.length > 0 ? 'Compliant' : 'Issues Found';
+      
+      case 'finalEvaluation':
+        // Check export readiness
+        return details.finalEvaluation.exportReadiness === 'Ready' ? 'Compliant' :
+               details.finalEvaluation.exportReadiness === 'Minor Corrections Needed' ? 'Issues Found' : 'Not Compliant';
+      
+      default:
+        return 'Issues Found';
+    }
+  };
+
+  const getStatusIcon = (status: SectionStatus) => {
+    switch (status) {
+      case 'Compliant':
+        return <CheckCircle className="h-4 w-4 text-green-500" />;
+      case 'Issues Found':
+        return <AlertCircle className="h-4 w-4 text-amber-500" />;
+      case 'Not Compliant':
+        return <XCircle className="h-4 w-4 text-red-500" />;
+    }
+  };
+
+  const getStatusBadgeStyle = (status: SectionStatus) => {
+    switch (status) {
+      case 'Compliant':
+        return "bg-green-50 text-green-700 border-green-200";
+      case 'Issues Found':
+        return "bg-amber-50 text-amber-700 border-amber-200";
+      case 'Not Compliant':
+        return "bg-red-50 text-red-700 border-red-200";
+    }
+  };
+
+  const renderStatusBadge = (section: keyof PostHarvestInspection) => {
+    const status = getSectionStatus(section);
+    return (
+      <div className={cn(
+        "flex items-center px-2 py-1 rounded-full border text-xs font-medium mr-3",
+        getStatusBadgeStyle(status)
+      )}>
+        {getStatusIcon(status)}
+        <span className="ml-1">{status}</span>
+      </div>
+    );
   };
 
   const renderPhotos = (photos: { type: string; url: string; }[]) => {
@@ -78,7 +160,8 @@ export const PostHarvestDetails = ({ details }: PostHarvestDetailsProps) => {
       {/* Farm Identification */}
       <AccordionItem value="farm-id" className="border rounded-lg">
         <AccordionTrigger className="px-4 hover:no-underline [&[data-state=open]>div]:text-primary">
-          <div className="flex items-center">
+          <div className="flex items-center w-full">
+            {renderStatusBadge('farmIdentification')}
             <Building2 className="h-5 w-5 mr-2" />
             <span>Farm Identification & General Info</span>
           </div>
@@ -129,7 +212,8 @@ export const PostHarvestDetails = ({ details }: PostHarvestDetailsProps) => {
       {/* Traceability */}
       <AccordionItem value="traceability" className="border rounded-lg">
         <AccordionTrigger className="px-4 hover:no-underline [&[data-state=open]>div]:text-primary">
-          <div className="flex items-center">
+          <div className="flex items-center w-full">
+            {renderStatusBadge('traceability')}
             <ClipboardCheck className="h-5 w-5 mr-2" />
             <span>Traceability & Record Keeping</span>
           </div>
@@ -156,7 +240,8 @@ export const PostHarvestDetails = ({ details }: PostHarvestDetailsProps) => {
       {/* GAP */}
       <AccordionItem value="gap" className="border rounded-lg">
         <AccordionTrigger className="px-4 hover:no-underline [&[data-state=open]>div]:text-primary">
-          <div className="flex items-center">
+          <div className="flex items-center w-full">
+            {renderStatusBadge('gap')}
             <Sprout className="h-5 w-5 mr-2" />
             <span>Good Agricultural Practices (G.A.P.)</span>
           </div>
@@ -214,7 +299,8 @@ export const PostHarvestDetails = ({ details }: PostHarvestDetailsProps) => {
       {/* Pest Management */}
       <AccordionItem value="pest" className="border rounded-lg">
         <AccordionTrigger className="px-4 hover:no-underline [&[data-state=open]>div]:text-primary">
-          <div className="flex items-center">
+          <div className="flex items-center w-full">
+            {renderStatusBadge('pestManagement')}
             <Bug className="h-5 w-5 mr-2" />
             <span>Pest & Disease Management</span>
           </div>
@@ -284,7 +370,8 @@ export const PostHarvestDetails = ({ details }: PostHarvestDetailsProps) => {
       {/* Pre-Harvest */}
       <AccordionItem value="pre-harvest" className="border rounded-lg">
         <AccordionTrigger className="px-4 hover:no-underline [&[data-state=open]>div]:text-primary">
-          <div className="flex items-center">
+          <div className="flex items-center w-full">
+            {renderStatusBadge('preHarvest')}
             <Truck className="h-5 w-5 mr-2" />
             <span>Pre-Harvest & Harvest Readiness</span>
           </div>
@@ -352,7 +439,8 @@ export const PostHarvestDetails = ({ details }: PostHarvestDetailsProps) => {
       {/* Worker Welfare */}
       <AccordionItem value="welfare" className="border rounded-lg">
         <AccordionTrigger className="px-4 hover:no-underline [&[data-state=open]>div]:text-primary">
-          <div className="flex items-center">
+          <div className="flex items-center w-full">
+            {renderStatusBadge('workerWelfare')}
             <Users className="h-5 w-5 mr-2" />
             <span>Food Safety & Worker Welfare</span>
           </div>
@@ -416,7 +504,8 @@ export const PostHarvestDetails = ({ details }: PostHarvestDetailsProps) => {
       {/* Environmental Protection */}
       <AccordionItem value="environmental" className="border rounded-lg">
         <AccordionTrigger className="px-4 hover:no-underline [&[data-state=open]>div]:text-primary">
-          <div className="flex items-center">
+          <div className="flex items-center w-full">
+            {renderStatusBadge('environmental')}
             <TreePine className="h-5 w-5 mr-2" />
             <span>Environmental Protection</span>
           </div>
@@ -468,7 +557,8 @@ export const PostHarvestDetails = ({ details }: PostHarvestDetailsProps) => {
       {/* Final Evaluation */}
       <AccordionItem value="evaluation" className="border rounded-lg">
         <AccordionTrigger className="px-4 hover:no-underline [&[data-state=open]>div]:text-primary">
-          <div className="flex items-center">
+          <div className="flex items-center w-full">
+            {renderStatusBadge('finalEvaluation')}
             <CheckSquare className="h-5 w-5 mr-2" />
             <span>Final Evaluation</span>
           </div>

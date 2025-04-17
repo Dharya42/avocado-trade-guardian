@@ -48,6 +48,7 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover";
 import { PostHarvestDetails } from './PostHarvestDetails';
+import { PreShipmentDetails } from './PreShipmentDetails';
 
 interface InspectionDetailProps {
   inspection: Inspection;
@@ -129,6 +130,11 @@ export const InspectionDetail = ({ inspection }: InspectionDetailProps) => {
       {/* Post-Harvest Details */}
       {inspection.type === 'Post-Harvest' && inspection.postHarvestDetails && (
         <PostHarvestDetails details={inspection.postHarvestDetails} />
+      )}
+
+      {/* Pre-Shipment Details */}
+      {inspection.type === 'Pre-Shipment' && inspection.preShipmentDetails && (
+        <PreShipmentDetails details={inspection.preShipmentDetails} />
       )}
 
       {/* Quality Checks */}

@@ -217,16 +217,23 @@ export interface PostHarvestInspection {
 
 export interface Inspection {
   id: string;
-  type: InspectionType;
+  type: 'Post-Harvest' | 'Pre-Shipment' | 'On-Arrival' | 'Warehouse';
   date: string;
   location: string;
-  status: InspectionStatus;
+  status: 'Passed' | 'Failed' | 'Pending';
+  postHarvestDetails?: PostHarvestInspection;
+  preShipmentDetails?: PreShipmentInspection;
   qualityChecks: QualityCheck[];
   compliances: Compliance[];
   inspectionTools: string[];
-  lab?: Lab;
+  lab?: {
+    name: string;
+    location: string;
+    contactPerson?: string;
+  };
   notes?: string;
-  postHarvestDetails?: PostHarvestInspection;
+  createdAt: string;
+  updatedAt: string;
 }
 
 export interface Trade {
@@ -365,4 +372,159 @@ export interface PurchaseOrder {
   };
   createdAt: string;
   updatedAt: string;
+}
+
+export interface PhotoRecord {
+  type: string;
+  url: string;
+}
+
+export interface PreShipmentInspection {
+  facilityIdentification: {
+    facilityName: string;
+    registrationNumber: string;
+    address: string;
+    contactPerson: string;
+    phone: string;
+    email: string;
+    photos: PhotoRecord[];
+  };
+  regulatoryCompliance: {
+    documentsValid: boolean;
+    certifications: {
+      type: string;
+      number: string;
+      expiryDate: string;
+    }[];
+    permits: {
+      type: string;
+      number: string;
+      validUntil: string;
+    }[];
+    photos: PhotoRecord[];
+  };
+  facilityCondition: {
+    maintenanceStatus: 'Good' | 'Fair' | 'Poor';
+    cleanlinessRating: number;
+    pestControl: {
+      program: string;
+      lastInspection: string;
+      findings: string;
+    };
+    repairs: {
+      area: string;
+      issue: string;
+      status: string;
+      date: string;
+    }[];
+    photos: PhotoRecord[];
+  };
+  receivingArea: {
+    temperature: {
+      current: number;
+      required: number;
+      withinRange: boolean;
+    };
+    loadingDocks: {
+      number: string;
+      condition: string;
+      cleanliness: string;
+    }[];
+    photos: PhotoRecord[];
+  };
+  processingLine: {
+    equipmentCondition: 'Operational' | 'Needs Maintenance' | 'Out of Service';
+    stations: {
+      name: string;
+      status: string;
+      lastMaintenance: string;
+      notes: string;
+    }[];
+    calibration: {
+      equipment: string;
+      lastCalibrated: string;
+      nextDue: string;
+    }[];
+    photos: PhotoRecord[];
+  };
+  qualityControl: {
+    proceduresFollowed: boolean;
+    checkpoints: {
+      station: string;
+      parameters: string[];
+      frequency: string;
+      responsible: string;
+    }[];
+    samples: {
+      type: string;
+      quantity: number;
+      results: string;
+      date: string;
+    }[];
+    photos: PhotoRecord[];
+  };
+  packingLabeling: {
+    materialsCompliant: boolean;
+    packaging: {
+      type: string;
+      condition: string;
+      quantity: number;
+    }[];
+    labels: {
+      type: string;
+      compliance: boolean;
+      notes: string;
+    }[];
+    photos: PhotoRecord[];
+  };
+  storage: {
+    temperature: {
+      current: number;
+      required: number;
+      withinRange: boolean;
+    };
+    humidity: {
+      current: number;
+      required: number;
+      withinRange: boolean;
+    };
+    areas: {
+      name: string;
+      capacity: string;
+      currentUsage: string;
+      condition: string;
+    }[];
+    photos: PhotoRecord[];
+  };
+  workerHygiene: {
+    trainingCurrent: boolean;
+    personnel: {
+      role: string;
+      certified: boolean;
+      lastTraining: string;
+    }[];
+    facilities: {
+      type: string;
+      condition: string;
+      adequacy: string;
+    }[];
+    photos: PhotoRecord[];
+  };
+  finalAssessment: {
+    readyForShipment: boolean;
+    issues: {
+      category: string;
+      description: string;
+      severity: 'Critical' | 'Major' | 'Minor';
+      action: string;
+    }[];
+    recommendations: string[];
+    approver: {
+      name: string;
+      position: string;
+      date: string;
+      signature: string;
+    };
+    photos: PhotoRecord[];
+  };
 }
