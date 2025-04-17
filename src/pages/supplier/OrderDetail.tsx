@@ -62,32 +62,34 @@ const OrderDetail = () => {
   return (
     <Layout>
       <div className="container mx-auto py-6 space-y-6">
-        <div className="flex items-center gap-4">
-          <Button
-            variant="ghost"
-            size="icon"
-            onClick={() => navigate('/supplier/orders')}
-          >
-            <ChevronLeft className="h-4 w-4" />
-          </Button>
-          <div>
-            <h1 className="text-2xl font-bold">Order Details</h1>
-            <p className="text-muted-foreground">
-              {order.customerPoNumber}
-            </p>
+        {/* Navigation and Title */}
+        <div className="flex items-center justify-between">
+          <div className="flex items-center gap-4">
+            <Button
+              variant="ghost"
+              size="icon"
+              onClick={() => navigate('/supplier/orders')}
+            >
+              <ChevronLeft className="h-4 w-4" />
+            </Button>
+            <div>
+              <h1 className="text-3xl font-bold">Commercial Invoice</h1>
+              <p className="text-muted-foreground">
+                {order.customerPoNumber}
+              </p>
+            </div>
           </div>
+          <Button variant="outline">
+            Download Invoice
+          </Button>
         </div>
 
         {/* Header Information */}
         <Card>
           <CardHeader>
-            <CardTitle>Order Information</CardTitle>
+            <CardTitle>Document Information</CardTitle>
           </CardHeader>
           <CardContent className="grid grid-cols-2 gap-4">
-            <div>
-              <p className="text-sm font-semibold">PO Number</p>
-              <p className="text-sm">{order.customerPoNumber}</p>
-            </div>
             <div>
               <p className="text-sm font-semibold">Invoice Number</p>
               <p className="text-sm">{order.invoiceNumber}</p>
@@ -97,6 +99,10 @@ const OrderDetail = () => {
               <p className="text-sm">{order.invoiceDate}</p>
             </div>
             <div>
+              <p className="text-sm font-semibold">Customer PO Number</p>
+              <p className="text-sm">{order.customerPoNumber}</p>
+            </div>
+            <div>
               <p className="text-sm font-semibold">Status</p>
               <OrderStatusBadge status={order.status} />
             </div>
@@ -104,78 +110,148 @@ const OrderDetail = () => {
         </Card>
 
         {/* Company Details */}
-        <div className="grid grid-cols-2 gap-6">
+        <div className="grid grid-cols-3 gap-6">
           <Card>
             <CardHeader>
-              <CardTitle>Exporter</CardTitle>
+              <CardTitle>Exporter / Seller</CardTitle>
             </CardHeader>
-            <CardContent>
+            <CardContent className="space-y-2">
               <p className="font-semibold">{order.exporter.name}</p>
-              <p>{order.exporter.addressLine1}</p>
-              {order.exporter.addressLine2 && <p>{order.exporter.addressLine2}</p>}
-              <p>{order.exporter.city}, {order.exporter.country}</p>
-              <p>Phone: {order.exporter.phone}</p>
-              <p>Email: {order.exporter.email}</p>
-              {order.exporter.registrationNumbers.map((reg, index) => (
-                <p key={index}>{reg.type}: {reg.value}</p>
-              ))}
+              <div className="text-sm space-y-1">
+                <p>{order.exporter.addressLine1}</p>
+                {order.exporter.addressLine2 && <p>{order.exporter.addressLine2}</p>}
+                <p>{order.exporter.city}, {order.exporter.country}</p>
+                {order.exporter.postalCode && <p>Postal Code: {order.exporter.postalCode}</p>}
+                <p>Phone: {order.exporter.phone}</p>
+                <p>Email: {order.exporter.email}</p>
+                <div className="pt-2">
+                  {order.exporter.registrationNumbers.map((reg, index) => (
+                    <p key={index} className="font-medium">{reg.type}: {reg.value}</p>
+                  ))}
+                </div>
+              </div>
             </CardContent>
           </Card>
+
           <Card>
             <CardHeader>
-              <CardTitle>Importer</CardTitle>
+              <CardTitle>Importer / Buyer</CardTitle>
             </CardHeader>
-            <CardContent>
+            <CardContent className="space-y-2">
               <p className="font-semibold">{order.importer.name}</p>
-              <p>{order.importer.addressLine1}</p>
-              {order.importer.addressLine2 && <p>{order.importer.addressLine2}</p>}
-              <p>{order.importer.city}, {order.importer.country}</p>
-              <p>Phone: {order.importer.phone}</p>
-              <p>Email: {order.importer.email}</p>
-              {order.importer.registrationNumbers.map((reg, index) => (
-                <p key={index}>{reg.type}: {reg.value}</p>
-              ))}
+              <div className="text-sm space-y-1">
+                <p>{order.importer.addressLine1}</p>
+                {order.importer.addressLine2 && <p>{order.importer.addressLine2}</p>}
+                <p>{order.importer.city}, {order.importer.country}</p>
+                {order.importer.postalCode && <p>Postal Code: {order.importer.postalCode}</p>}
+                <p>Phone: {order.importer.phone}</p>
+                <p>Email: {order.importer.email}</p>
+                <div className="pt-2">
+                  {order.importer.registrationNumbers.map((reg, index) => (
+                    <p key={index} className="font-medium">{reg.type}: {reg.value}</p>
+                  ))}
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+
+          <Card>
+            <CardHeader>
+              <CardTitle>Consignee</CardTitle>
+            </CardHeader>
+            <CardContent className="space-y-2">
+              {order.consignee ? (
+                <>
+                  <p className="font-semibold">{order.consignee.name}</p>
+                  <div className="text-sm space-y-1">
+                    <p>{order.consignee.addressLine1}</p>
+                    {order.consignee.addressLine2 && <p>{order.consignee.addressLine2}</p>}
+                    <p>{order.consignee.city}, {order.consignee.country}</p>
+                    {order.consignee.postalCode && <p>Postal Code: {order.consignee.postalCode}</p>}
+                    <p>Phone: {order.consignee.phone}</p>
+                    <p>Email: {order.consignee.email}</p>
+                  </div>
+                </>
+              ) : (
+                <p className="text-sm text-muted-foreground">Same as Importer</p>
+              )}
             </CardContent>
           </Card>
         </div>
 
-        {/* Shipment Details */}
-        <Card>
-          <CardHeader>
-            <CardTitle>Shipment Details</CardTitle>
-          </CardHeader>
-          <CardContent className="grid grid-cols-2 gap-4">
-            <div>
-              <p className="text-sm font-semibold">Mode of Transport</p>
-              <p className="text-sm">{order.shipmentDetails.modeOfTransport}</p>
-            </div>
-            {order.shipmentDetails.vesselOrFlightNumber && (
+        {/* Shipment and Transaction Details */}
+        <div className="grid grid-cols-2 gap-6">
+          <Card>
+            <CardHeader>
+              <CardTitle>Shipment Details</CardTitle>
+            </CardHeader>
+            <CardContent className="grid grid-cols-2 gap-4">
               <div>
-                <p className="text-sm font-semibold">Vessel/Flight Number</p>
-                <p className="text-sm">{order.shipmentDetails.vesselOrFlightNumber}</p>
+                <p className="text-sm font-semibold">Mode of Transport</p>
+                <p className="text-sm">{order.shipmentDetails.modeOfTransport}</p>
               </div>
-            )}
-            {order.shipmentDetails.blOrAwbNumber && (
+              {order.shipmentDetails.vesselOrFlightNumber && (
+                <div>
+                  <p className="text-sm font-semibold">Vessel/Flight Number</p>
+                  <p className="text-sm">{order.shipmentDetails.vesselOrFlightNumber}</p>
+                </div>
+              )}
+              {order.shipmentDetails.blOrAwbNumber && (
+                <div>
+                  <p className="text-sm font-semibold">BL/AWB Number</p>
+                  <p className="text-sm">{order.shipmentDetails.blOrAwbNumber}</p>
+                </div>
+              )}
               <div>
-                <p className="text-sm font-semibold">BL/AWB Number</p>
-                <p className="text-sm">{order.shipmentDetails.blOrAwbNumber}</p>
+                <p className="text-sm font-semibold">Port of Loading</p>
+                <p className="text-sm">{order.shipmentDetails.portOfLoading}</p>
               </div>
-            )}
-            <div>
-              <p className="text-sm font-semibold">Port of Loading</p>
-              <p className="text-sm">{order.shipmentDetails.portOfLoading}</p>
-            </div>
-            <div>
-              <p className="text-sm font-semibold">Port of Discharge</p>
-              <p className="text-sm">{order.shipmentDetails.portOfDischarge}</p>
-            </div>
-          </CardContent>
-        </Card>
+              <div>
+                <p className="text-sm font-semibold">Port of Discharge</p>
+                <p className="text-sm">{order.shipmentDetails.portOfDischarge}</p>
+              </div>
+              {order.shipmentDetails.finalDestination && (
+                <div>
+                  <p className="text-sm font-semibold">Final Destination</p>
+                  <p className="text-sm">{order.shipmentDetails.finalDestination}</p>
+                </div>
+              )}
+              <div>
+                <p className="text-sm font-semibold">Country of Origin</p>
+                <p className="text-sm">{order.shipmentDetails.countryOfOrigin}</p>
+              </div>
+              <div>
+                <p className="text-sm font-semibold">Country of Destination</p>
+                <p className="text-sm">{order.shipmentDetails.countryOfDestination}</p>
+              </div>
+            </CardContent>
+          </Card>
+
+          <Card>
+            <CardHeader>
+              <CardTitle>Transaction Details</CardTitle>
+            </CardHeader>
+            <CardContent className="grid grid-cols-2 gap-4">
+              <div>
+                <p className="text-sm font-semibold">Incoterms</p>
+                <p className="text-sm">{order.transactionDetails.incoterms}</p>
+              </div>
+              <div>
+                <p className="text-sm font-semibold">Payment Terms</p>
+                <p className="text-sm">{order.transactionDetails.termsOfPayment}</p>
+              </div>
+              <div>
+                <p className="text-sm font-semibold">Currency</p>
+                <p className="text-sm">{order.transactionDetails.currency}</p>
+              </div>
+            </CardContent>
+          </Card>
+        </div>
 
         {/* Line Items */}
         <Card>
           <CardHeader>
-            <CardTitle>Line Items</CardTitle>
+            <CardTitle>Goods Description</CardTitle>
           </CardHeader>
           <CardContent>
             <Table>
@@ -185,6 +261,7 @@ const OrderDetail = () => {
                   <TableHead>Grade</TableHead>
                   <TableHead>Size</TableHead>
                   <TableHead>Packaging</TableHead>
+                  <TableHead>HS Code</TableHead>
                   <TableHead className="text-right">Quantity</TableHead>
                   <TableHead className="text-right">Unit Price</TableHead>
                   <TableHead className="text-right">Total</TableHead>
@@ -197,6 +274,7 @@ const OrderDetail = () => {
                     <TableCell>{item.grade}</TableCell>
                     <TableCell>{item.sizeSpec}</TableCell>
                     <TableCell>{item.packagingType}</TableCell>
+                    <TableCell>{item.hsCode}</TableCell>
                     <TableCell className="text-right">{item.quantity}</TableCell>
                     <TableCell className="text-right">${item.unitPrice.toFixed(2)}</TableCell>
                     <TableCell className="text-right">${item.totalAmount.toFixed(2)}</TableCell>
@@ -210,10 +288,10 @@ const OrderDetail = () => {
         {/* Charges */}
         <Card>
           <CardHeader>
-            <CardTitle>Charges</CardTitle>
+            <CardTitle>Charges Summary</CardTitle>
           </CardHeader>
           <CardContent>
-            <div className="space-y-2">
+            <div className="space-y-2 max-w-sm ml-auto">
               <div className="flex justify-between">
                 <span>Subtotal:</span>
                 <span>${order.charges.subtotal.toFixed(2)}</span>
@@ -234,6 +312,12 @@ const OrderDetail = () => {
                 <div className="flex justify-between">
                   <span>Packing Charges:</span>
                   <span>${order.charges.packingCharges.toFixed(2)}</span>
+                </div>
+              )}
+              {order.charges.otherCharges && (
+                <div className="flex justify-between">
+                  <span>Other Charges:</span>
+                  <span>${order.charges.otherCharges.toFixed(2)}</span>
                 </div>
               )}
               <Separator />
@@ -259,9 +343,10 @@ const OrderDetail = () => {
           </Card>
           <Card>
             <CardHeader>
-              <CardTitle>Declarations</CardTitle>
+              <CardTitle>Declarations & Certifications</CardTitle>
             </CardHeader>
-            <CardContent>
+            <CardContent className="space-y-2">
+              <p><span className="font-semibold">Origin Declaration:</span> Product of Kenya</p>
               {order.declarations.map((declaration, index) => (
                 <p key={index}>
                   <span className="font-semibold">{declaration.type}:</span> {declaration.reference}
@@ -276,11 +361,18 @@ const OrderDetail = () => {
           <CardHeader>
             <CardTitle>Bank Details</CardTitle>
           </CardHeader>
-          <CardContent>
-            <p><span className="font-semibold">Bank Name:</span> {order.bankDetails.bankName}</p>
-            <p><span className="font-semibold">Account Name:</span> {order.bankDetails.accountName}</p>
-            <p><span className="font-semibold">Account Number:</span> {order.bankDetails.accountNumber}</p>
-            <p><span className="font-semibold">SWIFT Code:</span> {order.bankDetails.swiftCode}</p>
+          <CardContent className="grid grid-cols-2 gap-4">
+            <div>
+              <p><span className="font-semibold">Bank Name:</span> {order.bankDetails.bankName}</p>
+              <p><span className="font-semibold">Account Name:</span> {order.bankDetails.accountName}</p>
+              <p><span className="font-semibold">Account Number:</span> {order.bankDetails.accountNumber}</p>
+              <p><span className="font-semibold">SWIFT Code:</span> {order.bankDetails.swiftCode}</p>
+            </div>
+            <div className="text-right">
+              <p className="font-semibold mb-2">Authorized Signature</p>
+              <div className="h-20 border-b border-dashed"></div>
+              <p className="mt-2 text-sm text-muted-foreground">Digital signature pending</p>
+            </div>
           </CardContent>
         </Card>
       </div>
