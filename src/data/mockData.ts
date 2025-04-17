@@ -5,33 +5,35 @@ import { formatInspection } from './mockData-helpers';
 // KPI Mock Data for dashboard visualizations
 export const mockKPIData = {
   rejectionRates: {
+    quantity: 42,  // Added required quantity property
     percentage: 4.2,
     byRegion: [
-      { region: 'Chile', percentage: 5.8 },
-      { region: 'Kenya', percentage: 3.6 },
-      { region: 'Mexico', percentage: 4.1 },
-      { region: 'Peru', percentage: 3.9 }
+      { region: 'Chile', quantity: 15, percentage: 5.8 },
+      { region: 'Kenya', quantity: 12, percentage: 3.6 },
+      { region: 'Mexico', quantity: 8, percentage: 4.1 },
+      { region: 'Peru', quantity: 7, percentage: 3.9 }
     ],
     bySupplier: [
-      { supplier: 'Green Valley Farms', percentage: 6.2 },
-      { supplier: 'Highland Avocado Co.', percentage: 4.0 },
-      { supplier: 'Sunshine Growers', percentage: 3.8 },
-      { supplier: 'Fresh Fields Ltd', percentage: 3.5 }
+      { supplier: 'Green Valley Farms', quantity: 18, percentage: 6.2 },
+      { supplier: 'Highland Avocado Co.', quantity: 10, percentage: 4.0 },
+      { supplier: 'Sunshine Growers', quantity: 8, percentage: 3.8 },
+      { supplier: 'Fresh Fields Ltd', quantity: 6, percentage: 3.5 }
     ]
   },
   complianceBreaches: {
+    quantity: 37,  // Added required quantity property
     percentage: 3.7,
     byRegion: [
-      { region: 'Chile', percentage: 4.2 },
-      { region: 'Kenya', percentage: 3.1 },
-      { region: 'Mexico', percentage: 4.6 },
-      { region: 'Peru', percentage: 2.9 }
+      { region: 'Chile', quantity: 14, percentage: 4.2 },
+      { region: 'Kenya', quantity: 10, percentage: 3.1 },
+      { region: 'Mexico', quantity: 9, percentage: 4.6 },
+      { region: 'Peru', quantity: 4, percentage: 2.9 }
     ],
     bySupplier: [
-      { supplier: 'Green Valley Farms', percentage: 5.1 },
-      { supplier: 'Highland Avocado Co.', percentage: 3.3 },
-      { supplier: 'Sunshine Growers', percentage: 3.2 },
-      { supplier: 'Fresh Fields Ltd', percentage: 3.0 }
+      { supplier: 'Green Valley Farms', quantity: 15, percentage: 5.1 },
+      { supplier: 'Highland Avocado Co.', quantity: 9, percentage: 3.3 },
+      { supplier: 'Sunshine Growers', quantity: 8, percentage: 3.2 },
+      { supplier: 'Fresh Fields Ltd', quantity: 5, percentage: 3.0 }
     ]
   }
 };

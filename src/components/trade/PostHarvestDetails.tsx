@@ -43,6 +43,14 @@ interface PostHarvestDetailsProps {
 type SectionStatus = 'Compliant' | 'Issues Found' | 'Not Compliant';
 
 export const PostHarvestDetails = ({ details }: PostHarvestDetailsProps) => {
+  if (!details) {
+    return (
+      <div className="p-4 border rounded-lg bg-white text-center">
+        <p className="text-muted-foreground">No post-harvest inspection details available</p>
+      </div>
+    );
+  }
+
   const formatDate = (dateString: string) => {
     return new Date(dateString).toLocaleDateString(undefined, {
       year: 'numeric',
@@ -54,39 +62,37 @@ export const PostHarvestDetails = ({ details }: PostHarvestDetailsProps) => {
   const getSectionStatus = (section: keyof PostHarvestInspection): SectionStatus => {
     switch (section) {
       case 'farmIdentification':
-        // Check if all required fields are present and valid
-        return details.farmIdentification.registrationNumbers.length > 0 ? 'Compliant' : 'Issues Found';
+        return details.farmIdentification && details.farmIdentification.registrationNumbers && 
+               details.farmIdentification.registrationNumbers.length > 0 ? 'Compliant' : 'Issues Found';
       
       case 'traceability':
-        // Check if records are available and system is in place
-        return details.traceability.recordsAvailable ? 'Compliant' : 'Not Compliant';
+        return details.traceability && details.traceability.recordsAvailable ? 'Compliant' : 'Not Compliant';
       
       case 'gap':
-        // Check soil management compliance and water management
-        return details.gap.soilManagement.storageCompliance ? 'Compliant' : 'Issues Found';
+        return details.gap && details.gap.soilManagement && 
+               details.gap.soilManagement.storageCompliance ? 'Compliant' : 'Issues Found';
       
       case 'pestManagement':
-        // Check IPM strategy and storage security
-        return details.pestManagement.ipmStrategyPresent && 
+        return details.pestManagement && details.pestManagement.ipmStrategyPresent && 
+               details.pestManagement.pesticides && details.pestManagement.pesticides.storage && 
                details.pestManagement.pesticides.storage.secure ? 'Compliant' : 'Issues Found';
       
       case 'preHarvest':
-        // Check dry matter percentage and equipment condition
-        return details.preHarvest.dryMatterPercentage >= 21 ? 'Compliant' : 'Issues Found';
+        return details.preHarvest && details.preHarvest.dryMatterPercentage >= 21 ? 'Compliant' : 'Issues Found';
       
       case 'workerWelfare':
-        // Check facilities and first aid provisions
-        return details.workerWelfare.firstAid.kitsAvailable > 0 && 
-               details.workerWelfare.waterAccess.potable ? 'Compliant' : 'Issues Found';
+        return details.workerWelfare && details.workerWelfare.firstAid && 
+               details.workerWelfare.firstAid.kitsAvailable > 0 && 
+               details.workerWelfare.waterAccess && details.workerWelfare.waterAccess.potable ? 'Compliant' : 'Issues Found';
       
       case 'environmental':
-        // Check waste management and water protection measures
-        return details.environmental.waterProtection.measures.length > 0 ? 'Compliant' : 'Issues Found';
+        return details.environmental && details.environmental.waterProtection && 
+               details.environmental.waterProtection.measures && 
+               details.environmental.waterProtection.measures.length > 0 ? 'Compliant' : 'Issues Found';
       
       case 'finalEvaluation':
-        // Check export readiness
-        return details.finalEvaluation.exportReadiness === 'Ready' ? 'Compliant' :
-               details.finalEvaluation.exportReadiness === 'Minor Corrections Needed' ? 'Issues Found' : 'Not Compliant';
+        return details.finalEvaluation && details.finalEvaluation.exportReadiness === 'Ready' ? 'Compliant' :
+               details.finalEvaluation && details.finalEvaluation.exportReadiness === 'Minor Corrections Needed' ? 'Issues Found' : 'Not Compliant';
       
       default:
         return 'Issues Found';
@@ -128,8 +134,8 @@ export const PostHarvestDetails = ({ details }: PostHarvestDetailsProps) => {
     );
   };
 
-  const renderPhotos = (photos: { type: string; url: string; }[]) => {
-    if (!photos.length) return null;
+  const renderPhotos = (photos: { type: string; url: string; }[] | undefined) => {
+    if (!photos || !photos.length) return null;
     
     return (
       <div className="mt-4 border-t pt-4">
@@ -639,4 +645,4 @@ export const PostHarvestDetails = ({ details }: PostHarvestDetailsProps) => {
       </AccordionItem>
     </Accordion>
   );
-}; 
+};
