@@ -1,3 +1,4 @@
+
 import { Inspection, QualityCheck, Compliance } from '@/types';
 import {
   Card,

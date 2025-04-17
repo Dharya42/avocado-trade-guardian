@@ -1,1029 +1,248 @@
-import { Trade, KPIData } from '../types';
+import { Trade } from '@/types';
+import { formatInspection } from './mockData-helpers';
 
 export const mockTrades: Trade[] = [
   {
     id: '1',
-    tradeNumber: 'AVT-2023-001',
-    supplier: 'Green Highlands Avocado Farm',
+    tradeNumber: 'TRD-AVG-2023-001',
+    supplier: 'Green Highlands Avocado Farms',
     supplierCountry: 'Kenya',
-    buyer: 'Fresh Emirates Trading LLC',
-    buyerCountry: 'United Arab Emirates',
-    productType: 'Hass Avocado',
-    quantity: '12,000 kg',
-    departureDate: '2023-04-01',
-    arrivalDate: '2023-04-08',
+    buyer: 'Fresh Mart Distributors',
+    buyerCountry: 'UAE',
+    productType: 'Hass Avocados',
+    quantity: '24,000 kg (2,000 cartons)',
+    shipDate: '2023-04-05',
+    arrivalDate: '2023-04-09',
     status: 'Completed',
+    value: '$86,400',
     inspections: [
-      {
+      formatInspection({
         id: 'insp-001',
         type: 'Post-Harvest',
         date: '2023-03-28',
         location: 'Nairobi, Kenya',
         status: 'Passed',
         qualityChecks: [
-          { 
-            type: 'Physical', 
-            status: 'Passed', 
-            value: '8.5/10', 
-            threshold: '7/10',
-            details: 'Size uniformity (95%), Color development (dark green), Skin damage (<3%), Maturity stage (proper), No pest damage'
-          },
-          { 
-            type: 'Chemical', 
-            status: 'Passed', 
-            value: '0.02 ppm', 
-            threshold: '< 0.05 ppm',
-            details: 'Pesticide residue (0.02 ppm), Heavy metals (below detection limit), No prohibited chemicals'
-          },
-          { 
-            type: 'Moisture', 
-            status: 'Passed', 
-            value: '72%', 
-            threshold: '70-75%',
-            details: 'Optimal moisture content for transport and shelf life'
-          }
+          { type: 'Physical', value: 'Excellent', threshold: 'Good', status: 'Passed', details: 'Avocados are firm and free from physical damage.' },
+          { type: 'Chemical', value: 'Optimal', threshold: 'Optimal', status: 'Passed', details: 'Chemical analysis shows ideal maturity levels.' },
+          { type: 'Moisture', value: '70%', threshold: '65-75%', status: 'Passed', details: 'Moisture content within acceptable range.' }
         ],
         compliances: [
-          { 
-            name: 'UAE Food Import Standards', 
-            status: 'Passed', 
-            details: 'Certificate #UAE-ADAFSA-2023-456, meets all Gulf Standard Organization requirements' 
-          },
-          { 
-            name: 'KEPHIS Phytosanitary Certificate', 
-            status: 'Passed', 
-            details: 'Certificate #KE-PHY-2023-789, pest-free declaration issued' 
-          },
-          { 
-            name: 'Global GAP', 
-            status: 'Passed', 
-            details: 'Certificate #GG-2023-789, all good agricultural practices verified' 
-          }
+          { name: 'GLOBALG.A.P', status: 'Passed', details: 'Compliant with GLOBALG.A.P standards.' },
+          { name: 'HACCP', status: 'Passed', details: 'Compliant with HACCP food safety standards.' }
         ],
-        inspectionTools: ['AvocaDrone X3', 'QualityScan Pro', 'MoistureMeter 2000'],
+        inspectionTools: [
+          'Refractometer',
+          'Digital Scale',
+          'Color Chart',
+          'Sizing Rings'
+        ],
+        notes: 'Excellent quality overall. Fruit properly matured and sized.',
         lab: {
-          name: 'Kenya Agricultural Labs',
-          location: 'Nairobi, Kenya',
-          contactPerson: 'Dr. Kimani'
+          name: 'AgriQuality Labs',
+          location: 'Nairobi',
+          contactPerson: 'Dr. Mwangi'
         },
-        notes: 'Excellent quality batch, properly sorted and graded according to UAE market preferences. Extra care taken with cold chain management.',
         postHarvestDetails: {
-          farmIdentification: {
-            farmName: "Green Highlands Avocado Farm",
-            growerName: "John Kamau",
-            registrationNumbers: [
-              { type: "HCD", value: "HCD/2023/0123" },
-              { type: "KEPHIS", value: "KE-PHY-2023-456" }
-            ],
-            location: {
-              coordinates: "-1.2921,36.8219",
-              address: "Kiambu Road, Kiambu County"
-            },
-            areas: {
-              total: 50,
-              avocado: 35
-            },
-            varieties: ["Hass", "Fuerte"],
-            targetMarkets: ["UAE", "EU"],
-            associatedPackhouse: "Fresh Pack Kenya Ltd",
-            photos: [
-              { type: "farm_signage", url: "/mock/farm-signage.jpg" },
-              { type: "orchard_overview", url: "/mock/orchard.jpg" }
-            ]
-          },
-          traceability: {
-            systemType: "Digital",
-            recordsAvailable: true,
-            recordTypes: ["inputs", "harvest", "staff", "training"],
-            photos: [
-              { type: "block_id", url: "/mock/block-id.jpg" },
-              { type: "logbook", url: "/mock/logbook.jpg" }
-            ]
-          },
-          gap: {
-            siteHistory: "Previously coffee farm, converted to avocados in 2018",
-            soilManagement: {
-              fertilizers: [
-                {
-                  type: "Organic Compost",
-                  applicationDate: "2023-02-15",
-                  rate: "2.5 tons/ha"
-                },
-                {
-                  type: "NPK 17:17:17",
-                  applicationDate: "2023-03-01",
-                  rate: "200 kg/ha"
-                }
-              ],
-              storageCompliance: true
-            },
-            waterManagement: {
-              source: "Borehole",
-              qualityTestDate: "2023-01-15",
-              irrigationMethod: "Drip Irrigation",
-              testResults: "Compliant with drinking water standards"
-            },
-            photos: [
-              { type: "fertilizer_store", url: "/mock/fertilizer-store.jpg" },
-              { type: "irrigation", url: "/mock/irrigation.jpg" }
-            ]
-          },
-          pestManagement: {
-            ipmStrategyPresent: true,
-            monitoringLogs: [
-              {
-                date: "2023-03-20",
-                findings: "Low fruit fly presence",
-                action: "Pheromone traps installed"
-              },
-              {
-                date: "2023-03-15",
-                findings: "No significant pest pressure",
-                action: "Continued monitoring"
-              }
-            ],
-            pesticides: {
-              storage: {
-                secure: true,
-                conditions: "Locked, ventilated store with proper labeling"
-              },
-              records: [
-                {
-                  product: "Copper Oxychloride",
-                  applicationDate: "2023-02-28",
-                  phi: 14
-                }
-              ],
-              disposal: "Triple rinsing, puncturing, and authorized collection"
-            },
-            calibrationRecords: [
-              {
-                equipment: "Backpack Sprayer",
-                date: "2023-02-25",
-                result: "Calibrated to 16L/ha"
-              }
-            ],
-            photos: [
-              { type: "pesticide_store", url: "/mock/pesticide-store.jpg" },
-              { type: "traps", url: "/mock/traps.jpg" }
-            ]
-          },
-          preHarvest: {
-            maturityMethod: "Dry Matter Testing",
-            dryMatterPercentage: 23,
-            equipment: [
-              {
-                type: "Harvesting Poles",
-                condition: "Good",
-                lastMaintenance: "2023-03-15"
-              },
-              {
-                type: "Collection Crates",
-                condition: "Excellent",
-                lastMaintenance: "2023-03-20"
-              }
-            ],
-            trainingRecords: [
-              {
-                topic: "Harvest Maturity Assessment",
-                date: "2023-03-10",
-                attendees: 15
-              },
-              {
-                topic: "Safe Handling Practices",
-                date: "2023-03-11",
-                attendees: 15
-              }
-            ],
-            heatRemovalPlan: "Immediate transfer to on-site cold room within 2 hours of harvest",
-            photos: [
-              { type: "tools", url: "/mock/tools.jpg" },
-              { type: "collection_bins", url: "/mock/bins.jpg" }
-            ]
-          },
-          workerWelfare: {
-            hygieneTraining: [
-              {
-                date: "2023-03-01",
-                topics: ["Personal Hygiene", "Food Safety"],
-                trainer: "Sarah Njeri"
-              }
-            ],
-            facilities: [
-              {
-                type: "Toilet",
-                count: 4,
-                condition: "Good",
-                supplies: ["Toilet Paper", "Soap", "Water"]
-              },
-              {
-                type: "Handwashing Station",
-                count: 6,
-                condition: "Excellent",
-                supplies: ["Soap", "Paper Towels"]
-              }
-            ],
-            firstAid: {
-              kitsAvailable: 3,
-              trainedPersonnel: 2,
-              lastInspection: "2023-03-15"
-            },
-            waterAccess: {
-              points: 8,
-              potable: true,
-              testDate: "2023-02-15"
-            },
-            photos: [
-              { type: "facilities", url: "/mock/facilities.jpg" },
-              { type: "first_aid", url: "/mock/first-aid.jpg" }
-            ]
-          },
-          environmental: {
-            wasteManagement: {
-              plan: "Segregation of organic and inorganic waste, composting of organic materials",
-              collectionAreas: [
-                {
-                  type: "Organic Waste",
-                  condition: "Clean",
-                  lastCleaned: "2023-03-27"
-                },
-                {
-                  type: "Chemical Containers",
-                  condition: "Secure",
-                  lastCleaned: "2023-03-26"
-                }
-              ]
-            },
-            waterProtection: {
-              bufferZones: [
-                {
-                  location: "Stream Border",
-                  width: 10
-                }
-              ],
-              measures: ["Grass Strips", "Contour Planting"]
-            },
-            biodiversity: {
-              zones: [
-                {
-                  type: "Natural Forest",
-                  area: 5,
-                  species: ["Indigenous Trees", "Native Shrubs"]
-                }
-              ]
-            },
-            photos: [
-              { type: "waste_site", url: "/mock/waste.jpg" },
-              { type: "buffer_zone", url: "/mock/buffer.jpg" }
-            ]
-          },
-          finalEvaluation: {
-            strengths: [
-              "Strong traceability system",
-              "Well-maintained facilities",
-              "Comprehensive worker training"
-            ],
-            weaknesses: [
-              "Limited cold storage capacity",
-              "Some record keeping delays"
-            ],
-            nonConformities: [
-              {
-                severity: "Minor",
-                description: "Delayed updating of spray records",
-                correctiveAction: "Implement daily record update policy",
-                deadline: "2023-04-15"
-              }
-            ],
-            exportReadiness: "Minor Corrections Needed",
-            evaluator: {
-              name: "Dr. David Mwangi",
-              organization: "KEPHIS",
-              date: "2023-03-28"
-            }
-          }
+          harvestDate: '2023-03-27',
+          storageConditions: 'Cool, dry place',
+          pestControlUsed: 'None',
+          packagingType: 'Ventilated cartons',
+          transportMethod: 'Refrigerated trucks'
         }
-      },
-      {
+      }),
+      
+      formatInspection({
         id: 'insp-002',
         type: 'Pre-Shipment',
         date: '2023-03-30',
         location: 'Mombasa Port, Kenya',
         status: 'Passed',
         qualityChecks: [
-          { 
-            type: 'Physical', 
-            status: 'Passed', 
-            value: '8.2/10', 
-            threshold: '7/10',
-            details: 'Package integrity (100%), Palletization quality (excellent), Proper labeling (complete)'
-          },
-          { 
-            type: 'Moisture', 
-            status: 'Passed', 
-            value: '71%', 
-            threshold: '70-75%',
-            details: 'Stable moisture levels maintain fruit quality during transit'
-          }
+          { type: 'Physical', value: 'Excellent', threshold: 'Good', status: 'Passed', details: 'Avocados are firm and free from physical damage.' },
+          { type: 'Chemical', value: 'Optimal', threshold: 'Optimal', status: 'Passed', details: 'Chemical analysis shows ideal maturity levels.' },
+          { type: 'Moisture', value: '70%', threshold: '65-75%', status: 'Passed', details: 'Moisture content within acceptable range.' }
         ],
         compliances: [
-          { 
-            name: 'Container Integrity', 
-            status: 'Passed', 
-            details: 'Temperature control operational, set at 5.5°C, humidity at 90%' 
-          },
-          { 
-            name: 'Packaging Compliance', 
-            status: 'Passed', 
-            details: 'All packaging materials food-grade and halal-certified as per UAE requirements' 
-          },
-          { 
-            name: 'Export Documentation', 
-            status: 'Passed', 
-            details: 'Certificate of Origin, Commercial Invoice, Packing List verified' 
-          }
+          { name: 'GLOBALG.A.P', status: 'Passed', details: 'Compliant with GLOBALG.A.P standards.' },
+          { name: 'HACCP', status: 'Passed', details: 'Compliant with HACCP food safety standards.' }
         ],
-        inspectionTools: ['TempTrack Pro', 'ContainerScan X2', 'HumidityLogger'],
-        notes: 'Container properly sealed and maintained at optimal temperature. All documentation in order for UAE customs clearance.'
-      },
-      {
-        id: 'insp-003',
-        type: 'On-Arrival',
-        date: '2023-04-08',
-        location: 'Dubai, UAE',
-        status: 'Passed',
-        qualityChecks: [
-          { 
-            type: 'Physical', 
-            status: 'Passed', 
-            value: '8.0/10', 
-            threshold: '7/10',
-            details: 'Ripeness stage (ideal), Firmness (good), Overall appearance (excellent)'
-          },
-          { 
-            type: 'Chemical', 
-            status: 'Passed', 
-            value: '0.03 ppm', 
-            threshold: '< 0.05 ppm',
-            details: 'Pesticide residue (0.03 ppm), Ethylene levels (normal)'
-          },
-          { 
-            type: 'Moisture', 
-            status: 'Passed', 
-            value: '70%', 
-            threshold: '68-75%',
-            details: 'Moisture content appropriate for UAE market conditions'
-          }
+        inspectionTools: [
+          'Temperature Logger',
+          'Humidity Meter',
+          'Digital Camera',
+          'Sampling Tools'
         ],
-        compliances: [
-          { 
-            name: 'UAE ADAFSA Inspection', 
-            status: 'Passed', 
-            details: 'Dubai Municipality food safety team verified compliance with UAE.S GSO 2203:2017 standard' 
+        notes: 'Container properly sealed and temperature settings verified.',
+        preShipmentDetails: {
+          facilityIdentification: {
+            facilityName: "Fresh Pack Kenya Ltd",
+            registrationNumber: "PKH-2023-45678",
+            address: "Mombasa Export Processing Zone, Mombasa",
+            contactPerson: "Jane Kariuki",
+            phone: "+254 712 345 678",
+            email: "operations@freshpack.co.ke",
+            photos: [
+              { type: "facility_exterior", url: "https://images.unsplash.com/photo-1486312338219-ce68d2c6f44d" },
+              { type: "facility_signage", url: "https://images.unsplash.com/photo-1498050108023-c5249f4df085" }
+            ]
           },
-          { 
-            name: 'Halal Certification', 
-            status: 'Passed', 
-            details: 'Handling processes verified to maintain halal integrity' 
+          regulatoryCompliance: {
+            documentsValid: true,
+            certifications: [
+              { type: "GLOBALG.A.P", number: "GGN 4052852192286", expiryDate: "2023-12-31" },
+              { type: "HACCP", number: "HC-234-KE", expiryDate: "2023-11-15" },
+              { type: "ISO 22000", number: "ISO22-789-2023", expiryDate: "2024-06-30" }
+            ],
+            permits: [
+              { type: "Export Permit", number: "EXP-2023-4567", validUntil: "2023-04-30" },
+              { type: "Phytosanitary Certificate", number: "KEPHIS-PC-2023-789", validUntil: "2023-04-15" }
+            ],
+            photos: [
+              { type: "certifications", url: "https://images.unsplash.com/photo-1486718448742-163732cd1544" }
+            ]
           },
-          { 
-            name: 'Customs Clearance', 
-            status: 'Passed', 
-            details: 'All import duties paid and documentation verified' 
+          facilityCondition: {
+            maintenanceStatus: "Good",
+            cleanlinessRating: 8,
+            pestControl: {
+              program: "Integrated Pest Management",
+              lastInspection: "2023-03-15",
+              findings: "No evidence of pests found"
+            },
+            repairs: [
+              { area: "Loading Dock Door", issue: "Seal damaged", status: "Scheduled", date: "2023-04-10" }
+            ],
+            photos: [
+              { type: "facility_interior", url: "https://images.unsplash.com/photo-1460925895917-afdab827c52f" },
+              { type: "pest_control", url: "https://images.unsplash.com/photo-1517022812141-23620dba5c23" }
+            ]
+          },
+          receivingArea: {
+            temperature: {
+              current: 20,
+              required: "18-22",
+              withinRange: true
+            },
+            loadingDocks: [
+              { number: 1, condition: "Good", cleanliness: "Clean" },
+              { number: 2, condition: "Good", cleanliness: "Clean" }
+            ],
+            photos: [
+              { type: "receiving_area", url: "https://images.unsplash.com/photo-1581091226825-a6a2a5aee158" }
+            ]
+          },
+          processingLine: {
+            equipmentCondition: "Operational",
+            stations: [
+              { name: "Washing Station", status: "Operational", lastMaintenance: "2023-03-01", notes: "Running efficiently" },
+              { name: "Sorting Line", status: "Operational", lastMaintenance: "2023-03-05", notes: "New sorting sensors installed" },
+              { name: "Grading Station", status: "Operational", lastMaintenance: "2023-03-05", notes: "Calibrated" }
+            ],
+            calibration: [
+              { equipment: "Weight Sorter", lastCalibrated: "2023-03-15", nextDue: "2023-04-15" },
+              { equipment: "Size Grader", lastCalibrated: "2023-03-15", nextDue: "2023-04-15" }
+            ],
+            photos: [
+              { type: "processing_line", url: "https://images.unsplash.com/photo-1518770660439-4636190af475" },
+              { type: "washing_station", url: "https://images.unsplash.com/photo-1487958449943-2429e8be8625" }
+            ]
+          },
+          qualityControl: {
+            proceduresFollowed: true,
+            checkpoints: [
+              { 
+                station: "Receiving", 
+                parameters: ["Ripeness", "Defects", "Sizing"],
+                frequency: "Each batch",
+                responsible: "QC Officer"
+              },
+              { 
+                station: "Pre-Shipping", 
+                parameters: ["Temperature", "Packaging Integrity", "Labeling"],
+                frequency: "Each container",
+                responsible: "QC Manager"
+              }
+            ],
+            samples: [
+              { type: "External Quality", quantity: "n=60 from 3 pallets", results: "Meets specifications", date: "2023-03-30" },
+              { type: "Internal Quality", quantity: "n=20 from 3 pallets", results: "Meets specifications", date: "2023-03-30" }
+            ],
+            photos: [
+              { type: "quality_check", url: "https://images.unsplash.com/photo-1485827404703-89b55fcc595e" }
+            ]
+          },
+          packingLabeling: {
+            materialsCompliant: true,
+            packaging: [
+              { type: "Cartons", condition: "New", quantity: "Sufficient" },
+              { type: "Liners", condition: "New", quantity: "Sufficient" }
+            ],
+            labels: [
+              { type: "Product Labels", compliance: true, notes: "All information correct and legible" },
+              { type: "Carton Markings", compliance: true, notes: "Properly printed with all required information" }
+            ],
+            photos: [
+              { type: "packaging_materials", url: "https://images.unsplash.com/photo-1581090464777-f3220bbe1b8b" },
+              { type: "labeled_carton", url: "https://images.unsplash.com/photo-1585909695284-32d2985ac9c0" }
+            ]
+          },
+          storage: {
+            temperature: {
+              current: 5.5,
+              required: "5-7",
+              withinRange: true
+            },
+            humidity: {
+              current: 90,
+              required: "85-95",
+              withinRange: true
+            },
+            areas: [
+              { name: "Pre-Cooling Room", capacity: "10,000 kg", currentUsage: "60%", condition: "Good" },
+              { name: "Cold Storage", capacity: "30,000 kg", currentUsage: "40%", condition: "Good" }
+            ],
+            photos: [
+              { type: "cold_storage", url: "https://images.unsplash.com/photo-1601599924803-f5d841fa2c5a" }
+            ]
+          },
+          workerHygiene: {
+            trainingCurrent: true,
+            personnel: [
+              { role: "Line Workers", certified: true, lastTraining: "2023-02-15" },
+              { role: "Quality Control", certified: true, lastTraining: "2023-02-15" },
+              { role: "Supervisors", certified: true, lastTraining: "2023-01-20" }
+            ],
+            facilities: [
+              { type: "Handwashing Stations", condition: "Good", adequacy: "Sufficient" },
+              { type: "Sanitation Facilities", condition: "Good", adequacy: "Sufficient" },
+              { type: "Change Rooms", condition: "Good", adequacy: "Sufficient" }
+            ],
+            photos: [
+              { type: "worker_ppe", url: "https://images.unsplash.com/photo-1499366440726-c474dd1fbd7d" },
+              { type: "handwashing_station", url: "https://images.unsplash.com/photo-1605810230434-7631ac76ec81" }
+            ]
+          },
+          finalAssessment: {
+            readyForShipment: true,
+            issues: [
+              { category: "Documentation", description: "Missing carrier's contact information", severity: "Minor", action: "Update before dispatch" }
+            ],
+            recommendations: [
+              "Ensure all temperature loggers are properly activated before container sealing",
+              "Provide additional training on new labeling requirements coming next quarter"
+            ],
+            approver: {
+              name: "David Mwangi",
+              position: "Pre-Shipment Inspector",
+              date: "2023-03-30"
+            },
+            photos: [
+              { type: "container_loading", url: "https://images.unsplash.com/photo-1578575437130-527eed3abbec" }
+            ]
           }
-        ],
-        inspectionTools: ['QualityScan Pro', 'AvocaDrone X3', 'TempTrack Pro'],
-        lab: {
-          name: 'UAE Food Control Laboratory',
-          location: 'Dubai, UAE',
-          contactPerson: 'Dr. Al-Mansoori'
         }
-      },
-      {
-        id: 'insp-004',
-        type: 'Warehouse',
-        date: '2023-04-09',
-        location: 'Fresh Emirates Warehouse, Dubai',
-        status: 'Passed',
-        qualityChecks: [
-          { 
-            type: 'Physical', 
-            status: 'Passed', 
-            value: '7.9/10', 
-            threshold: '7/10',
-            details: 'Display quality (excellent), Shelf arrangement (optimal), Consumer packaging integrity (100%)'
-          },
-          { 
-            type: 'Moisture', 
-            status: 'Passed', 
-            value: '69%', 
-            threshold: '65-75%',
-            details: 'Moisture levels appropriate for UAE retail environment'
-          }
-        ],
-        compliances: [
-          { 
-            name: 'Storage Conditions', 
-            status: 'Passed', 
-            details: 'Temperature (5°C) and humidity (85%) optimal for UAE climate conditions' 
-          },
-          { 
-            name: 'Shelf Life Assessment', 
-            status: 'Passed', 
-            details: 'Estimated 7 days remaining in ideal retail conditions' 
-          },
-          { 
-            name: 'UAE Retail Standards', 
-            status: 'Passed', 
-            details: 'All labeling in Arabic and English, nutrition facts compliant with UAE regulations' 
-          }
-        ],
-        inspectionTools: ['RipeScan Pro', 'TempTrack Pro', 'ShelfLife Analyzer'],
-        notes: 'Product properly stored in temperature-controlled environment optimized for UAE market conditions.'
-      }
+      }),
     ]
   },
-  {
-    id: '2',
-    tradeNumber: 'AVT-2023-002',
-    supplier: 'Kenyan Avocado Cooperative',
-    supplierCountry: 'Kenya',
-    buyer: 'Royal Greens Trading',
-    buyerCountry: 'United Arab Emirates',
-    productType: 'Hass Avocado',
-    quantity: '8,500 kg',
-    departureDate: '2023-04-15',
-    arrivalDate: '2023-04-25',
-    status: 'Completed',
-    inspections: [
-      {
-        id: 'insp-005',
-        type: 'Post-Harvest',
-        date: '2023-04-12',
-        location: 'Nakuru, Kenya',
-        status: 'Passed',
-        qualityChecks: [
-          { 
-            type: 'Physical', 
-            status: 'Passed', 
-            value: '8.7/10', 
-            threshold: '7/10',
-            details: 'Size grading (premium), External appearance (excellent), Weight consistency (92%)'
-          },
-          { 
-            type: 'Chemical', 
-            status: 'Passed', 
-            value: '0.01 ppm', 
-            threshold: '< 0.05 ppm',
-            details: 'Pesticide residue (minimal), Fungicide levels (within limits), No prohibited substances'
-          },
-          { 
-            type: 'Moisture', 
-            status: 'Passed', 
-            value: '73%', 
-            threshold: '70-75%',
-            details: 'Ideal moisture levels for export quality'
-          }
-        ],
-        compliances: [
-          { 
-            name: 'UAE Food Import Standards', 
-            status: 'Passed', 
-            details: 'Certificate #UAE-ADAFSA-2023-789, meets all Gulf Standard Organization requirements' 
-          },
-          { 
-            name: 'KEPHIS Certification', 
-            status: 'Passed', 
-            details: 'Certificate #KE-PHY-2023-456, pest-free declaration issued' 
-          },
-          { 
-            name: 'Global GAP', 
-            status: 'Passed', 
-            details: 'Certificate #GG-2023-123, all good agricultural practices verified' 
-          }
-        ],
-        inspectionTools: ['AvocaDrone X3', 'QualityScan Pro', 'ResidueAnalyzer 3000'],
-        lab: {
-          name: 'Kenya Plant Health Inspection Service',
-          location: 'Nakuru, Kenya',
-          contactPerson: 'Dr. Omondi'
-        }
-      },
-      {
-        id: 'insp-006',
-        type: 'Pre-Shipment',
-        date: '2023-04-14',
-        location: 'Mombasa Port, Kenya',
-        status: 'Passed',
-        qualityChecks: [
-          { 
-            type: 'Physical', 
-            status: 'Passed', 
-            value: '8.5/10', 
-            threshold: '7/10',
-            details: 'Packaging quality (excellent), Carton strength (superior), Stacking arrangement (optimal)'
-          },
-          { 
-            type: 'Moisture', 
-            status: 'Passed', 
-            value: '72%', 
-            threshold: '70-75%',
-            details: 'Consistent moisture levels across all pallets'
-          }
-        ],
-        compliances: [
-          { 
-            name: 'Container Integrity', 
-            status: 'Passed', 
-            details: 'Temperature control operational, set at 5.0°C, humidity at 90%' 
-          },
-          { 
-            name: 'Packaging Compliance', 
-            status: 'Passed', 
-            details: 'All packaging materials food-grade and halal-certified as per UAE requirements' 
-          },
-          { 
-            name: 'Export Documentation', 
-            status: 'Passed', 
-            details: 'All required documents for UAE customs verified and complete' 
-          }
-        ],
-        inspectionTools: ['TempTrack Pro', 'ContainerScan X2', 'DocVerify System']
-      },
-      {
-        id: 'insp-007',
-        type: 'On-Arrival',
-        date: '2023-04-25',
-        location: 'Abu Dhabi, UAE',
-        status: 'Failed',
-        qualityChecks: [
-          { 
-            type: 'Physical', 
-            status: 'Failed', 
-            value: '6.5/10', 
-            threshold: '7/10',
-            details: 'Evidence of poor temperature control during transit, 15% of fruit showing cold damage'
-          },
-          { 
-            type: 'Chemical', 
-            status: 'Passed', 
-            value: '0.02 ppm', 
-            threshold: '< 0.05 ppm',
-            details: 'Chemical analysis within acceptable parameters'
-          },
-          { 
-            type: 'Moisture', 
-            status: 'Passed', 
-            value: '71%', 
-            threshold: '70-75%',
-            details: 'Moisture content acceptable despite temperature issues'
-          }
-        ],
-        compliances: [
-          { 
-            name: 'ADAFSA Regulations', 
-            status: 'Passed', 
-            details: 'Meets basic import requirements' 
-          },
-          { 
-            name: 'Temperature Log', 
-            status: 'Failed', 
-            details: 'Temperature fluctuations detected during transit, fell below 2°C for 6 hours' 
-          },
-          { 
-            name: 'UAE Quality Standards', 
-            status: 'Failed', 
-            details: 'Physical condition does not meet premium grade requirements as specified in contract' 
-          }
-        ],
-        inspectionTools: ['QualityScan Pro', 'TempTrack Pro', 'ColdDamage Analyzer'],
-        lab: {
-          name: 'Abu Dhabi Food Control Authority Lab',
-          location: 'Abu Dhabi, UAE',
-          contactPerson: 'Dr. Al-Hashimi'
-        },
-        notes: 'Temperature monitoring equipment failure identified. Shipment placed on hold pending negotiation with supplier.'
-      }
-    ]
-  },
-  {
-    id: '3',
-    tradeNumber: 'AVT-2023-003',
-    supplier: 'Rift Valley Avocado Farms',
-    supplierCountry: 'Kenya',
-    buyer: 'Al Wahat Fresh Produce',
-    buyerCountry: 'United Arab Emirates',
-    productType: 'Hass Avocado',
-    quantity: '12,000 kg',
-    departureDate: '2023-05-01',
-    status: 'In Transit',
-    inspections: [
-      {
-        id: 'insp-008',
-        type: 'Post-Harvest',
-        date: '2023-04-28',
-        location: 'Eldoret, Kenya',
-        status: 'Passed',
-        qualityChecks: [
-          { 
-            type: 'Physical', 
-            status: 'Passed', 
-            value: '8.3/10', 
-            threshold: '7/10',
-            details: 'Fruit size uniformity (90%), Shape consistency (excellent), Color development (proper)'
-          },
-          { 
-            type: 'Chemical', 
-            status: 'Passed', 
-            value: '0.02 ppm', 
-            threshold: '< 0.05 ppm',
-            details: 'Pesticide residue below UAE tolerance limits, No banned substances detected'
-          },
-          { 
-            type: 'Moisture', 
-            status: 'Passed', 
-            value: '72%', 
-            threshold: '70-75%',
-            details: 'Optimal moisture content for long-distance shipping'
-          }
-        ],
-        compliances: [
-          { 
-            name: 'UAE Import Standards', 
-            status: 'Passed', 
-            details: 'Certificate #UAE-ADAFSA-2023-901, meets all Gulf Standard Organization requirements' 
-          },
-          { 
-            name: 'KEPHIS Phytosanitary', 
-            status: 'Passed', 
-            details: 'Certificate #KE-PHY-2023-789, all pest control measures verified' 
-          },
-          { 
-            name: 'Global GAP', 
-            status: 'Passed', 
-            details: 'Certificate #GG-2023-456, sustainable farming practices confirmed' 
-          }
-        ],
-        inspectionTools: ['AvocaDrone X3', 'QualityScan Pro', 'PesticideDetector 2000'],
-        lab: {
-          name: 'Kenya Agricultural Research Lab',
-          location: 'Eldoret, Kenya',
-          contactPerson: 'Dr. Wangari'
-        }
-      },
-      {
-        id: 'insp-009',
-        type: 'Pre-Shipment',
-        date: '2023-04-30',
-        location: 'Mombasa Port, Kenya',
-        status: 'Passed',
-        qualityChecks: [
-          { 
-            type: 'Physical', 
-            status: 'Passed', 
-            value: '8.1/10', 
-            threshold: '7/10',
-            details: 'Packaging integrity (100%), Label compliance (complete), Palletization quality (excellent)'
-          },
-          { 
-            type: 'Moisture', 
-            status: 'Passed', 
-            value: '71%', 
-            threshold: '70-75%',
-            details: 'Consistent moisture readings across sample points'
-          }
-        ],
-        compliances: [
-          { 
-            name: 'Container Integrity', 
-            status: 'Passed', 
-            details: 'Temperature control operational, set at 5.5°C, humidity at 90%, new calibrated sensors installed' 
-          },
-          { 
-            name: 'Packaging Compliance', 
-            status: 'Passed', 
-            details: 'All packaging materials food-grade and halal-certified as per UAE requirements' 
-          },
-          { 
-            name: 'UAE Documentation', 
-            status: 'Passed', 
-            details: 'All required documentation for UAE market entry complete and verified' 
-          }
-        ],
-        inspectionTools: ['TempTrack Pro', 'ContainerScan X2', 'HumidityMonitor Advanced'],
-        notes: 'Container properly sealed and maintained at optimal temperature. Additional temperature monitoring equipment installed due to previous shipment issues. All UAE import documentation prepared.'
-      }
-    ]
-  },
-  {
-    id: '4',
-    tradeNumber: 'AVT-2023-004',
-    supplier: 'Mount Kenya Organics',
-    supplierCountry: 'Kenya',
-    buyer: 'Emirates Organic Foods',
-    buyerCountry: 'United Arab Emirates',
-    productType: 'Hass Avocado',
-    quantity: '15,000 kg',
-    departureDate: '2023-03-15',
-    arrivalDate: '2023-03-28',
-    status: 'Rejected',
-    inspections: [
-      {
-        id: 'insp-010',
-        type: 'Post-Harvest',
-        date: '2023-03-12',
-        location: 'Nyeri, Kenya',
-        status: 'Passed',
-        qualityChecks: [
-          { 
-            type: 'Physical', 
-            status: 'Passed', 
-            value: '8.0/10', 
-            threshold: '7/10',
-            details: 'Size grading (premium), External appearance (excellent), Stem cut quality (clean)'
-          },
-          { 
-            type: 'Chemical', 
-            status: 'Passed', 
-            value: '0.03 ppm', 
-            threshold: '< 0.05 ppm',
-            details: 'Organic certification verified, No synthetic pesticides detected'
-          },
-          { 
-            type: 'Moisture', 
-            status: 'Passed', 
-            value: '72%', 
-            threshold: '70-75%',
-            details: 'Moisture content within optimal range for export'
-          }
-        ],
-        compliances: [
-          { 
-            name: 'UAE Organic Import Standards', 
-            status: 'Passed', 
-            details: 'Certificate #UAE-ORG-2023-123, meets Emirates Authority for Standardization & Metrology requirements' 
-          },
-          { 
-            name: 'KEPHIS Organic Certification', 
-            status: 'Passed', 
-            details: 'Certificate #KE-ORG-2023-456, organic growing practices verified' 
-          },
-          { 
-            name: 'Global GAP', 
-            status: 'Passed', 
-            details: 'Certificate #GG-2023-789, sustainable farming practices confirmed' 
-          }
-        ],
-        inspectionTools: ['OrganicVerifier Pro', 'QualityScan Pro', 'AvocaDrone X3'],
-        lab: {
-          name: 'Kenya Organic Certification Lab',
-          location: 'Nyeri, Kenya',
-          contactPerson: 'Dr. Njoroge'
-        }
-      },
-      {
-        id: 'insp-011',
-        type: 'Pre-Shipment',
-        date: '2023-03-14',
-        location: 'Mombasa Port, Kenya',
-        status: 'Passed',
-        qualityChecks: [
-          { 
-            type: 'Physical', 
-            status: 'Passed', 
-            value: '7.8/10', 
-            threshold: '7/10',
-            details: 'Packaging integrity (good), Stacking arrangement (proper), Label compliance (complete)'
-          },
-          { 
-            type: 'Moisture', 
-            status: 'Passed', 
-            value: '71%', 
-            threshold: '70-75%',
-            details: 'Moisture readings consistent across all pallets'
-          }
-        ],
-        compliances: [
-          { 
-            name: 'Container Integrity', 
-            status: 'Passed', 
-            details: 'Temperature control operational, set at 5.5°C, humidity at 90%' 
-          },
-          { 
-            name: 'Organic Packaging Compliance', 
-            status: 'Passed', 
-            details: 'All packaging materials eco-friendly and compliant with UAE organic standards' 
-          },
-          { 
-            name: 'Export Documentation', 
-            status: 'Passed', 
-            details: 'All organic certification and export documents verified' 
-          }
-        ],
-        inspectionTools: ['TempTrack Pro', 'ContainerScan X2', 'OrganicVerifier Pro']
-      },
-      {
-        id: 'insp-012',
-        type: 'On-Arrival',
-        date: '2023-03-28',
-        location: 'Dubai, UAE',
-        status: 'Failed',
-        qualityChecks: [
-          { 
-            type: 'Physical', 
-            status: 'Failed', 
-            value: '5.5/10', 
-            threshold: '7/10',
-            details: 'Extensive fungal growth detected on 40% of fruit, Black spots present, Accelerated ripening'
-          },
-          { 
-            type: 'Chemical', 
-            status: 'Failed', 
-            value: '0.08 ppm', 
-            threshold: '< 0.05 ppm',
-            details: 'Elevated ethylene levels, Mycotoxin presence detected at 0.08 ppm (above UAE limits)'
-          },
-          { 
-            type: 'Moisture', 
-            status: 'Failed', 
-            value: '80%', 
-            threshold: '70-75%',
-            details: 'Excessive moisture content indicating improper ventilation during transit'
-          }
-        ],
-        compliances: [
-          { 
-            name: 'UAE Food Safety Compliance', 
-            status: 'Failed', 
-            details: 'Mycotoxin levels exceed UAE maximum residue limits' 
-          },
-          { 
-            name: 'ADAFSA Regulations', 
-            status: 'Failed', 
-            details: 'Visual quality standards not met, potential health risk identified' 
-          },
-          { 
-            name: 'Organic Certification', 
-            status: 'Failed', 
-            details: 'Product condition compromised, no longer suitable for premium organic market' 
-          }
-        ],
-        inspectionTools: ['QualityScan Pro', 'ChemAnalyzer X1', 'MycotoxinDetector'],
-        lab: {
-          name: 'Dubai Central Food Lab',
-          location: 'Dubai, UAE',
-          contactPerson: 'Dr. Al-Falasi'
-        },
-        notes: 'Significant quality deterioration during transit. Signs of fungal growth and excessive ripening. Container temperature log shows multiple critical failures. Full shipment rejected and documentation submitted to Kenyan authorities for investigation. Humidity control system failure suspected.'
-      }
-    ]
-  },
-  {
-    id: '5',
-    tradeNumber: 'AVT-2023-005',
-    supplier: 'Machakos Avocado Growers',
-    supplierCountry: 'Kenya',
-    buyer: 'Sharjah Fruit Importers',
-    buyerCountry: 'United Arab Emirates',
-    productType: 'Hass Avocado',
-    quantity: '9,000 kg',
-    departureDate: '2023-05-10',
-    status: 'In Transit',
-    inspections: [
-      {
-        id: 'insp-013',
-        type: 'Post-Harvest',
-        date: '2023-05-07',
-        location: 'Machakos, Kenya',
-        status: 'Passed',
-        qualityChecks: [
-          { 
-            type: 'Physical', 
-            status: 'Passed', 
-            value: '8.6/10', 
-            threshold: '7/10',
-            details: 'Size uniformity (excellent), Color consistency (proper), Defect-free (95%)'
-          },
-          { 
-            type: 'Chemical', 
-            status: 'Passed', 
-            value: '0.01 ppm', 
-            threshold: '< 0.05 ppm',
-            details: 'Pesticide residue minimal, No prohibited substances for UAE market detected'
-          },
-          { 
-            type: 'Moisture', 
-            status: 'Passed', 
-            value: '73%', 
-            threshold: '70-75%',
-            details: 'Optimal moisture content for long-distance shipping'
-          }
-        ],
-        compliances: [
-          { 
-            name: 'UAE Import Standards', 
-            status: 'Passed', 
-            details: 'Certificate #UAE-ADAFSA-2023-567, meets all Gulf Standard Organization requirements' 
-          },
-          { 
-            name: 'KEPHIS Certification', 
-            status: 'Passed', 
-            details: 'Certificate #KE-PHY-2023-234, pest-free declaration issued' 
-          },
-          { 
-            name: 'Global GAP', 
-            status: 'Passed', 
-            details: 'Certificate #GG-2023-890, good agricultural practices verified' 
-          }
-        ],
-        inspectionTools: ['AvocaDrone X3', 'QualityScan Pro', 'DensityAnalyzer'],
-        lab: {
-          name: 'Kenya Agriculture and Food Authority Lab',
-          location: 'Machakos, Kenya',
-          contactPerson: 'Dr. Mwangi'
-        }
-      },
-      {
-        id: 'insp-014',
-        type: 'Pre-Shipment',
-        date: '2023-05-09',
-        location: 'Mombasa Port, Kenya',
-        status: 'Passed',
-        qualityChecks: [
-          { 
-            type: 'Physical', 
-            status: 'Passed', 
-            value: '8.4/10', 
-            threshold: '7/10',
-            details: 'Packaging quality (superior), Carton strength (excellent), Labeling compliance (100%)'
-          },
-          { 
-            type: 'Moisture', 
-            status: 'Passed', 
-            value: '72%', 
-            threshold: '70-75%',
-            details: 'Consistent moisture levels appropriate for sea transportation'
-          }
-        ],
-        compliances: [
-          { 
-            name: 'Container Integrity', 
-            status: 'Passed', 
-            details: 'Temperature control operational, set at 5.0°C, humidity at 90%, triple redundant monitoring installed' 
-          },
-          { 
-            name: 'Packaging Compliance', 
-            status: 'Passed', 
-            details: 'All packaging materials food-grade and halal-certified as per UAE requirements' 
-          },
-          { 
-            name: 'UAE Custom Requirements', 
-            status: 'Passed', 
-            details: 'All documentation prepared according to latest UAE import regulations' 
-          }
-        ],
-        inspectionTools: ['TempTrack Pro', 'ContainerScan X2', 'SmartSensor Network'],
-        notes: 'Container properly sealed and maintained at optimal temperature. Enhanced temperature and humidity monitoring systems installed with satellite reporting. All UAE import documentation prepared with additional verification steps.'
-      }
-    ]
-  }
 ];
-
-export const mockKPIData: KPIData = {
-  rejectionRates: {
-    quantity: 2,
-    percentage: 22.2,
-    byRegion: [
-      { region: 'Nairobi, Kenya', quantity: 0, percentage: 0 },
-      { region: 'Nakuru, Kenya', quantity: 1, percentage: 50 },
-      { region: 'Nyeri, Kenya', quantity: 1, percentage: 100 },
-      { region: 'Eldoret, Kenya', quantity: 0, percentage: 0 },
-      { region: 'Machakos, Kenya', quantity: 0, percentage: 0 }
-    ],
-    bySupplier: [
-      { supplier: 'Green Highlands Avocado Farm', quantity: 0, percentage: 0 },
-      { supplier: 'Kenyan Avocado Cooperative', quantity: 1, percentage: 100 },
-      { supplier: 'Rift Valley Avocado Farms', quantity: 0, percentage: 0 },
-      { supplier: 'Mount Kenya Organics', quantity: 1, percentage: 100 },
-      { supplier: 'Machakos Avocado Growers', quantity: 0, percentage: 0 }
-    ]
-  },
-  complianceBreaches: {
-    quantity: 3,
-    percentage: 33.3,
-    byRegion: [
-      { region: 'Nairobi, Kenya', quantity: 0, percentage: 0 },
-      { region: 'Nakuru, Kenya', quantity: 1, percentage: 50 },
-      { region: 'Nyeri, Kenya', quantity: 2, percentage: 100 },
-      { region: 'Eldoret, Kenya', quantity: 0, percentage: 0 },
-      { region: 'Machakos, Kenya', quantity: 0, percentage: 0 }
-    ],
-    bySupplier: [
-      { supplier: 'Green Highlands Avocado Farm', quantity: 0, percentage: 0 },
-      { supplier: 'Kenyan Avocado Cooperative', quantity: 1, percentage: 100 },
-      { supplier: 'Rift Valley Avocado Farms', quantity: 0, percentage: 0 },
-      { supplier: 'Mount Kenya Organics', quantity: 2, percentage: 100 },
-      { supplier: 'Machakos Avocado Growers', quantity: 0, percentage: 0 }
-    ]
-  }
-};

@@ -221,17 +221,13 @@ export interface Inspection {
   date: string;
   location: string;
   status: 'Passed' | 'Failed' | 'Pending';
-  postHarvestDetails?: PostHarvestInspection;
-  preShipmentDetails?: PreShipmentInspection;
   qualityChecks: QualityCheck[];
   compliances: Compliance[];
   inspectionTools: string[];
-  lab?: {
-    name: string;
-    location: string;
-    contactPerson?: string;
-  };
+  lab?: Lab;
   notes?: string;
+  postHarvestDetails?: PostHarvestInspection;
+  preShipmentDetails?: PreShipmentInspection;
   createdAt: string;
   updatedAt: string;
 }
