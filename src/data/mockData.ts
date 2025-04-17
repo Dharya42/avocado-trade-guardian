@@ -1,5 +1,40 @@
+
 import { Trade } from '@/types';
 import { formatInspection } from './mockData-helpers';
+
+// KPI Mock Data for dashboard visualizations
+export const mockKPIData = {
+  rejectionRates: {
+    percentage: 4.2,
+    byRegion: [
+      { region: 'Chile', percentage: 5.8 },
+      { region: 'Kenya', percentage: 3.6 },
+      { region: 'Mexico', percentage: 4.1 },
+      { region: 'Peru', percentage: 3.9 }
+    ],
+    bySupplier: [
+      { supplier: 'Green Valley Farms', percentage: 6.2 },
+      { supplier: 'Highland Avocado Co.', percentage: 4.0 },
+      { supplier: 'Sunshine Growers', percentage: 3.8 },
+      { supplier: 'Fresh Fields Ltd', percentage: 3.5 }
+    ]
+  },
+  complianceBreaches: {
+    percentage: 3.7,
+    byRegion: [
+      { region: 'Chile', percentage: 4.2 },
+      { region: 'Kenya', percentage: 3.1 },
+      { region: 'Mexico', percentage: 4.6 },
+      { region: 'Peru', percentage: 2.9 }
+    ],
+    bySupplier: [
+      { supplier: 'Green Valley Farms', percentage: 5.1 },
+      { supplier: 'Highland Avocado Co.', percentage: 3.3 },
+      { supplier: 'Sunshine Growers', percentage: 3.2 },
+      { supplier: 'Fresh Fields Ltd', percentage: 3.0 }
+    ]
+  }
+};
 
 export const mockTrades: Trade[] = [
   {
@@ -11,8 +46,9 @@ export const mockTrades: Trade[] = [
     buyerCountry: 'UAE',
     productType: 'Hass Avocados',
     quantity: '24,000 kg (2,000 cartons)',
-    shipDate: '2023-04-05',
-    arrivalDate: '2023-04-09',
+    // Use the proper format for shipDate and arrivalDate to match the Trade type
+    shipDate: new Date('2023-04-05').toISOString(),
+    arrivalDate: new Date('2023-04-09').toISOString(),
     status: 'Completed',
     value: '$86,400',
     inspections: [

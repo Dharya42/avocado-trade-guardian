@@ -241,9 +241,10 @@ export interface Trade {
   buyerCountry: string;
   productType: string;
   quantity: string;
-  departureDate?: string;
-  arrivalDate?: string;
-  status: 'In Transit' | 'Completed' | 'Rejected';
+  shipDate: string;
+  arrivalDate: string;
+  status: string;
+  value: string;
   inspections: Inspection[];
 }
 
