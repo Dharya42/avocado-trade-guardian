@@ -1,8 +1,9 @@
+
 import { useState } from 'react';
 import { NavLink, useLocation, useMatch, useNavigate } from 'react-router-dom';
 import { LayoutGrid, BarChart3, AlertCircle, ChevronLeft, ChevronRight, Menu, LogOut, ClipboardList } from 'lucide-react';
 import { cn } from '@/lib/utils';
-import { useMobile } from '@/hooks/use-mobile';
+import { useIsMobile as useMobile } from '@/hooks/use-mobile';
 import {
   Popover,
   PopoverContent,
@@ -72,12 +73,10 @@ export const CustomSidebar = ({ collapsed, setCollapsed }: { collapsed: boolean,
 
       <div
         className={cn(
-          "fixed inset-y-0 left-0 z-40 flex flex-col bg-background border-r transition-transform duration-300",
+          "fixed inset-y-0 left-0 z-40 flex flex-col bg-background border-r transition-all duration-300",
           {
-            "translate-x-0": isSidebarOpen,
-            "-translate-x-full": !isSidebarOpen,
             "w-64": !collapsed,
-            "w-16": collapsed && !isMobile,
+            "w-16": collapsed,
           }
         )}
       >
@@ -87,19 +86,18 @@ export const CustomSidebar = ({ collapsed, setCollapsed }: { collapsed: boolean,
               Avocado Trace
             </h1>
           )}
-          {!isMobile && (
-            <Button
-              variant="ghost"
-              size="icon"
-              onClick={toggleSidebar}
-            >
-              {collapsed ? (
-                <ChevronRight className="h-4 w-4" />
-              ) : (
-                <ChevronLeft className="h-4 w-4" />
-              )}
-            </Button>
-          )}
+          <Button
+            variant="ghost"
+            size="icon"
+            onClick={toggleSidebar}
+            className={collapsed ? "mx-auto" : ""}
+          >
+            {collapsed ? (
+              <ChevronRight className="h-4 w-4" />
+            ) : (
+              <ChevronLeft className="h-4 w-4" />
+            )}
+          </Button>
         </div>
 
         <nav className="flex-1 p-2 space-y-1">
@@ -113,13 +111,13 @@ export const CustomSidebar = ({ collapsed, setCollapsed }: { collapsed: boolean,
                   {
                     "bg-primary text-primary-foreground": isActive,
                     "hover:bg-muted": !isActive,
-                    "justify-center": collapsed && !isMobile,
+                    "justify-center": collapsed,
                   }
                 )
               }
             >
               {item.icon}
-              {(!collapsed || isMobile) && <span>{item.title}</span>}
+              {!collapsed && <span>{item.title}</span>}
             </NavLink>
           ))}
         </nav>
@@ -128,12 +126,12 @@ export const CustomSidebar = ({ collapsed, setCollapsed }: { collapsed: boolean,
           <Button
             variant="ghost"
             className={cn("w-full flex items-center space-x-2", {
-              "justify-center": collapsed && !isMobile,
+              "justify-center": collapsed,
             })}
             onClick={handleLogout}
           >
             <LogOut className="h-4 w-4" />
-            {(!collapsed || isMobile) && <span>Logout</span>}
+            {!collapsed && <span>Logout</span>}
           </Button>
         </div>
       </div>
