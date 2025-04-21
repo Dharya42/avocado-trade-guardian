@@ -353,6 +353,7 @@ export interface Inspection {
   preShipmentDetails?: PreShipmentInspection;
   transitDetails?: TransitMonitoringDetails;
   postOfImportDetails?: PostOfImportDetails;
+  distributionCenterDetails?: DistributionCenterInspection;
   createdAt: string;
   updatedAt: string;
 }
@@ -769,4 +770,97 @@ interface PhotoEvidence {
   url: string;
   timestamp: string;
   description?: string;
+}
+
+export interface DistributionCenterInspection {
+  shipmentReceiving: {
+    inspectionDate: string;
+    inspectorName: string;
+    inspectorId: string;
+    internalLotId: string;
+    palletIds: string[];
+    containerId: string;
+    poReference: string;
+    supplierLotId: string;
+    supplierName: string;
+    variety: string;
+    declaredGrade: string;
+    dateReceived: string;
+    cartonsReceived: number;
+    cartonsSampled: number;
+    photos: PhotoRecord[];
+  };
+  storageConditions: {
+    deliveryTruckTemp: number;
+    pulpTemperatures: {
+      palletId: string;
+      temperature: number;
+      acceptable: boolean;
+    }[];
+    averagePulpTemp: number;
+    initialStorageBay: string;
+    photos: PhotoRecord[];
+  };
+  packagingLabeling: {
+    cartonCondition: {
+      status: 'Good' | 'Minor Damage' | 'Major Damage';
+      damageCount: number;
+      photos: PhotoRecord[];
+    };
+    labelAccuracy: {
+      status: 'Correct' | 'Missing' | 'Mismatched';
+      details?: string;
+    };
+    palletCondition: 'Good' | 'Damaged';
+    photos: PhotoRecord[];
+  };
+  externalQuality: {
+    appearance: {
+      uniformity: 'Good' | 'Fair' | 'Poor';
+      colorStage: 'Green' | 'Turning' | 'Mixed';
+      gloss: 'Good' | 'Dull';
+    };
+    shape: {
+      status: 'Typical' | 'Misshapen';
+      percentageAffected?: number;
+    };
+    size: {
+      sizeCode: string;
+      uniformity: 'Good' | 'Fair' | 'Poor';
+      averageWeight: number;
+    };
+    externalDefects: {
+      type: 'Bruising' | 'Cuts' | 'Scars' | 'Sunburn' | 'Mold' | 'Pest Damage' | 'Stem Issues';
+      percentageAffected: number;
+    }[];
+    photos: PhotoRecord[];
+  };
+  internalQuality: {
+    firmness: {
+      readings: number[];
+      average: number;
+    };
+    dryMatter?: number;
+    fleshColor: 'Creamy' | 'Grayish' | 'Dark';
+    internalDefects: {
+      type: 'Vascular Browning' | 'Flesh Bruising' | 'Seed Cavity Mold' | 'Uneven Ripening';
+      severity: 'None' | 'Minor' | 'Moderate' | 'Severe';
+    }[];
+    photos: PhotoRecord[];
+  };
+  sensoryEvaluation?: {
+    aroma: 'Fresh' | 'Fermented';
+    texture: 'Creamy' | 'Watery' | 'Fibrous';
+    taste: 'Good' | 'Bitter' | 'Off';
+    photos: PhotoRecord[];
+  };
+  finalAssessment: {
+    qualityRating: 'Premium' | 'Acceptable' | 'Below Standard';
+    primaryIssues: string[];
+    recommendedAction: 'Accept for Standard Storage' | 'Accept for Quick Sale' | 'Hold for Review' | 'Segregate' | 'Reject';
+    actionDetails?: string;
+    finalStorageBay: string;
+    inspectorRemarks: string;
+    photos: PhotoRecord[];
+  };
 }

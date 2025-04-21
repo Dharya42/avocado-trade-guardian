@@ -51,6 +51,7 @@ import { PostHarvestDetails } from './PostHarvestDetails';
 import { PreShipmentDetails } from './PreShipmentDetails';
 import { TransitDetails } from './TransitDetails';
 import { PostOfImportDetails } from './PostOfImportDetails';
+import { DistributionCenterDetails } from './DistributionCenterDetails';
 
 interface InspectionDetailProps {
   inspection: Inspection;
@@ -147,6 +148,11 @@ export const InspectionDetail = ({ inspection }: InspectionDetailProps) => {
       {/* Post of Import Details */}
       {inspection.type === 'On-Arrival' && inspection.postOfImportDetails && (
         <PostOfImportDetails details={inspection.postOfImportDetails} />
+      )}
+
+      {/* Distribution Center Details */}
+      {inspection.type === 'Warehouse' && inspection.distributionCenterDetails && (
+        <DistributionCenterDetails details={inspection.distributionCenterDetails} />
       )}
 
       {/* Quality Checks */}

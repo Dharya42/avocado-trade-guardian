@@ -588,6 +588,140 @@ export const mockTrades: Trade[] = [
             inspectorRemarks: 'Shipment meets all UAE import requirements. Product quality and condition excellent. Cleared for market distribution.'
           }
         }
+      }),
+      formatInspection({
+        id: 'insp-005',
+        type: 'Warehouse',
+        date: '2023-04-10',
+        location: 'TFC Distribution Center, Dubai, UAE',
+        status: 'Passed',
+        qualityChecks: [
+          { type: 'Physical', value: 'Good', threshold: 'Good', status: 'Passed', details: 'Product condition maintained during storage.' },
+          { type: 'Chemical', value: 'Within Spec', threshold: 'Within Spec', status: 'Passed', details: 'No chemical deterioration observed.' },
+          { type: 'Moisture', value: '71%', threshold: '65-75%', status: 'Passed', details: 'Moisture content optimal.' }
+        ],
+        compliances: [
+          { name: 'Storage Standards', status: 'Passed', details: 'Meets TFC storage requirements.' },
+          { name: 'Cold Chain', status: 'Passed', details: 'Temperature maintained within specifications.' }
+        ],
+        inspectionTools: [
+          'Digital Thermometer',
+          'Penetrometer',
+          'Moisture Meter',
+          'Color Chart'
+        ],
+        notes: 'Product received in excellent condition. Storage conditions optimal.',
+        distributionCenterDetails: {
+          shipmentReceiving: {
+            inspectionDate: '2023-04-10T08:00:00Z',
+            inspectorName: 'Ahmed Al-Mansouri',
+            inspectorId: 'TFC-INSP-123',
+            internalLotId: 'TFC-LOT-2023-456',
+            palletIds: ['PLT-001', 'PLT-002', 'PLT-003', 'PLT-004'],
+            containerId: 'MSKU-7654321',
+            poReference: 'PO-2023-789',
+            supplierLotId: 'GH-LOT-2023-123',
+            supplierName: 'Green Highlands Avocado Farms',
+            variety: 'Hass',
+            declaredGrade: 'Class I',
+            dateReceived: '2023-04-10T07:30:00Z',
+            cartonsReceived: 2000,
+            cartonsSampled: 20,
+            photos: [
+              { type: 'receiving_area', url: 'https://example.com/receiving.jpg' },
+              { type: 'pallet_condition', url: 'https://example.com/pallets.jpg' }
+            ]
+          },
+          storageConditions: {
+            deliveryTruckTemp: 5.5,
+            pulpTemperatures: [
+              { palletId: 'PLT-001', temperature: 5.8, acceptable: true },
+              { palletId: 'PLT-002', temperature: 5.6, acceptable: true },
+              { palletId: 'PLT-003', temperature: 5.7, acceptable: true },
+              { palletId: 'PLT-004', temperature: 5.9, acceptable: true }
+            ],
+            averagePulpTemp: 5.75,
+            initialStorageBay: 'Bay-C12',
+            photos: [
+              { type: 'temperature_reading', url: 'https://example.com/temp.jpg' },
+              { type: 'storage_bay', url: 'https://example.com/bay.jpg' }
+            ]
+          },
+          packagingLabeling: {
+            cartonCondition: {
+              status: 'Good',
+              damageCount: 0,
+              photos: [
+                { type: 'carton_condition', url: 'https://example.com/cartons.jpg' }
+              ]
+            },
+            labelAccuracy: {
+              status: 'Correct',
+              details: 'All labels clear and accurate'
+            },
+            palletCondition: 'Good',
+            photos: [
+              { type: 'labels', url: 'https://example.com/labels.jpg' }
+            ]
+          },
+          externalQuality: {
+            appearance: {
+              uniformity: 'Good',
+              colorStage: 'Green',
+              gloss: 'Good'
+            },
+            shape: {
+              status: 'Typical',
+              percentageAffected: 0
+            },
+            size: {
+              sizeCode: '16',
+              uniformity: 'Good',
+              averageWeight: 250
+            },
+            externalDefects: [
+              { type: 'Bruising', percentageAffected: 1.2 },
+              { type: 'Cuts', percentageAffected: 0.5 }
+            ],
+            photos: [
+              { type: 'external_quality', url: 'https://example.com/quality.jpg' }
+            ]
+          },
+          internalQuality: {
+            firmness: {
+              readings: [7.2, 7.4, 7.1, 7.3, 7.2],
+              average: 7.24
+            },
+            dryMatter: 23.5,
+            fleshColor: 'Creamy',
+            internalDefects: [
+              { type: 'Vascular Browning', severity: 'None' },
+              { type: 'Flesh Bruising', severity: 'None' }
+            ],
+            photos: [
+              { type: 'internal_quality', url: 'https://example.com/internal.jpg' }
+            ]
+          },
+          sensoryEvaluation: {
+            aroma: 'Fresh',
+            texture: 'Creamy',
+            taste: 'Good',
+            photos: [
+              { type: 'cut_fruit', url: 'https://example.com/cut.jpg' }
+            ]
+          },
+          finalAssessment: {
+            qualityRating: 'Premium',
+            primaryIssues: [],
+            recommendedAction: 'Accept for Standard Storage',
+            actionDetails: 'Product meets all quality specifications',
+            finalStorageBay: 'Bay-C12',
+            inspectorRemarks: 'Excellent quality shipment. All parameters within specification. Approved for standard storage and distribution.',
+            photos: [
+              { type: 'final_storage', url: 'https://example.com/storage.jpg' }
+            ]
+          }
+        }
       })
     ]
   },
