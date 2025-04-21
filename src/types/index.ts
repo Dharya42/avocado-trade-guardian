@@ -352,6 +352,7 @@ export interface Inspection {
   postHarvestDetails?: PostHarvestInspection;
   preShipmentDetails?: PreShipmentInspection;
   transitDetails?: TransitMonitoringDetails;
+  postOfImportDetails?: PostOfImportDetails;
   createdAt: string;
   updatedAt: string;
 }
@@ -648,4 +649,124 @@ export interface PreShipmentInspection {
     };
     photos: PhotoRecord[];
   };
+}
+
+export interface PostOfImportDetails {
+  shipmentDetails: {
+    inspectionDateTime: string;
+    inspectorName: string;
+    inspectorId: string;
+    shipmentId: string;
+    containerId: string;
+    vesselInfo: string;
+    importerInfo: {
+      name: string;
+      licenseNo: string;
+    };
+    exporterName: string;
+    commodity: string;
+    quantity: {
+      cartons: number;
+      weight: number;
+      unit: string;
+    };
+    photos: PhotoEvidence[];
+  };
+  
+  documentVerification: {
+    importPermit: {
+      present: boolean;
+      checkNumber: string;
+    };
+    commercialInvoice: {
+      present: boolean;
+      quantityMatch: boolean;
+      valueMatch: boolean;
+    };
+    packingList: {
+      present: boolean;
+      cartonCountMatch: boolean;
+    };
+    billOfLading: {
+      present: boolean;
+      matchesShipmentId: boolean;
+    };
+    phytosanitaryCert: {
+      present: boolean;
+      valid: boolean;
+      pestFree: boolean;
+      dateCorrect: boolean;
+      certNumber: string;
+    };
+    certificateOfOrigin: {
+      present: boolean;
+      consistentWithInvoice: boolean;
+    };
+    photos: PhotoEvidence[];
+  };
+
+  containerSealIntegrity: {
+    containerCondition: 'Good' | 'Minor Damage' | 'Significant Damage';
+    documentSealNumber: string;
+    actualSealNumber: string;
+    sealIntegrity: 'Matches' | 'Broken' | 'Missing' | 'Tampered' | 'Mismatch';
+    photos: PhotoEvidence[];
+  };
+
+  productTemperatureCheck: {
+    temperatureRecorder: {
+      deviceId: string;
+      reading: number;
+      inRange: boolean;
+    };
+    pulpTemperature: {
+      readings: number[];
+      acceptable: boolean;
+    };
+    containerAtmosphere: 'Normal' | 'Off-Odor' | 'Mold' | 'Condensation';
+    palletCondition: {
+      status: 'Secure' | 'Shifted' | 'Crushed' | 'Wet';
+      notes: string;
+    };
+    photos: PhotoEvidence[];
+  };
+
+  qualityInspection: {
+    sampleCartons: string[];
+    appearance: {
+      color: 'Typical' | 'Abnormal';
+      uniformity: 'Good' | 'Poor';
+      defects: 'None' | 'Moderate' | 'Severe';
+      pestPresence: {
+        detected: boolean;
+        description: string;
+      };
+    };
+    packagingIntegrity: {
+      status: 'Intact' | 'Damaged' | 'Labeling Issues';
+      notes: string;
+    };
+    photos: PhotoEvidence[];
+  };
+
+  complianceDecision: {
+    overallCompliance: 'Compliant' | 'Non-Compliant' | 'Pending Lab Test';
+    nonComplianceReasons: {
+      missingDocs: boolean;
+      sealTampering: boolean;
+      tempDeviation: boolean;
+      pests: boolean;
+      qualityIssues: boolean;
+      other: string;
+    };
+    action: 'Released' | 'Hold' | 'Lab Sample' | 'Rejected';
+    inspectorRemarks: string;
+  };
+}
+
+interface PhotoEvidence {
+  type: string;
+  url: string;
+  timestamp: string;
+  description?: string;
 }

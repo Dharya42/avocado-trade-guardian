@@ -443,6 +443,151 @@ export const mockTrades: Trade[] = [
             ]
           }
         }
+      }),
+      formatInspection({
+        id: 'insp-004',
+        type: 'On-Arrival',
+        date: '2023-04-09',
+        location: 'Dubai Port, UAE',
+        status: 'Passed',
+        qualityChecks: [
+          { type: 'Physical', value: 'Good', threshold: 'Good', status: 'Passed', details: 'Product condition maintained during transit.' },
+          { type: 'Chemical', value: 'Within Spec', threshold: 'Within Spec', status: 'Passed', details: 'No chemical deterioration observed.' },
+          { type: 'Moisture', value: '72%', threshold: '65-75%', status: 'Passed', details: 'Moisture content optimal.' }
+        ],
+        compliances: [
+          { name: 'UAE Import Standards', status: 'Passed', details: 'Meets all UAE import requirements.' },
+          { name: 'Food Safety Standards', status: 'Passed', details: 'Compliant with UAE food safety regulations.' }
+        ],
+        inspectionTools: [
+          'Digital Thermometer',
+          'Moisture Meter',
+          'Quality Assessment Kit',
+          'Documentation Scanner'
+        ],
+        notes: 'Shipment arrived in excellent condition. All documentation and physical checks passed.',
+        postOfImportDetails: {
+          shipmentDetails: {
+            inspectionDateTime: '2023-04-09T09:30:00Z',
+            inspectorName: 'Mohammed Al-Rashid',
+            inspectorId: 'UAE-INSP-2023-456',
+            shipmentId: 'SHP-2023-789',
+            containerId: 'MSKU-7654321',
+            vesselInfo: 'MSC Avocado Express / VOY-456-23',
+            importerInfo: {
+              name: 'Fresh Mart Distributors',
+              licenseNo: 'UAE-IMP-2023-789'
+            },
+            exporterName: 'Green Highlands Avocado Farms',
+            commodity: 'Fresh Hass Avocados',
+            quantity: {
+              cartons: 2000,
+              weight: 24000,
+              unit: 'kg'
+            },
+            photos: [
+              { type: 'container_arrival', url: 'https://example.com/arrival.jpg', timestamp: '2023-04-09T09:15:00Z' },
+              { type: 'documentation', url: 'https://example.com/docs.jpg', timestamp: '2023-04-09T09:20:00Z' }
+            ]
+          },
+          documentVerification: {
+            importPermit: {
+              present: true,
+              checkNumber: 'UAE-IMP-2023-456'
+            },
+            commercialInvoice: {
+              present: true,
+              quantityMatch: true,
+              valueMatch: true
+            },
+            packingList: {
+              present: true,
+              cartonCountMatch: true
+            },
+            billOfLading: {
+              present: true,
+              matchesShipmentId: true
+            },
+            phytosanitaryCert: {
+              present: true,
+              valid: true,
+              pestFree: true,
+              dateCorrect: true,
+              certNumber: 'KEPHIS-PC-2023-789'
+            },
+            certificateOfOrigin: {
+              present: true,
+              consistentWithInvoice: true
+            },
+            photos: [
+              { type: 'import_permit', url: 'https://example.com/permit.jpg', timestamp: '2023-04-09T09:35:00Z' },
+              { type: 'certificates', url: 'https://example.com/certs.jpg', timestamp: '2023-04-09T09:36:00Z' }
+            ]
+          },
+          containerSealIntegrity: {
+            containerCondition: 'Good',
+            documentSealNumber: 'SL-98765432',
+            actualSealNumber: 'SL-98765432',
+            sealIntegrity: 'Matches',
+            photos: [
+              { type: 'seal_intact', url: 'https://example.com/seal.jpg', timestamp: '2023-04-09T09:40:00Z' },
+              { type: 'container_condition', url: 'https://example.com/container.jpg', timestamp: '2023-04-09T09:41:00Z' }
+            ]
+          },
+          productTemperatureCheck: {
+            temperatureRecorder: {
+              deviceId: 'TEMP-456',
+              reading: 5.8,
+              inRange: true
+            },
+            pulpTemperature: {
+              readings: [6.1, 5.9, 6.0],
+              acceptable: true
+            },
+            containerAtmosphere: 'Normal',
+            palletCondition: {
+              status: 'Secure',
+              notes: 'All pallets properly secured, no shifting observed'
+            },
+            photos: [
+              { type: 'temp_reading', url: 'https://example.com/temp.jpg', timestamp: '2023-04-09T09:45:00Z' },
+              { type: 'pulp_temp', url: 'https://example.com/pulp.jpg', timestamp: '2023-04-09T09:46:00Z' }
+            ]
+          },
+          qualityInspection: {
+            sampleCartons: ['A123', 'B456', 'C789'],
+            appearance: {
+              color: 'Typical',
+              uniformity: 'Good',
+              defects: 'None',
+              pestPresence: {
+                detected: false,
+                description: ''
+              }
+            },
+            packagingIntegrity: {
+              status: 'Intact',
+              notes: 'All cartons in good condition, labels clear and intact'
+            },
+            photos: [
+              { type: 'sample_product', url: 'https://example.com/sample.jpg', timestamp: '2023-04-09T09:50:00Z' },
+              { type: 'packaging', url: 'https://example.com/packaging.jpg', timestamp: '2023-04-09T09:51:00Z' }
+            ]
+          },
+          complianceDecision: {
+            overallCompliance: 'Compliant',
+            nonComplianceReasons: {
+              missingDocs: false,
+              sealTampering: false,
+              tempDeviation: false,
+              pests: false,
+              qualityIssues: false,
+              other: ''
+            },
+            action: 'Released',
+            inspectorRemarks: 'Shipment meets all UAE import requirements. Product quality and condition excellent. Cleared for market distribution.'
+          }
+        }
       })
     ]
   },
