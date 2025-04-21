@@ -52,6 +52,8 @@ import { PreShipmentDetails } from './PreShipmentDetails';
 import { TransitDetails } from './TransitDetails';
 import { PostOfImportDetails } from './PostOfImportDetails';
 import { DistributionCenterDetails } from './DistributionCenterDetails';
+import { RetailShelfDetails } from './RetailShelfDetails';
+import { PortOfExportDetails } from './PortOfExportDetails';
 
 interface InspectionDetailProps {
   inspection: Inspection;
@@ -140,6 +142,11 @@ export const InspectionDetail = ({ inspection }: InspectionDetailProps) => {
         <PreShipmentDetails details={inspection.preShipmentDetails} />
       )}
 
+      {/* Port of Export Details */}
+      {inspection.type === 'Port-Export' && inspection.portOfExportDetails && (
+        <PortOfExportDetails details={inspection.portOfExportDetails} />
+      )}
+
       {/* Transit Details */}
       {inspection.type === 'Transit' && inspection.transitDetails && (
         <TransitDetails details={inspection.transitDetails} />
@@ -153,6 +160,11 @@ export const InspectionDetail = ({ inspection }: InspectionDetailProps) => {
       {/* Distribution Center Details */}
       {inspection.type === 'Warehouse' && inspection.distributionCenterDetails && (
         <DistributionCenterDetails details={inspection.distributionCenterDetails} />
+      )}
+
+      {/* Retail Shelf Details */}
+      {inspection.type === 'Retail' && inspection.retailShelfDetails && (
+        <RetailShelfDetails details={inspection.retailShelfDetails} />
       )}
 
       {/* Quality Checks */}

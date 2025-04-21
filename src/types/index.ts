@@ -1,4 +1,4 @@
-export type InspectionType = 'Post-Harvest' | 'Pre-Shipment' | 'On-Arrival' | 'Warehouse';
+export type InspectionType = 'Post-Harvest' | 'Pre-Shipment' | 'Port-Export' | 'Transit' | 'On-Arrival' | 'Warehouse' | 'Retail';
 
 export type QualityCheckType = 'Physical' | 'Chemical' | 'Moisture';
 
@@ -340,7 +340,7 @@ export interface TransitMonitoringDetails {
 
 export interface Inspection {
   id: string;
-  type: 'Post-Harvest' | 'Pre-Shipment' | 'Transit' | 'On-Arrival' | 'Warehouse';
+  type: InspectionType;
   date: string;
   location: string;
   status: 'Passed' | 'Failed' | 'Pending';
@@ -351,9 +351,11 @@ export interface Inspection {
   notes?: string;
   postHarvestDetails?: PostHarvestInspection;
   preShipmentDetails?: PreShipmentInspection;
+  portOfExportDetails?: PortOfExportDetails;
   transitDetails?: TransitMonitoringDetails;
   postOfImportDetails?: PostOfImportDetails;
   distributionCenterDetails?: DistributionCenterInspection;
+  retailShelfDetails?: RetailShelfAuditDetails;
   createdAt: string;
   updatedAt: string;
 }
@@ -862,5 +864,152 @@ export interface DistributionCenterInspection {
     finalStorageBay: string;
     inspectorRemarks: string;
     photos: PhotoRecord[];
+  };
+}
+
+export interface RetailShelfAuditDetails {
+  auditMetadata: {
+    dateTime: string;
+    auditorName: string;
+    auditorId: string;
+    storeName: string;
+    storeLocation: string;
+    storeContact?: string;
+    weatherConditions?: string;
+    photos: PhotoRecord[];
+  };
+  displayArea: {
+    location: string;
+    displayType: 'Ambient' | 'Refrigerated' | 'Standalone';
+    cleanliness: 'Excellent' | 'Good' | 'Fair' | 'Poor';
+    lighting: 'Adequate' | 'Too Dim' | 'Too Bright';
+    posPresent: boolean;
+    posCondition?: 'Good' | 'Damaged' | 'Outdated';
+    posOriginAccuracy: 'Correct' | 'Incorrect' | 'Missing';
+    overallAppeal: 'High' | 'Medium' | 'Low';
+    photos: PhotoRecord[];
+  };
+  looseAvocados: {
+    variety: string;
+    originLabeling: 'Clearly Labeled' | 'Incorrect' | 'Missing';
+    priceLabeling: 'Clear & Correct' | 'Incorrect' | 'Missing';
+    ripenessMix: {
+      hardRipenAtHome: number;
+      breakingFirmRipe: number;
+      readyToEat: number;
+      overripe: number;
+    };
+    visualQuality: {
+      sizeColorUniformity: 'Good' | 'Fair' | 'Poor';
+      damagedFruit: {
+        level: 'None' | 'Some' | 'Excessive';
+        count: number;
+      };
+      overripeMoldyFruit: {
+        level: 'None' | 'Some' | 'Excessive';
+        count: number;
+      };
+      handlingDamage: 'Minimal' | 'Evident';
+    };
+    firmnessConsistency: 'Consistent' | 'Inconsistent';
+    stockRotation: {
+      olderStockMixed: boolean | 'Unclear';
+      removalPercentage: number;
+    };
+    photos: PhotoRecord[];
+  };
+  prePackaged?: {
+    packageType: string;
+    condition: 'Good' | 'Damaged';
+    labelingAccuracy: 'Correct' | 'Incorrect' | 'Missing';
+    fruitVisibility: 'Yes' | 'Partially' | 'No';
+    inPackQuality: {
+      uniformity: 'Good' | 'Poor';
+      visibleDamage: 'None' | 'Some' | 'Excessive';
+    };
+    fifoFollowed: boolean;
+    photos: PhotoRecord[];
+  };
+  summary: {
+    stockLevel: 'High' | 'Medium' | 'Low' | 'Out of Stock';
+    overallQuality: 'Excellent' | 'Good' | 'Fair' | 'Poor';
+    immediateActions: string;
+    storeRecommendations: string;
+    tfcRecommendations: string;
+    auditorComments: string;
+  };
+}
+
+export interface PortOfExportDetails {
+  inspectorInfo: {
+    name: string;
+    inspectionDate: string;
+    inspectionTime: string;
+    affiliatedBody: string;
+    portLocation: string;
+    photos?: { type: string; url: string; }[];
+  };
+  consignmentInfo: {
+    bookingReference: string;
+    exporterName: string;
+    importerName: string;
+    containerId: string;
+    vesselInfo?: {
+      name: string;
+      voyageNumber: string;
+    };
+    phytosanitaryCertificate: boolean;
+    exportPermit: boolean;
+    photos?: { type: string; url: string; }[];
+  };
+  containerCondition: {
+    containerType: 'Reefer';
+    externalCondition: 'Pass' | 'Fail' | 'Needs Improvement';
+    internalCleanliness: 'Pass' | 'Fail' | 'Needs Improvement';
+    doorSealsCondition: 'Pass' | 'Fail' | 'Needs Improvement';
+    reeferUnitFunctionality: 'Pass' | 'Fail' | 'Needs Improvement';
+    photos?: { type: string; url: string; }[];
+  };
+  temperatureVerification: {
+    setTemperature: number;
+    actualTemperature: number;
+    preCooled: boolean | null;
+    pulpTemperatures: {
+      location1: number;
+      location2: number;
+      location3: number;
+      location4: number;
+      location5: number;
+      average: number;
+    };
+    temperatureLoggerPlaced: boolean | null;
+    loggerPosition?: string;
+    photos?: { type: string; url: string; }[];
+  };
+  loadingProcess: {
+    loadingMethod: string;
+    handlingPractices: 'Good' | 'Fair' | 'Poor';
+    stackingPattern: 'Pass' | 'Fail' | 'Needs Improvement';
+    cartonCondition: 'Good' | 'Fair' | 'Poor';
+    dunnageMaterial?: string;
+    timeframeAcceptable: boolean | null;
+    photos?: { type: string; url: string; }[];
+  };
+  finalSealing: {
+    totalUnits: {
+      pallets?: number;
+      cartons: number;
+    };
+    doorsClosed: boolean;
+    highSecuritySeal: boolean;
+    sealNumber: string;
+    sealType: 'Bolt' | 'Cable' | 'Other';
+    photos?: { type: string; url: string; }[];
+  };
+  overallAssessment: {
+    findings: string;
+    nonConformities?: string;
+    correctiveActions?: string;
+    exportClearance: boolean;
   };
 }

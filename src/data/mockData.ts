@@ -279,6 +279,120 @@ export const mockTrades: Trade[] = [
           }
         }
       }),
+      
+      formatInspection({
+        id: 'insp-002b',
+        type: 'Port-Export',
+        date: '2023-04-01',
+        location: 'Port of Mombasa, Kenya',
+        status: 'Passed',
+        qualityChecks: [
+          { type: 'Physical', value: 'Pass', threshold: 'Pass', status: 'Passed', details: 'Container and cargo condition meets export standards.' },
+          { type: 'Chemical', value: 'N/A', threshold: 'N/A', status: 'Passed', details: 'Not applicable for port inspection.' },
+          { type: 'Moisture', value: '70%', threshold: '65-75%', status: 'Passed', details: 'Container atmosphere within specifications.' }
+        ],
+        compliances: [
+          { name: 'Export Documentation', status: 'Passed', details: 'All required export documents present and valid.' },
+          { name: 'Container Standards', status: 'Passed', details: 'Container meets shipping line requirements.' }
+        ],
+        inspectionTools: [
+          'Digital Thermometer',
+          'Humidity Meter',
+          'Container Inspection Kit',
+          'Seal Verification Tools'
+        ],
+        notes: 'Container properly prepared and sealed for export. All parameters within specification.',
+        portOfExportDetails: {
+          inspectorInfo: {
+            name: "James Ochieng",
+            inspectionDate: "2023-04-01",
+            inspectionTime: "09:30",
+            affiliatedBody: "KEPHIS",
+            portLocation: "Port of Mombasa, Terminal 2",
+            photos: [
+              { type: "inspector_id", url: "https://example.com/inspector-badge.jpg" }
+            ]
+          },
+          consignmentInfo: {
+            bookingReference: "MSC-BOK-2023-789",
+            exporterName: "Green Highlands Avocado Farms",
+            importerName: "Fresh Mart Distributors",
+            containerId: "MSKU-7654321",
+            vesselInfo: {
+              name: "MSC Avocado Express",
+              voyageNumber: "VOY-456-23"
+            },
+            phytosanitaryCertificate: true,
+            exportPermit: true,
+            photos: [
+              { type: "container_number", url: "https://example.com/container.jpg" },
+              { type: "documents", url: "https://example.com/documents.jpg" }
+            ]
+          },
+          containerCondition: {
+            containerType: "Reefer",
+            externalCondition: "Pass",
+            internalCleanliness: "Pass",
+            doorSealsCondition: "Pass",
+            reeferUnitFunctionality: "Pass",
+            photos: [
+              { type: "container_external", url: "https://example.com/container-ext.jpg" },
+              { type: "container_internal", url: "https://example.com/container-int.jpg" }
+            ]
+          },
+          temperatureVerification: {
+            setTemperature: 5.5,
+            actualTemperature: 5.6,
+            preCooled: true,
+            pulpTemperatures: {
+              location1: 5.7,
+              location2: 5.6,
+              location3: 5.5,
+              location4: 5.6,
+              location5: 5.7,
+              average: 5.62
+            },
+            temperatureLoggerPlaced: true,
+            loggerPosition: "Carton stack center, middle height",
+            photos: [
+              { type: "temp_display", url: "https://example.com/temp.jpg" },
+              { type: "logger_placement", url: "https://example.com/logger.jpg" }
+            ]
+          },
+          loadingProcess: {
+            loadingMethod: "Palletized",
+            handlingPractices: "Good",
+            stackingPattern: "Pass",
+            cartonCondition: "Good",
+            dunnageMaterial: "Air bags and corner protectors",
+            timeframeAcceptable: true,
+            photos: [
+              { type: "loading_process", url: "https://example.com/loading.jpg" },
+              { type: "stacking_pattern", url: "https://example.com/stacking.jpg" }
+            ]
+          },
+          finalSealing: {
+            totalUnits: {
+              pallets: 20,
+              cartons: 2000
+            },
+            doorsClosed: true,
+            highSecuritySeal: true,
+            sealNumber: "SL-98765432",
+            sealType: "Bolt",
+            photos: [
+              { type: "seal_applied", url: "https://example.com/seal.jpg" },
+              { type: "final_closure", url: "https://example.com/closure.jpg" }
+            ]
+          },
+          overallAssessment: {
+            findings: "Container loading and sealing completed according to protocol. Temperature and atmosphere conditions optimal for transit.",
+            correctiveActions: "None required",
+            exportClearance: true
+          }
+        }
+      }),
+      
       formatInspection({
         id: 'insp-003',
         type: 'Transit',
@@ -720,6 +834,111 @@ export const mockTrades: Trade[] = [
             photos: [
               { type: 'final_storage', url: 'https://example.com/storage.jpg' }
             ]
+          }
+        }
+      }),
+      formatInspection({
+        id: 'insp-006',
+        type: 'Retail',
+        date: '2023-04-12',
+        location: 'Fresh Mart Supermarket, Dubai Mall, UAE',
+        status: 'Passed',
+        qualityChecks: [
+          { type: 'Physical', value: 'Good', threshold: 'Good', status: 'Passed', details: 'Product display and handling meets standards.' },
+          { type: 'Chemical', value: 'N/A', threshold: 'N/A', status: 'Passed', details: 'Not applicable for retail inspection.' },
+          { type: 'Moisture', value: '70%', threshold: '65-75%', status: 'Passed', details: 'Fruit moisture content maintained.' }
+        ],
+        compliances: [
+          { name: 'Display Standards', status: 'Passed', details: 'Meets TFC retail display guidelines.' },
+          { name: 'Product Labeling', status: 'Passed', details: 'Origin and pricing clearly displayed.' }
+        ],
+        inspectionTools: [
+          'Digital Thermometer',
+          'Firmness Tester',
+          'Digital Camera',
+          'Inspection Checklist'
+        ],
+        notes: 'Overall excellent retail presentation and stock management.',
+        retailShelfDetails: {
+          auditMetadata: {
+            dateTime: '2023-04-12T10:00:00Z',
+            auditorName: 'Sarah Al-Mansoori',
+            auditorId: 'TFC-RTL-123',
+            storeName: 'Fresh Mart Supermarket',
+            storeLocation: 'Dubai Mall, Sheikh Mohammed Bin Rashid Blvd, Dubai',
+            storeContact: 'Mohammed Hassan',
+            weatherConditions: 'Indoor Climate Controlled',
+            photos: [
+              { type: 'store_front', url: 'https://example.com/store.jpg' }
+            ]
+          },
+          displayArea: {
+            location: 'Main Produce Section',
+            displayType: 'Refrigerated',
+            cleanliness: 'Excellent',
+            lighting: 'Adequate',
+            posPresent: true,
+            posCondition: 'Good',
+            posOriginAccuracy: 'Correct',
+            overallAppeal: 'High',
+            photos: [
+              { type: 'display_area', url: 'https://example.com/display.jpg' },
+              { type: 'pos_materials', url: 'https://example.com/pos.jpg' }
+            ]
+          },
+          looseAvocados: {
+            variety: 'Hass',
+            originLabeling: 'Clearly Labeled',
+            priceLabeling: 'Clear & Correct',
+            ripenessMix: {
+              hardRipenAtHome: 30,
+              breakingFirmRipe: 40,
+              readyToEat: 25,
+              overripe: 5
+            },
+            visualQuality: {
+              sizeColorUniformity: 'Good',
+              damagedFruit: {
+                level: 'Some',
+                count: 3
+              },
+              overripeMoldyFruit: {
+                level: 'None',
+                count: 0
+              },
+              handlingDamage: 'Minimal'
+            },
+            firmnessConsistency: 'Consistent',
+            stockRotation: {
+              olderStockMixed: false,
+              removalPercentage: 5
+            },
+            photos: [
+              { type: 'loose_avocados', url: 'https://example.com/loose.jpg' },
+              { type: 'ripeness_stages', url: 'https://example.com/ripeness.jpg' }
+            ]
+          },
+          prePackaged: {
+            packageType: '4-count mesh bag',
+            condition: 'Good',
+            labelingAccuracy: 'Correct',
+            fruitVisibility: 'Yes',
+            inPackQuality: {
+              uniformity: 'Good',
+              visibleDamage: 'None'
+            },
+            fifoFollowed: true,
+            photos: [
+              { type: 'packaged_product', url: 'https://example.com/packaged.jpg' }
+            ]
+          },
+          summary: {
+            stockLevel: 'Medium',
+            overallQuality: 'Excellent',
+            immediateActions: 'Removed 3 damaged fruits from display',
+            storeRecommendations: 'Continue current stock rotation practices. Consider increasing ready-to-eat proportion slightly based on customer demand.',
+            tfcRecommendations: 'Current ripeness distribution working well for this location. Maintain delivery schedule.',
+            auditorComments: 'Excellent presentation and stock management. Staff well-trained in handling procedures.'
           }
         }
       })

@@ -8,7 +8,9 @@ import {
   Ship,
   CheckCircle,
   XCircle,
-  Clock
+  Clock,
+  Store,
+  Anchor
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
@@ -38,12 +40,16 @@ export const InspectionTimeline = ({
         return <Package className="h-6 w-6" />;
       case 'Pre-Shipment':
         return <Box className="h-6 w-6" />;
+      case 'Port-Export':
+        return <Anchor className="h-6 w-6" />;
       case 'Transit':
         return <Ship className="h-6 w-6" />;
       case 'On-Arrival':
         return <Truck className="h-6 w-6" />;
       case 'Warehouse':
         return <Warehouse className="h-6 w-6" />;
+      case 'Retail':
+        return <Store className="h-6 w-6" />;
       default:
         return null;
     }
