@@ -1,4 +1,3 @@
-
 import { Trade } from '@/types';
 import { formatInspection } from './mockData-helpers';
 
@@ -48,7 +47,6 @@ export const mockTrades: Trade[] = [
     buyerCountry: 'UAE',
     productType: 'Hass Avocados',
     quantity: '24,000 kg (2,000 cartons)',
-    // Use the proper format for shipDate and arrivalDate to match the Trade type
     shipDate: new Date('2023-04-05').toISOString(),
     arrivalDate: new Date('2023-04-09').toISOString(),
     status: 'Completed',
@@ -281,6 +279,171 @@ export const mockTrades: Trade[] = [
           }
         }
       }),
+      formatInspection({
+        id: 'insp-003',
+        type: 'Transit',
+        date: '2023-04-06',
+        location: 'Mombasa - Dubai Sea Route',
+        status: 'Passed',
+        qualityChecks: [
+          { type: 'Physical', value: 'Stable', threshold: 'Stable', status: 'Passed', details: 'Container integrity maintained throughout transit.' },
+          { type: 'Chemical', value: 'Within Range', threshold: 'Within Range', status: 'Passed', details: 'Atmosphere levels maintained within specifications.' },
+          { type: 'Moisture', value: '85-90%', threshold: '80-90%', status: 'Passed', details: 'Relative humidity maintained within optimal range.' }
+        ],
+        compliances: [
+          { name: 'Temperature Control', status: 'Passed', details: 'Temperature maintained between 5-7°C throughout transit.' },
+          { name: 'Container Seal', status: 'Passed', details: 'Seal integrity maintained, no tampering detected.' }
+        ],
+        inspectionTools: [
+          'Remote Temperature Logger',
+          'Humidity Sensor',
+          'GPS Tracker',
+          'Atmosphere Analyzer'
+        ],
+        notes: 'Transit conditions maintained within specifications. No significant deviations noted.',
+        transitDetails: {
+          monitorInfo: {
+            monitorName: "Sarah Johnson",
+            monitorId: "MTR-2023-456",
+            startDate: "2023-04-06",
+            endDate: "2023-04-09",
+            company: "SeaWatch Monitoring Ltd",
+            photos: [
+              { type: "monitor_id", url: "https://example.com/monitor-badge.jpg" }
+            ]
+          },
+          shipmentIdentification: {
+            containerId: "MSKU-7654321",
+            bookingReference: "BKG-2023-789",
+            exporterName: "Green Highlands Avocado Farms",
+            importerName: "Fresh Mart Distributors",
+            sealNumber: "SL-98765432",
+            photos: [
+              { type: "container_seal", url: "https://example.com/seal.jpg" },
+              { type: "container_number", url: "https://example.com/container.jpg" }
+            ]
+          },
+          vesselDetails: {
+            vesselName: "MSC Avocado Express",
+            imoNumber: "IMO-9876543",
+            voyageNumber: "VOY-456-23",
+            shippingLine: "MSC",
+            portOfLoading: {
+              name: "Mombasa Port",
+              actualDeparture: "2023-04-06T08:30:00Z"
+            },
+            transshipments: [
+              {
+                port: "Jebel Ali",
+                eta: "2023-04-08T14:00:00Z",
+                ata: "2023-04-08T15:30:00Z",
+                atd: "2023-04-08T23:00:00Z"
+              }
+            ],
+            portOfDischarge: {
+              name: "Dubai Port",
+              originalEta: "2023-04-09T10:00:00Z",
+              currentEta: "2023-04-09T12:00:00Z",
+              etaChanges: [
+                {
+                  date: "2023-04-08T16:00:00Z",
+                  newEta: "2023-04-09T12:00:00Z",
+                  reason: "Port congestion at Jebel Ali"
+                }
+              ]
+            },
+            photos: [
+              { type: "vessel_departure", url: "https://example.com/departure.jpg" }
+            ]
+          },
+          monitoringSources: {
+            primarySource: {
+              type: "Emerson Real-Time Monitoring",
+              details: "Container equipped with Emerson cargo monitoring system"
+            },
+            secondarySource: {
+              type: "Carrier TripLINK",
+              details: "Backup monitoring through carrier's system"
+            },
+            reviewFrequency: "Every 4 hours",
+            photos: [
+              { type: "monitoring_device", url: "https://example.com/device.jpg" }
+            ]
+          },
+          environmentalConditions: {
+            temperature: {
+              setPoint: 5.5,
+              dataAvailability: "Continuous",
+              reviewMethod: "Portal",
+              minTemperature: 5.2,
+              maxTemperature: 5.8,
+              deviationsNoted: false,
+              evidence: [
+                { type: "temp_graph", url: "https://example.com/temperature.jpg" }
+              ]
+            },
+            controlledAtmosphere: {
+              required: true,
+              o2SetPoint: 5,
+              co2SetPoint: 5,
+              dataAvailable: true,
+              o2Range: {
+                min: 4.8,
+                max: 5.2
+              },
+              co2Range: {
+                min: 4.7,
+                max: 5.3
+              },
+              deviationsNoted: false,
+              evidence: [
+                { type: "atmosphere_log", url: "https://example.com/atmosphere.jpg" }
+              ]
+            },
+            relativeHumidity: {
+              dataReviewed: true,
+              range: {
+                min: 85,
+                max: 90
+              }
+            },
+            reeferUnit: {
+              powerStatus: "On",
+              outages: []
+            },
+            photos: [
+              { type: "reefer_display", url: "https://example.com/reefer.jpg" }
+            ]
+          },
+          eventMonitoring: {
+            hasAlerts: false,
+            alerts: [],
+            hasDelays: true,
+            delays: [
+              {
+                description: "Port congestion at Jebel Ali",
+                impact: "2-hour delay in transshipment operation"
+              }
+            ],
+            photos: [
+              { type: "port_congestion", url: "https://example.com/port.jpg" }
+            ]
+          },
+          transitSummary: {
+            overallCondition: "OK",
+            communicationLog: [
+              "2023-04-06 09:00 - Container departed Mombasa Port",
+              "2023-04-08 15:30 - Arrived at Jebel Ali for transshipment",
+              "2023-04-08 23:00 - Departed Jebel Ali",
+              "2023-04-09 12:00 - Expected arrival at Dubai Port"
+            ],
+            finalEta: "2023-04-09T12:00:00Z",
+            photos: [
+              { type: "final_status", url: "https://example.com/status.jpg" }
+            ]
+          }
+        }
+      })
     ]
   },
 ];

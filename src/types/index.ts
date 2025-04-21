@@ -215,9 +215,132 @@ export interface PostHarvestInspection {
   finalEvaluation: FinalEvaluation;
 }
 
+export interface TransitMonitoringDetails {
+  monitorInfo: {
+    monitorName: string;
+    monitorId: string;
+    startDate: string;
+    endDate: string;
+    company: string;
+    photos: PhotoRecord[];
+  };
+  shipmentIdentification: {
+    containerId: string;
+    bookingReference: string;
+    exporterName: string;
+    importerName: string;
+    sealNumber: string;
+    photos: PhotoRecord[];
+  };
+  vesselDetails: {
+    vesselName: string;
+    imoNumber: string;
+    voyageNumber: string;
+    shippingLine: string;
+    portOfLoading: {
+      name: string;
+      actualDeparture: string;
+    };
+    transshipments: {
+      port: string;
+      eta: string;
+      ata: string;
+      atd: string;
+    }[];
+    portOfDischarge: {
+      name: string;
+      originalEta: string;
+      currentEta: string;
+      etaChanges: {
+        date: string;
+        newEta: string;
+        reason: string;
+      }[];
+    };
+    photos: PhotoRecord[];
+  };
+  monitoringSources: {
+    primarySource: {
+      type: string;
+      details: string;
+    };
+    secondarySource?: {
+      type: string;
+      details: string;
+    };
+    reviewFrequency: string;
+    photos: PhotoRecord[];
+  };
+  environmentalConditions: {
+    temperature: {
+      setPoint: number;
+      dataAvailability: 'Continuous' | 'Snapshot';
+      reviewMethod: 'Portal' | 'File' | 'Screenshot';
+      minTemperature: number;
+      maxTemperature: number;
+      deviationsNoted: boolean;
+      evidence: PhotoRecord[];
+    };
+    controlledAtmosphere: {
+      required: boolean;
+      o2SetPoint?: number;
+      co2SetPoint?: number;
+      dataAvailable: boolean;
+      o2Range?: {
+        min: number;
+        max: number;
+      };
+      co2Range?: {
+        min: number;
+        max: number;
+      };
+      deviationsNoted: boolean;
+      evidence: PhotoRecord[];
+    };
+    relativeHumidity: {
+      dataReviewed: boolean;
+      range?: {
+        min: number;
+        max: number;
+      };
+    };
+    reeferUnit: {
+      powerStatus: 'On' | 'Off';
+      outages: {
+        startTime: string;
+        endTime: string;
+        duration: string;
+      }[];
+    };
+    photos: PhotoRecord[];
+  };
+  eventMonitoring: {
+    hasAlerts: boolean;
+    alerts: {
+      dateTime: string;
+      description: string;
+      duration: string;
+      resolution: string;
+      evidence: PhotoRecord[];
+    }[];
+    hasDelays: boolean;
+    delays: {
+      description: string;
+      impact: string;
+    }[];
+    photos: PhotoRecord[];
+  };
+  transitSummary: {
+    overallCondition: 'OK' | 'Minor Issues' | 'Major Issues';
+    communicationLog: string[];
+    finalEta: string;
+    photos: PhotoRecord[];
+  };
+}
+
 export interface Inspection {
   id: string;
-  type: 'Post-Harvest' | 'Pre-Shipment' | 'On-Arrival' | 'Warehouse';
+  type: 'Post-Harvest' | 'Pre-Shipment' | 'Transit' | 'On-Arrival' | 'Warehouse';
   date: string;
   location: string;
   status: 'Passed' | 'Failed' | 'Pending';
@@ -228,6 +351,7 @@ export interface Inspection {
   notes?: string;
   postHarvestDetails?: PostHarvestInspection;
   preShipmentDetails?: PreShipmentInspection;
+  transitDetails?: TransitMonitoringDetails;
   createdAt: string;
   updatedAt: string;
 }

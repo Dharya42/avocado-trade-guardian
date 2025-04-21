@@ -1,4 +1,3 @@
-
 import { useState } from 'react';
 import { Inspection } from '@/types';
 import { 
@@ -6,6 +5,7 @@ import {
   Truck, 
   Warehouse, 
   Box,
+  Ship,
   CheckCircle,
   XCircle,
   Clock
@@ -38,6 +38,8 @@ export const InspectionTimeline = ({
         return <Package className="h-6 w-6" />;
       case 'Pre-Shipment':
         return <Box className="h-6 w-6" />;
+      case 'Transit':
+        return <Ship className="h-6 w-6" />;
       case 'On-Arrival':
         return <Truck className="h-6 w-6" />;
       case 'Warehouse':

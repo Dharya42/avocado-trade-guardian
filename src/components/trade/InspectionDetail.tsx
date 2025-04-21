@@ -1,4 +1,3 @@
-
 import { Inspection, QualityCheck, Compliance } from '@/types';
 import {
   Card,
@@ -50,6 +49,7 @@ import {
 } from "@/components/ui/popover";
 import { PostHarvestDetails } from './PostHarvestDetails';
 import { PreShipmentDetails } from './PreShipmentDetails';
+import { TransitDetails } from './TransitDetails';
 
 interface InspectionDetailProps {
   inspection: Inspection;
@@ -136,6 +136,11 @@ export const InspectionDetail = ({ inspection }: InspectionDetailProps) => {
       {/* Pre-Shipment Details */}
       {inspection.type === 'Pre-Shipment' && inspection.preShipmentDetails && (
         <PreShipmentDetails details={inspection.preShipmentDetails} />
+      )}
+
+      {/* Transit Details */}
+      {inspection.type === 'Transit' && inspection.transitDetails && (
+        <TransitDetails details={inspection.transitDetails} />
       )}
 
       {/* Quality Checks */}
