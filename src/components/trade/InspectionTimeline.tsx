@@ -81,20 +81,20 @@ export const InspectionTimeline = ({
   }
 
   return (
-    <div className="p-4 border rounded-lg bg-white">
+    <div className="p-4 border rounded-lg bg-white w-full">
       <h3 className="text-lg font-semibold mb-4">Inspection Timeline</h3>
       <ScrollArea className="w-full">
         <div className="relative">
           {/* Horizontal line connecting inspection nodes */}
           <div className="absolute top-6 left-0 right-0 h-0.5 bg-gray-200 z-0" />
           
-          <div className="flex space-x-8 relative z-10 pb-4 px-2">
+          <div className="flex justify-between relative z-10 pb-4 px-2 min-w-full">
             {sortedInspections.map((inspection, index) => (
               <div 
                 key={inspection.id}
                 onClick={() => handleSelect(inspection)}
                 className={cn(
-                  "flex flex-col items-center cursor-pointer min-w-[150px]",
+                  "flex flex-col items-center cursor-pointer px-4",
                   "hover:bg-gray-50 rounded-md p-2 transition-colors",
                   selectedId === inspection.id && "bg-avocado-50"
                 )}
@@ -126,3 +126,4 @@ export const InspectionTimeline = ({
     </div>
   );
 };
+
