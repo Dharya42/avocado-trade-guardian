@@ -1,3 +1,4 @@
+
 import { useState } from 'react';
 import { Inspection } from '@/types';
 import { 
@@ -13,6 +14,7 @@ import {
   Anchor
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
+import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
 
 interface InspectionTimelineProps {
   inspections: Inspection[];
@@ -81,43 +83,46 @@ export const InspectionTimeline = ({
   return (
     <div className="p-4 border rounded-lg bg-white">
       <h3 className="text-lg font-semibold mb-4">Inspection Timeline</h3>
-      <div className="relative">
-        {/* Vertical line connecting inspection nodes */}
-        <div className="absolute left-6 top-0 bottom-0 w-0.5 bg-gray-200 z-0" />
-        
-        <div className="space-y-8 relative z-10">
-          {sortedInspections.map((inspection, index) => (
-            <div 
-              key={inspection.id}
-              onClick={() => handleSelect(inspection)}
-              className={cn(
-                "flex items-start cursor-pointer",
-                "hover:bg-gray-50 rounded-md p-2 transition-colors",
-                selectedId === inspection.id && "bg-avocado-50"
-              )}
-            >
-              <div className={cn(
-                "flex items-center justify-center h-12 w-12 rounded-full shrink-0",
-                "border-2",
-                inspection.status === 'Passed' ? "border-green-500 bg-green-50" :
-                inspection.status === 'Failed' ? "border-red-500 bg-red-50" :
-                "border-amber-500 bg-amber-50"
-              )}>
-                {getInspectionIcon(inspection.type)}
-              </div>
-              
-              <div className="ml-4">
-                <div className="flex items-center">
-                  <h4 className="text-md font-medium">{inspection.type} Inspection</h4>
-                  <div className="ml-2">{getStatusIcon(inspection.status)}</div>
+      <ScrollArea className="w-full">
+        <div className="relative">
+          {/* Horizontal line connecting inspection nodes */}
+          <div className="absolute top-6 left-0 right-0 h-0.5 bg-gray-200 z-0" />
+          
+          <div className="flex space-x-8 relative z-10 pb-4 px-2">
+            {sortedInspections.map((inspection, index) => (
+              <div 
+                key={inspection.id}
+                onClick={() => handleSelect(inspection)}
+                className={cn(
+                  "flex flex-col items-center cursor-pointer min-w-[150px]",
+                  "hover:bg-gray-50 rounded-md p-2 transition-colors",
+                  selectedId === inspection.id && "bg-avocado-50"
+                )}
+              >
+                <div className={cn(
+                  "flex items-center justify-center h-12 w-12 rounded-full shrink-0",
+                  "border-2",
+                  inspection.status === 'Passed' ? "border-green-500 bg-green-50" :
+                  inspection.status === 'Failed' ? "border-red-500 bg-red-50" :
+                  "border-amber-500 bg-amber-50"
+                )}>
+                  {getInspectionIcon(inspection.type)}
                 </div>
-                <div className="text-sm text-gray-500">{new Date(inspection.date).toLocaleDateString()}</div>
-                <div className="text-sm text-gray-500">{inspection.location}</div>
+                
+                <div className="mt-3 text-center">
+                  <div className="flex items-center justify-center">
+                    <h4 className="text-sm font-medium">{inspection.type}</h4>
+                    <div className="ml-1">{getStatusIcon(inspection.status)}</div>
+                  </div>
+                  <div className="text-xs text-gray-500">{new Date(inspection.date).toLocaleDateString()}</div>
+                  <div className="text-xs text-gray-500 truncate max-w-[140px]">{inspection.location}</div>
+                </div>
               </div>
-            </div>
-          ))}
+            ))}
+          </div>
+          <ScrollBar orientation="horizontal" />
         </div>
-      </div>
+      </ScrollArea>
     </div>
   );
 };
