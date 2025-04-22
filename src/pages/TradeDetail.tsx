@@ -1,4 +1,3 @@
-
 import { useState } from 'react';
 import { useParams, useNavigate, useMatch } from 'react-router-dom';
 import { Layout } from "@/components/layout/Layout";
@@ -22,7 +21,6 @@ const TradeDetail = () => {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
   
-  // Check if we're in TFC or Supplier route
   const isTFC = useMatch('/tfc/*');
   const rolePrefix = isTFC ? '/tfc' : '/supplier';
   
@@ -34,7 +32,6 @@ const TradeDetail = () => {
 
   const handleDownloadReport = () => {
     console.log('Downloading trade report for:', trade?.tradeNumber);
-    // Mock download functionality
     alert(`Downloading trade report for ${trade?.tradeNumber}`);
   };
 
@@ -115,8 +112,8 @@ const TradeDetail = () => {
           </CardContent>
         </Card>
           
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-x-6 gap-y-8">
-          <div className="md:sticky md:top-4 self-start">
+        <div className="space-y-6">
+          <div>
             {trade.inspections.length > 0 ? (
               <InspectionTimeline
                 inspections={trade.inspections}
