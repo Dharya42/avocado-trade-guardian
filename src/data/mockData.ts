@@ -59,9 +59,9 @@ export const mockTrades: Trade[] = [
         location: 'Nairobi, Kenya',
         status: 'Passed',
         qualityChecks: [
-          { type: 'Physical', value: 'Excellent', threshold: 'Good', status: 'Passed', details: 'Avocados are firm and free from physical damage.' },
+          { type: 'Physical', value: 'Excellent', threshold: 'Good', status: 'Failed', details: 'Avocados are firm and free from physical damage.' },
           { type: 'Chemical', value: 'Optimal', threshold: 'Optimal', status: 'Passed', details: 'Chemical analysis shows ideal maturity levels.' },
-          { type: 'Moisture', value: '70%', threshold: '65-75%', status: 'Passed', details: 'Moisture content within acceptable range.' }
+          { type: 'Moisture', value: '69%', threshold: '65-75%', status: 'Passed', details: 'Moisture content within acceptable range.' }
         ],
         compliances: [
           { name: 'GLOBALG.A.P', status: 'Passed', details: 'Compliant with GLOBALG.A.P standards.' },
