@@ -1,4 +1,5 @@
-import { Inspection, QualityCheck, Compliance } from '@/types';
+
+import { Inspection, QualityCheck } from '@/types';
 import {
   Card,
   CardContent,
@@ -14,12 +15,6 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import {
-  Accordion,
-  AccordionContent,
-  AccordionItem,
-  AccordionTrigger,
-} from "@/components/ui/accordion";
 import { Button } from "@/components/ui/button";
 import {
   CheckCircle,
@@ -34,14 +29,6 @@ import {
   FileText,
   Info
 } from 'lucide-react';
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from "@/components/ui/dialog";
 import {
   Popover,
   PopoverContent,
@@ -114,8 +101,57 @@ export const InspectionDetail = ({ inspection }: InspectionDetailProps) => {
 
   const handleDownloadLabReport = () => {
     console.log('Downloading lab report for:', inspection.type);
-    // Mock download functionality
     alert(`Downloading lab report for ${inspection.type} inspection`);
+  };
+
+  // Helper: Render last details accordion for the node type within the summary card
+  const renderLastAccordionContent = () => {
+    switch (inspection.type) {
+      case 'Post-Harvest':
+        return inspection.postHarvestDetails ? (
+          <div className="mt-4">
+            <PostHarvestDetails details={inspection.postHarvestDetails} onlyLastAccordion />
+          </div>
+        ) : null;
+      case 'Pre-Shipment':
+        return inspection.preShipmentDetails ? (
+          <div className="mt-4">
+            <PreShipmentDetails details={inspection.preShipmentDetails} onlyLastAccordion />
+          </div>
+        ) : null;
+      case 'Port-Export':
+        return inspection.portOfExportDetails ? (
+          <div className="mt-4">
+            <PortOfExportDetails details={inspection.portOfExportDetails} onlyLastAccordion />
+          </div>
+        ) : null;
+      case 'Transit':
+        return inspection.transitDetails ? (
+          <div className="mt-4">
+            <TransitDetails details={inspection.transitDetails} onlyLastAccordion />
+          </div>
+        ) : null;
+      case 'On-Arrival':
+        return inspection.postOfImportDetails ? (
+          <div className="mt-4">
+            <PostOfImportDetails details={inspection.postOfImportDetails} onlyLastAccordion />
+          </div>
+        ) : null;
+      case 'Warehouse':
+        return inspection.distributionCenterDetails ? (
+          <div className="mt-4">
+            <DistributionCenterDetails details={inspection.distributionCenterDetails} onlyLastAccordion />
+          </div>
+        ) : null;
+      case 'Retail':
+        return inspection.retailShelfDetails ? (
+          <div className="mt-4">
+            <RetailShelfDetails details={inspection.retailShelfDetails} onlyLastAccordion />
+          </div>
+        ) : null;
+      default:
+        return null;
+    }
   };
 
   return (
@@ -130,164 +166,124 @@ export const InspectionDetail = ({ inspection }: InspectionDetailProps) => {
             {formatDate(inspection.date)} • {inspection.location}
           </CardDescription>
         </CardHeader>
-      </Card>
-
-      {/* Post-Harvest Details */}
-      {inspection.type === 'Post-Harvest' && inspection.postHarvestDetails && (
-        <PostHarvestDetails details={inspection.postHarvestDetails} />
-      )}
-
-      {/* Pre-Shipment Details */}
-      {inspection.type === 'Pre-Shipment' && inspection.preShipmentDetails && (
-        <PreShipmentDetails details={inspection.preShipmentDetails} />
-      )}
-
-      {/* Port of Export Details */}
-      {inspection.type === 'Port-Export' && inspection.portOfExportDetails && (
-        <PortOfExportDetails details={inspection.portOfExportDetails} />
-      )}
-
-      {/* Transit Details */}
-      {inspection.type === 'Transit' && inspection.transitDetails && (
-        <TransitDetails details={inspection.transitDetails} />
-      )}
-
-      {/* Post of Import Details */}
-      {inspection.type === 'On-Arrival' && inspection.postOfImportDetails && (
-        <PostOfImportDetails details={inspection.postOfImportDetails} />
-      )}
-
-      {/* Distribution Center Details */}
-      {inspection.type === 'Warehouse' && inspection.distributionCenterDetails && (
-        <DistributionCenterDetails details={inspection.distributionCenterDetails} />
-      )}
-
-      {/* Retail Shelf Details */}
-      {inspection.type === 'Retail' && inspection.retailShelfDetails && (
-        <RetailShelfDetails details={inspection.retailShelfDetails} />
-      )}
-
-      {/* Quality Checks */}
-      <Card>
-        <CardHeader>
-          <CardTitle className="text-lg flex items-center">
-            <FlaskConical className="mr-2 h-5 w-5" />
-            Quality Inspection Results
-          </CardTitle>
-        </CardHeader>
-        <CardContent className="p-0">
-          <Table>
-            <TableHeader className="bg-muted/50">
-              <TableRow>
-                <TableHead className="w-[30%]">Parameter</TableHead>
-                <TableHead className="w-[25%]">Value</TableHead>
-                <TableHead className="w-[25%]">Threshold</TableHead>
-                <TableHead className="w-[20%]">Status</TableHead>
-              </TableRow>
-            </TableHeader>
-            <TableBody>
-              {inspection.qualityChecks.map((check, index) => (
-                <TableRow key={index}>
-                  <TableCell className="font-medium">
-                    <div className="flex items-center">
-                      {getQualityIcon(check.type)}
-                      <span className="ml-2">{check.type}</span>
-                    </div>
-                  </TableCell>
-                  <TableCell>{check.value || '—'}</TableCell>
-                  <TableCell>{check.threshold || '—'}</TableCell>
-                  <TableCell>
-                    <div className="flex items-center justify-between">
-                      <div className={`flex items-center px-2 py-1 rounded ${getStatusColor(check.status)}`}>
-                        {getStatusIcon(check.status)}
-                        <span className={`ml-1 font-medium ${getStatusTextColor(check.status)}`}>{check.status}</span>
-                      </div>
-                      {check.details && (
-                        <Popover>
-                          <PopoverTrigger asChild>
-                            <Button variant="ghost" size="icon" className="h-8 w-8">
-                              <Info className="h-4 w-4" />
-                            </Button>
-                          </PopoverTrigger>
-                          <PopoverContent className="w-80" align="end">
-                            <div className="flex flex-col space-y-2">
-                              <div className="flex items-center">
-                                {getQualityIcon(check.type)}
-                                <span className="ml-2 font-medium">{check.type} Analysis</span>
-                              </div>
-                              <div className={`p-3 rounded-md ${getStatusColor(check.status)} border`}>
-                                <p className="text-sm text-muted-foreground">{check.details}</p>
-                              </div>
-                            </div>
-                          </PopoverContent>
-                        </Popover>
-                      )}
-                    </div>
-                  </TableCell>
-                </TableRow>
-              ))}
-            </TableBody>
-          </Table>
-        </CardContent>
-      </Card>
-
-      {/* Compliance Information */}
-      <Card>
-        <CardHeader>
-          <CardTitle className="text-lg flex items-center">
-            <Shield className="mr-2 h-5 w-5" />
-            Compliance Information
-          </CardTitle>
-        </CardHeader>
-        <CardContent className="p-0">
-          <Table>
-            <TableHeader className="bg-muted/50">
-              <TableRow>
-                <TableHead className="w-[70%]">Compliance</TableHead>
-                <TableHead className="w-[30%]">Status</TableHead>
-              </TableRow>
-            </TableHeader>
-            <TableBody>
-              {inspection.compliances.map((compliance, index) => (
-                <TableRow 
-                  key={index}
-                  className={compliance.details ? "cursor-pointer" : ""}
-                  onClick={() => {}}
-                >
-                  <TableCell className="font-medium">
-                    {compliance.name}
-                  </TableCell>
-                  <TableCell>
-                    <div className={`flex items-center px-2 py-1 rounded ${getStatusColor(compliance.status)}`}>
-                      {getStatusIcon(compliance.status)}
-                      <span className={`ml-1 font-medium ${getStatusTextColor(compliance.status)}`}>{compliance.status}</span>
-                    </div>
-                  </TableCell>
-                </TableRow>
-              ))}
-            </TableBody>
-          </Table>
-          
-          {inspection.compliances.some(compliance => compliance.details) && (
-            <div className="p-4 border-t">
-              <div className="text-sm font-medium mb-2 flex items-center">
-                <Info className="h-4 w-4 mr-1" />
-                Compliance Details
-              </div>
-              <div className="space-y-3">
-                {inspection.compliances
-                  .filter(compliance => compliance.details)
-                  .map((compliance, index) => (
-                    <div key={index} className={`p-3 rounded-md ${getStatusColor(compliance.status)} border`}>
-                      <div className="font-medium mb-1">
-                        {compliance.name}
-                      </div>
-                      <p className="text-sm text-muted-foreground">{compliance.details}</p>
-                    </div>
-                  ))}
-              </div>
+        {/* Quality Checks */}
+        <CardContent className="pt-0">
+          <div className="mb-6">
+            <div className="text-lg font-semibold flex items-center mb-2">
+              <FlaskConical className="mr-2 h-5 w-5" />
+              Quality Inspection Results
             </div>
-          )}
+            <Table>
+              <TableHeader className="bg-muted/50">
+                <TableRow>
+                  <TableHead className="w-[30%]">Parameter</TableHead>
+                  <TableHead className="w-[25%]">Value</TableHead>
+                  <TableHead className="w-[25%]">Threshold</TableHead>
+                  <TableHead className="w-[20%]">Status</TableHead>
+                </TableRow>
+              </TableHeader>
+              <TableBody>
+                {inspection.qualityChecks.map((check, index) => (
+                  <TableRow key={index}>
+                    <TableCell className="font-medium">
+                      <div className="flex items-center">
+                        {getQualityIcon(check.type)}
+                        <span className="ml-2">{check.type}</span>
+                      </div>
+                    </TableCell>
+                    <TableCell>{check.value || '—'}</TableCell>
+                    <TableCell>{check.threshold || '—'}</TableCell>
+                    <TableCell>
+                      <div className="flex items-center justify-between">
+                        <div className={`flex items-center px-2 py-1 rounded ${getStatusColor(check.status)}`}>
+                          {getStatusIcon(check.status)}
+                          <span className={`ml-1 font-medium ${getStatusTextColor(check.status)}`}>{check.status}</span>
+                        </div>
+                        {check.details && (
+                          <Popover>
+                            <PopoverTrigger asChild>
+                              <Button variant="ghost" size="icon" className="h-8 w-8">
+                                <Info className="h-4 w-4" />
+                              </Button>
+                            </PopoverTrigger>
+                            <PopoverContent className="w-80" align="end">
+                              <div className="flex flex-col space-y-2">
+                                <div className="flex items-center">
+                                  {getQualityIcon(check.type)}
+                                  <span className="ml-2 font-medium">{check.type} Analysis</span>
+                                </div>
+                                <div className={`p-3 rounded-md ${getStatusColor(check.status)} border`}>
+                                  <p className="text-sm text-muted-foreground">{check.details}</p>
+                                </div>
+                              </div>
+                            </PopoverContent>
+                          </Popover>
+                        )}
+                      </div>
+                    </TableCell>
+                  </TableRow>
+                ))}
+              </TableBody>
+            </Table>
+          </div>
+
+          {/* Compliance Information */}
+          <div className="mb-6">
+            <div className="text-lg font-semibold flex items-center mb-2">
+              <Shield className="mr-2 h-5 w-5" />
+              Compliance Information
+            </div>
+            <Table>
+              <TableHeader className="bg-muted/50">
+                <TableRow>
+                  <TableHead className="w-[70%]">Compliance</TableHead>
+                  <TableHead className="w-[30%]">Status</TableHead>
+                </TableRow>
+              </TableHeader>
+              <TableBody>
+                {inspection.compliances.map((compliance, index) => (
+                  <TableRow
+                    key={index}
+                    className={compliance.details ? "cursor-pointer" : ""}
+                  >
+                    <TableCell className="font-medium">
+                      {compliance.name}
+                    </TableCell>
+                    <TableCell>
+                      <div className={`flex items-center px-2 py-1 rounded ${getStatusColor(compliance.status)}`}>
+                        {getStatusIcon(compliance.status)}
+                        <span className={`ml-1 font-medium ${getStatusTextColor(compliance.status)}`}>{compliance.status}</span>
+                      </div>
+                    </TableCell>
+                  </TableRow>
+                ))}
+              </TableBody>
+            </Table>
+
+            {inspection.compliances.some(compliance => compliance.details) && (
+              <div className="p-4 border-t">
+                <div className="text-sm font-medium mb-2 flex items-center">
+                  <Info className="h-4 w-4 mr-1" />
+                  Compliance Details
+                </div>
+                <div className="space-y-3">
+                  {inspection.compliances
+                    .filter(compliance => compliance.details)
+                    .map((compliance, index) => (
+                      <div key={index} className={`p-3 rounded-md ${getStatusColor(compliance.status)} border`}>
+                        <div className="font-medium mb-1">
+                          {compliance.name}
+                        </div>
+                        <p className="text-sm text-muted-foreground">{compliance.details}</p>
+                      </div>
+                    ))}
+                </div>
+              </div>
+            )}
+          </div>
+
+          {/* Content from LAST accordion for the type */}
+          {renderLastAccordionContent()}
         </CardContent>
       </Card>
 
@@ -320,10 +316,10 @@ export const InspectionDetail = ({ inspection }: InspectionDetailProps) => {
                 <Beaker className="mr-2 h-5 w-5" />
                 Lab Information
               </div>
-              <Button 
-                variant="outline" 
-                size="sm" 
-                className="ml-auto" 
+              <Button
+                variant="outline"
+                size="sm"
+                className="ml-auto"
                 onClick={handleDownloadLabReport}
               >
                 <FileText className="h-4 w-4 mr-2" />
