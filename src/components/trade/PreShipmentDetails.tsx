@@ -1,11 +1,5 @@
-
 import { PreShipmentInspection } from '@/types';
-import {
-  Accordion,
-  AccordionContent,
-  AccordionItem,
-  AccordionTrigger,
-} from "@/components/ui/accordion";
+import { useState } from 'react';
 import {
   Table,
   TableBody,
@@ -38,7 +32,29 @@ interface PreShipmentDetailsProps {
 
 type SectionStatus = 'Compliant' | 'Pending Review' | 'Issues Found';
 
+type Section = {
+  id: string;
+  title: string;
+  icon: React.ReactNode;
+  key: keyof PreShipmentInspection;
+};
+
+const SECTIONS: Section[] = [
+  { id: 'facility-id', title: 'Facility Identification & General Info', icon: <Building2 className="h-5 w-5" />, key: 'facilityIdentification' },
+  { id: 'regulatory', title: 'Regulatory Compliance & Documentation', icon: <FileCheck className="h-5 w-5" />, key: 'regulatoryCompliance' },
+  { id: 'condition', title: 'Facility Condition & Hygiene', icon: <ClipboardList className="h-5 w-5" />, key: 'facilityCondition' },
+  { id: 'receiving', title: 'Receiving Area', icon: <Truck className="h-5 w-5" />, key: 'receivingArea' },
+  { id: 'processing', title: 'Processing Line', icon: <SlidersHorizontal className="h-5 w-5" />, key: 'processingLine' },
+  { id: 'quality', title: 'Quality Control (QC)', icon: <Target className="h-5 w-5" />, key: 'qualityControl' },
+  { id: 'packing', title: 'Packing & Labeling', icon: <PackageCheck className="h-5 w-5" />, key: 'packingLabeling' },
+  { id: 'storage', title: 'Storage & Dispatch', icon: <Snowflake className="h-5 w-5" />, key: 'storage' },
+  { id: 'hygiene', title: 'Worker Hygiene & Practices', icon: <Users2 className="h-5 w-5" />, key: 'workerHygiene' },
+  { id: 'assessment', title: 'Overall Assessment & Corrective Actions', icon: <ClipboardSignature className="h-5 w-5" />, key: 'finalAssessment' },
+];
+
 export const PreShipmentDetails = ({ details }: PreShipmentDetailsProps) => {
+  const [selectedSection, setSelectedSection] = useState<string>(SECTIONS[0].id);
+
   const formatDate = (dateString: string) => {
     return new Date(dateString).toLocaleDateString(undefined, {
       year: 'numeric',
@@ -116,19 +132,6 @@ export const PreShipmentDetails = ({ details }: PreShipmentDetailsProps) => {
     }
   };
 
-  const renderStatusBadge = (section: keyof PreShipmentInspection) => {
-    const status = getSectionStatus(section);
-    return (
-      <div className={cn(
-        "flex items-center px-2 py-1 rounded-full border text-xs font-medium mr-3",
-        getStatusBadgeStyle(status)
-      )}>
-        {getStatusIcon(status)}
-        <span className="ml-1">{status}</span>
-      </div>
-    );
-  };
-
   const renderPhotos = (photos: { type: string; url: string; }[]) => {
     if (!photos.length) return null;
     
@@ -156,18 +159,10 @@ export const PreShipmentDetails = ({ details }: PreShipmentDetailsProps) => {
     );
   };
 
-  return (
-    <Accordion type="single" collapsible className="w-full space-y-4">
-      {/* Facility Identification */}
-      <AccordionItem value="facility-id" className="border rounded-lg">
-        <AccordionTrigger className="px-4 hover:no-underline [&[data-state=open]>div]:text-primary">
-          <div className="flex items-center w-full">
-            {renderStatusBadge('facilityIdentification')}
-            <Building2 className="h-5 w-5 mr-2" />
-            <span>Facility Identification & General Info</span>
-          </div>
-        </AccordionTrigger>
-        <AccordionContent className="px-4 pb-4">
+  const renderSectionContent = (sectionId: string) => {
+    switch (sectionId) {
+      case 'facility-id':
+        return (
           <div className="space-y-4">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div>
@@ -211,19 +206,10 @@ export const PreShipmentDetails = ({ details }: PreShipmentDetailsProps) => {
             </div>
             {renderPhotos(details.facilityIdentification.photos)}
           </div>
-        </AccordionContent>
-      </AccordionItem>
+        );
 
-      {/* Regulatory Compliance */}
-      <AccordionItem value="regulatory" className="border rounded-lg">
-        <AccordionTrigger className="px-4 hover:no-underline [&[data-state=open]>div]:text-primary">
-          <div className="flex items-center w-full">
-            {renderStatusBadge('regulatoryCompliance')}
-            <FileCheck className="h-5 w-5 mr-2" />
-            <span>Regulatory Compliance & Documentation</span>
-          </div>
-        </AccordionTrigger>
-        <AccordionContent className="px-4 pb-4">
+      case 'regulatory':
+        return (
           <div className="space-y-4">
             <div>
               <h4 className="text-sm font-medium mb-1 flex items-center">
@@ -284,19 +270,10 @@ export const PreShipmentDetails = ({ details }: PreShipmentDetailsProps) => {
             </div>
             {renderPhotos(details.regulatoryCompliance.photos)}
           </div>
-        </AccordionContent>
-      </AccordionItem>
+        );
 
-      {/* Facility Condition */}
-      <AccordionItem value="condition" className="border rounded-lg">
-        <AccordionTrigger className="px-4 hover:no-underline [&[data-state=open]>div]:text-primary">
-          <div className="flex items-center w-full">
-            {renderStatusBadge('facilityCondition')}
-            <ClipboardList className="h-5 w-5 mr-2" />
-            <span>Facility Condition & Hygiene</span>
-          </div>
-        </AccordionTrigger>
-        <AccordionContent className="px-4 pb-4">
+      case 'condition':
+        return (
           <div className="space-y-4">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div>
@@ -370,19 +347,10 @@ export const PreShipmentDetails = ({ details }: PreShipmentDetailsProps) => {
             </div>
             {renderPhotos(details.facilityCondition.photos)}
           </div>
-        </AccordionContent>
-      </AccordionItem>
+        );
 
-      {/* Receiving Area */}
-      <AccordionItem value="receiving" className="border rounded-lg">
-        <AccordionTrigger className="px-4 hover:no-underline [&[data-state=open]>div]:text-primary">
-          <div className="flex items-center w-full">
-            {renderStatusBadge('receivingArea')}
-            <Truck className="h-5 w-5 mr-2" />
-            <span>Receiving Area</span>
-          </div>
-        </AccordionTrigger>
-        <AccordionContent className="px-4 pb-4">
+      case 'receiving':
+        return (
           <div className="space-y-4">
             <div>
               <h4 className="text-sm font-medium mb-1">Temperature Control</h4>
@@ -425,19 +393,10 @@ export const PreShipmentDetails = ({ details }: PreShipmentDetailsProps) => {
             </div>
             {renderPhotos(details.receivingArea.photos)}
           </div>
-        </AccordionContent>
-      </AccordionItem>
+        );
 
-      {/* Processing Line */}
-      <AccordionItem value="processing" className="border rounded-lg">
-        <AccordionTrigger className="px-4 hover:no-underline [&[data-state=open]>div]:text-primary">
-          <div className="flex items-center w-full">
-            {renderStatusBadge('processingLine')}
-            <SlidersHorizontal className="h-5 w-5 mr-2" />
-            <span>Processing Line (Washing, Sorting, Grading)</span>
-          </div>
-        </AccordionTrigger>
-        <AccordionContent className="px-4 pb-4">
+      case 'processing':
+        return (
           <div className="space-y-4">
             <div>
               <h4 className="text-sm font-medium mb-1 flex items-center">
@@ -500,19 +459,10 @@ export const PreShipmentDetails = ({ details }: PreShipmentDetailsProps) => {
             </div>
             {renderPhotos(details.processingLine.photos)}
           </div>
-        </AccordionContent>
-      </AccordionItem>
+        );
 
-      {/* Quality Control */}
-      <AccordionItem value="quality" className="border rounded-lg">
-        <AccordionTrigger className="px-4 hover:no-underline [&[data-state=open]>div]:text-primary">
-          <div className="flex items-center w-full">
-            {renderStatusBadge('qualityControl')}
-            <Target className="h-5 w-5 mr-2" />
-            <span>Quality Control (QC)</span>
-          </div>
-        </AccordionTrigger>
-        <AccordionContent className="px-4 pb-4">
+      case 'quality':
+        return (
           <div className="space-y-4">
             <div>
               <h4 className="text-sm font-medium mb-1 flex items-center">
@@ -576,19 +526,10 @@ export const PreShipmentDetails = ({ details }: PreShipmentDetailsProps) => {
             </div>
             {renderPhotos(details.qualityControl.photos)}
           </div>
-        </AccordionContent>
-      </AccordionItem>
+        );
 
-      {/* Packing & Labeling */}
-      <AccordionItem value="packing" className="border rounded-lg">
-        <AccordionTrigger className="px-4 hover:no-underline [&[data-state=open]>div]:text-primary">
-          <div className="flex items-center w-full">
-            {renderStatusBadge('packingLabeling')}
-            <PackageCheck className="h-5 w-5 mr-2" />
-            <span>Packing & Labeling</span>
-          </div>
-        </AccordionTrigger>
-        <AccordionContent className="px-4 pb-4">
+      case 'packing':
+        return (
           <div className="space-y-4">
             <div>
               <h4 className="text-sm font-medium mb-1 flex items-center">
@@ -652,19 +593,10 @@ export const PreShipmentDetails = ({ details }: PreShipmentDetailsProps) => {
             </div>
             {renderPhotos(details.packingLabeling.photos)}
           </div>
-        </AccordionContent>
-      </AccordionItem>
+        );
 
-      {/* Storage & Dispatch */}
-      <AccordionItem value="storage" className="border rounded-lg">
-        <AccordionTrigger className="px-4 hover:no-underline [&[data-state=open]>div]:text-primary">
-          <div className="flex items-center w-full">
-            {renderStatusBadge('storage')}
-            <Snowflake className="h-5 w-5 mr-2" />
-            <span>Storage (Pre-cooling/Cold Chain) & Dispatch</span>
-          </div>
-        </AccordionTrigger>
-        <AccordionContent className="px-4 pb-4">
+      case 'storage':
+        return (
           <div className="space-y-4">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div>
@@ -729,19 +661,10 @@ export const PreShipmentDetails = ({ details }: PreShipmentDetailsProps) => {
             </div>
             {renderPhotos(details.storage.photos)}
           </div>
-        </AccordionContent>
-      </AccordionItem>
+        );
 
-      {/* Worker Hygiene */}
-      <AccordionItem value="hygiene" className="border rounded-lg">
-        <AccordionTrigger className="px-4 hover:no-underline [&[data-state=open]>div]:text-primary">
-          <div className="flex items-center w-full">
-            {renderStatusBadge('workerHygiene')}
-            <Users2 className="h-5 w-5 mr-2" />
-            <span>Worker Hygiene & Practices</span>
-          </div>
-        </AccordionTrigger>
-        <AccordionContent className="px-4 pb-4">
+      case 'hygiene':
+        return (
           <div className="space-y-4">
             <div>
               <h4 className="text-sm font-medium mb-1 flex items-center">
@@ -805,19 +728,10 @@ export const PreShipmentDetails = ({ details }: PreShipmentDetailsProps) => {
             </div>
             {renderPhotos(details.workerHygiene.photos)}
           </div>
-        </AccordionContent>
-      </AccordionItem>
+        );
 
-      {/* Final Assessment */}
-      <AccordionItem value="assessment" className="border rounded-lg">
-        <AccordionTrigger className="px-4 hover:no-underline [&[data-state=open]>div]:text-primary">
-          <div className="flex items-center w-full">
-            {renderStatusBadge('finalAssessment')}
-            <ClipboardSignature className="h-5 w-5 mr-2" />
-            <span>Overall Assessment & Corrective Actions</span>
-          </div>
-        </AccordionTrigger>
-        <AccordionContent className="px-4 pb-4">
+      case 'assessment':
+        return (
           <div className="space-y-4">
             <div>
               <div className="flex justify-between items-center mb-2">
@@ -894,8 +808,59 @@ export const PreShipmentDetails = ({ details }: PreShipmentDetailsProps) => {
             </div>
             {renderPhotos(details.finalAssessment.photos)}
           </div>
-        </AccordionContent>
-      </AccordionItem>
-    </Accordion>
+        );
+
+      default:
+        return null;
+    }
+  };
+
+  return (
+    <div className="flex gap-6 w-full min-h-[600px]">
+      {/* Left Panel - Section List */}
+      <div className="w-1/3 border rounded-lg bg-white">
+        <div className="p-4 space-y-2">
+          {SECTIONS.map((section) => {
+            const status = getSectionStatus(section.key);
+            return (
+              <button
+                key={section.id}
+                onClick={() => setSelectedSection(section.id)}
+                className={cn(
+                  "w-full flex items-center p-3 rounded-lg text-left transition-colors",
+                  selectedSection === section.id
+                    ? "bg-primary/5 text-primary"
+                    : "hover:bg-muted"
+                )}
+              >
+                <div className={cn(
+                  "flex items-center px-2 py-1 rounded-full border text-xs font-medium mr-3",
+                  getStatusBadgeStyle(status)
+                )}>
+                  {getStatusIcon(status)}
+                  <span className="ml-1">{status}</span>
+                </div>
+                <div className="flex items-center gap-2">
+                  {section.icon}
+                  <span>{section.title}</span>
+                </div>
+              </button>
+            );
+          })}
+        </div>
+      </div>
+
+      {/* Right Panel - Section Details */}
+      <div className="flex-1 border rounded-lg bg-white">
+        <div className="p-6">
+          <div className="mb-4">
+            <h2 className="text-lg font-semibold">
+              {SECTIONS.find(s => s.id === selectedSection)?.title}
+            </h2>
+          </div>
+          {renderSectionContent(selectedSection)}
+        </div>
+      </div>
+    </div>
   );
 };

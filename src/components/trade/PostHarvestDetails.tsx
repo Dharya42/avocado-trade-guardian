@@ -1,4 +1,5 @@
 import { PostHarvestInspection } from '@/types';
+import { useState } from 'react';
 import {
   Card,
   CardContent,
@@ -42,7 +43,27 @@ interface PostHarvestDetailsProps {
 
 type SectionStatus = 'Compliant' | 'Issues Found' | 'Not Compliant';
 
+type Section = {
+  id: string;
+  title: string;
+  icon: React.ReactNode;
+  key: keyof PostHarvestInspection;
+};
+
+const SECTIONS: Section[] = [
+  { id: 'farm-id', title: 'Farm Identification & General Info', icon: <Building2 className="h-5 w-5" />, key: 'farmIdentification' },
+  { id: 'traceability', title: 'Traceability & Record Keeping', icon: <ClipboardCheck className="h-5 w-5" />, key: 'traceability' },
+  { id: 'gap', title: 'Good Agricultural Practices (G.A.P.)', icon: <Sprout className="h-5 w-5" />, key: 'gap' },
+  { id: 'pest', title: 'Pest & Disease Management', icon: <Bug className="h-5 w-5" />, key: 'pestManagement' },
+  { id: 'pre-harvest', title: 'Pre-Harvest & Harvest Readiness', icon: <Truck className="h-5 w-5" />, key: 'preHarvest' },
+  { id: 'welfare', title: 'Food Safety & Worker Welfare', icon: <Users className="h-5 w-5" />, key: 'workerWelfare' },
+  { id: 'environmental', title: 'Environmental Protection', icon: <TreePine className="h-5 w-5" />, key: 'environmental' },
+  { id: 'evaluation', title: 'Final Evaluation', icon: <CheckSquare className="h-5 w-5" />, key: 'finalEvaluation' },
+];
+
 export const PostHarvestDetails = ({ details }: PostHarvestDetailsProps) => {
+  const [selectedSection, setSelectedSection] = useState<string>(SECTIONS[0].id);
+
   if (!details) {
     return (
       <div className="p-4 border rounded-lg bg-white text-center">
@@ -121,19 +142,6 @@ export const PostHarvestDetails = ({ details }: PostHarvestDetailsProps) => {
     }
   };
 
-  const renderStatusBadge = (section: keyof PostHarvestInspection) => {
-    const status = getSectionStatus(section);
-    return (
-      <div className={cn(
-        "flex items-center px-2 py-1 rounded-full border text-xs font-medium mr-3",
-        getStatusBadgeStyle(status)
-      )}>
-        {getStatusIcon(status)}
-        <span className="ml-1">{status}</span>
-      </div>
-    );
-  };
-
   const renderPhotos = (photos: { type: string; url: string; }[] | undefined) => {
     if (!photos || !photos.length) return null;
     
@@ -161,70 +169,54 @@ export const PostHarvestDetails = ({ details }: PostHarvestDetailsProps) => {
     );
   };
 
-  return (
-    <Accordion type="single" collapsible className="w-full space-y-4">
-      {/* Farm Identification */}
-      <AccordionItem value="farm-id" className="border rounded-lg">
-        <AccordionTrigger className="px-4 hover:no-underline [&[data-state=open]>div]:text-primary">
-          <div className="flex items-center w-full">
-            {renderStatusBadge('farmIdentification')}
-            <Building2 className="h-5 w-5 mr-2" />
-            <span>Farm Identification & General Info</span>
+  const renderSectionContent = (sectionId: string) => {
+    switch (sectionId) {
+      case 'farm-id':
+        return (
+          <div className="space-y-4">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div>
+                <p className="text-sm font-medium">Farm/Grower Name</p>
+                <p className="text-sm">{details.farmIdentification.farmName} / {details.farmIdentification.growerName}</p>
+              </div>
+              <div>
+                <p className="text-sm font-medium">Registration Numbers</p>
+                {details.farmIdentification.registrationNumbers.map((reg, index) => (
+                  <p key={index} className="text-sm">{reg.type}: {reg.value}</p>
+                ))}
+              </div>
+              <div>
+                <p className="text-sm font-medium">Location</p>
+                <p className="text-sm">
+                  {details.farmIdentification.location.address}<br />
+                  GPS: {details.farmIdentification.location.coordinates}
+                </p>
+              </div>
+              <div>
+                <p className="text-sm font-medium">Area</p>
+                <p className="text-sm">
+                  Total: {details.farmIdentification.areas.total} Ha<br />
+                  Avocado: {details.farmIdentification.areas.avocado} Ha
+                </p>
+              </div>
+              <div>
+                <p className="text-sm font-medium">Varieties</p>
+                <p className="text-sm">{details.farmIdentification.varieties.join(', ')}</p>
+              </div>
+              <div>
+                <p className="text-sm font-medium">Target Markets</p>
+                <p className="text-sm">{details.farmIdentification.targetMarkets.join(', ')}</p>
+              </div>
+              <div>
+                <p className="text-sm font-medium">Associated Packhouse</p>
+                <p className="text-sm">{details.farmIdentification.associatedPackhouse}</p>
+              </div>
+            </div>
+            {renderPhotos(details.farmIdentification.photos)}
           </div>
-        </AccordionTrigger>
-        <AccordionContent className="px-4 pb-4">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <div>
-              <p className="text-sm font-medium">Farm/Grower Name</p>
-              <p className="text-sm">{details.farmIdentification.farmName} / {details.farmIdentification.growerName}</p>
-            </div>
-            <div>
-              <p className="text-sm font-medium">Registration Numbers</p>
-              {details.farmIdentification.registrationNumbers.map((reg, index) => (
-                <p key={index} className="text-sm">{reg.type}: {reg.value}</p>
-              ))}
-            </div>
-            <div>
-              <p className="text-sm font-medium">Location</p>
-              <p className="text-sm">
-                {details.farmIdentification.location.address}<br />
-                GPS: {details.farmIdentification.location.coordinates}
-              </p>
-            </div>
-            <div>
-              <p className="text-sm font-medium">Area</p>
-              <p className="text-sm">
-                Total: {details.farmIdentification.areas.total} Ha<br />
-                Avocado: {details.farmIdentification.areas.avocado} Ha
-              </p>
-            </div>
-            <div>
-              <p className="text-sm font-medium">Varieties</p>
-              <p className="text-sm">{details.farmIdentification.varieties.join(', ')}</p>
-            </div>
-            <div>
-              <p className="text-sm font-medium">Target Markets</p>
-              <p className="text-sm">{details.farmIdentification.targetMarkets.join(', ')}</p>
-            </div>
-            <div>
-              <p className="text-sm font-medium">Associated Packhouse</p>
-              <p className="text-sm">{details.farmIdentification.associatedPackhouse}</p>
-            </div>
-          </div>
-          {renderPhotos(details.farmIdentification.photos)}
-        </AccordionContent>
-      </AccordionItem>
-
-      {/* Traceability */}
-      <AccordionItem value="traceability" className="border rounded-lg">
-        <AccordionTrigger className="px-4 hover:no-underline [&[data-state=open]>div]:text-primary">
-          <div className="flex items-center w-full">
-            {renderStatusBadge('traceability')}
-            <ClipboardCheck className="h-5 w-5 mr-2" />
-            <span>Traceability & Record Keeping</span>
-          </div>
-        </AccordionTrigger>
-        <AccordionContent className="px-4 pb-4">
+        );
+      case 'traceability':
+        return (
           <div className="space-y-4">
             <div>
               <p className="text-sm font-medium">System Type</p>
@@ -238,21 +230,11 @@ export const PostHarvestDetails = ({ details }: PostHarvestDetailsProps) => {
               <p className="text-sm font-medium">Record Types</p>
               <p className="text-sm">{details.traceability.recordTypes.join(', ')}</p>
             </div>
+            {renderPhotos(details.traceability.photos)}
           </div>
-          {renderPhotos(details.traceability.photos)}
-        </AccordionContent>
-      </AccordionItem>
-
-      {/* GAP */}
-      <AccordionItem value="gap" className="border rounded-lg">
-        <AccordionTrigger className="px-4 hover:no-underline [&[data-state=open]>div]:text-primary">
-          <div className="flex items-center w-full">
-            {renderStatusBadge('gap')}
-            <Sprout className="h-5 w-5 mr-2" />
-            <span>Good Agricultural Practices (G.A.P.)</span>
-          </div>
-        </AccordionTrigger>
-        <AccordionContent className="px-4 pb-4">
+        );
+      case 'gap':
+        return (
           <div className="space-y-4">
             <div>
               <p className="text-sm font-medium">Site History</p>
@@ -297,21 +279,11 @@ export const PostHarvestDetails = ({ details }: PostHarvestDetailsProps) => {
                 </div>
               </div>
             </div>
+            {renderPhotos(details.gap.photos)}
           </div>
-          {renderPhotos(details.gap.photos)}
-        </AccordionContent>
-      </AccordionItem>
-
-      {/* Pest Management */}
-      <AccordionItem value="pest" className="border rounded-lg">
-        <AccordionTrigger className="px-4 hover:no-underline [&[data-state=open]>div]:text-primary">
-          <div className="flex items-center w-full">
-            {renderStatusBadge('pestManagement')}
-            <Bug className="h-5 w-5 mr-2" />
-            <span>Pest & Disease Management</span>
-          </div>
-        </AccordionTrigger>
-        <AccordionContent className="px-4 pb-4">
+        );
+      case 'pest':
+        return (
           <div className="space-y-4">
             <div>
               <p className="text-sm font-medium">IPM Strategy</p>
@@ -368,21 +340,11 @@ export const PostHarvestDetails = ({ details }: PostHarvestDetailsProps) => {
                 </TableBody>
               </Table>
             </div>
+            {renderPhotos(details.pestManagement.photos)}
           </div>
-          {renderPhotos(details.pestManagement.photos)}
-        </AccordionContent>
-      </AccordionItem>
-
-      {/* Pre-Harvest */}
-      <AccordionItem value="pre-harvest" className="border rounded-lg">
-        <AccordionTrigger className="px-4 hover:no-underline [&[data-state=open]>div]:text-primary">
-          <div className="flex items-center w-full">
-            {renderStatusBadge('preHarvest')}
-            <Truck className="h-5 w-5 mr-2" />
-            <span>Pre-Harvest & Harvest Readiness</span>
-          </div>
-        </AccordionTrigger>
-        <AccordionContent className="px-4 pb-4">
+        );
+      case 'pre-harvest':
+        return (
           <div className="space-y-4">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div>
@@ -437,21 +399,11 @@ export const PostHarvestDetails = ({ details }: PostHarvestDetailsProps) => {
                 </TableBody>
               </Table>
             </div>
+            {renderPhotos(details.preHarvest.photos)}
           </div>
-          {renderPhotos(details.preHarvest.photos)}
-        </AccordionContent>
-      </AccordionItem>
-
-      {/* Worker Welfare */}
-      <AccordionItem value="welfare" className="border rounded-lg">
-        <AccordionTrigger className="px-4 hover:no-underline [&[data-state=open]>div]:text-primary">
-          <div className="flex items-center w-full">
-            {renderStatusBadge('workerWelfare')}
-            <Users className="h-5 w-5 mr-2" />
-            <span>Food Safety & Worker Welfare</span>
-          </div>
-        </AccordionTrigger>
-        <AccordionContent className="px-4 pb-4">
+        );
+      case 'welfare':
+        return (
           <div className="space-y-4">
             <div>
               <p className="text-sm font-medium">Hygiene Training</p>
@@ -502,21 +454,11 @@ export const PostHarvestDetails = ({ details }: PostHarvestDetailsProps) => {
                 </div>
               </div>
             </div>
+            {renderPhotos(details.workerWelfare.photos)}
           </div>
-          {renderPhotos(details.workerWelfare.photos)}
-        </AccordionContent>
-      </AccordionItem>
-
-      {/* Environmental Protection */}
-      <AccordionItem value="environmental" className="border rounded-lg">
-        <AccordionTrigger className="px-4 hover:no-underline [&[data-state=open]>div]:text-primary">
-          <div className="flex items-center w-full">
-            {renderStatusBadge('environmental')}
-            <TreePine className="h-5 w-5 mr-2" />
-            <span>Environmental Protection</span>
-          </div>
-        </AccordionTrigger>
-        <AccordionContent className="px-4 pb-4">
+        );
+      case 'environmental':
+        return (
           <div className="space-y-4">
             <div>
               <p className="text-sm font-medium">Waste Management</p>
@@ -555,21 +497,11 @@ export const PostHarvestDetails = ({ details }: PostHarvestDetailsProps) => {
                 ))}
               </div>
             </div>
+            {renderPhotos(details.environmental.photos)}
           </div>
-          {renderPhotos(details.environmental.photos)}
-        </AccordionContent>
-      </AccordionItem>
-
-      {/* Final Evaluation */}
-      <AccordionItem value="evaluation" className="border rounded-lg">
-        <AccordionTrigger className="px-4 hover:no-underline [&[data-state=open]>div]:text-primary">
-          <div className="flex items-center w-full">
-            {renderStatusBadge('finalEvaluation')}
-            <CheckSquare className="h-5 w-5 mr-2" />
-            <span>Final Evaluation</span>
-          </div>
-        </AccordionTrigger>
-        <AccordionContent className="px-4 pb-4">
+        );
+      case 'evaluation':
+        return (
           <div className="space-y-4">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div>
@@ -641,8 +573,58 @@ export const PostHarvestDetails = ({ details }: PostHarvestDetailsProps) => {
               </div>
             </div>
           </div>
-        </AccordionContent>
-      </AccordionItem>
-    </Accordion>
+        );
+      default:
+        return null;
+    }
+  };
+
+  return (
+    <div className="flex gap-6 w-full min-h-[600px]">
+      {/* Left Panel - Section List */}
+      <div className="w-1/3 border rounded-lg bg-white">
+        <div className="p-4 space-y-2">
+          {SECTIONS.map((section) => {
+            const status = getSectionStatus(section.key);
+            return (
+              <button
+                key={section.id}
+                onClick={() => setSelectedSection(section.id)}
+                className={cn(
+                  "w-full flex items-center p-3 rounded-lg text-left transition-colors",
+                  selectedSection === section.id
+                    ? "bg-primary/5 text-primary"
+                    : "hover:bg-muted"
+                )}
+              >
+                <div className={cn(
+                  "flex items-center px-2 py-1 rounded-full border text-xs font-medium mr-3",
+                  getStatusBadgeStyle(status)
+                )}>
+                  {getStatusIcon(status)}
+                  <span className="ml-1">{status}</span>
+                </div>
+                <div className="flex items-center gap-2">
+                  {section.icon}
+                  <span>{section.title}</span>
+                </div>
+              </button>
+            );
+          })}
+        </div>
+      </div>
+
+      {/* Right Panel - Section Details */}
+      <div className="flex-1 border rounded-lg bg-white">
+        <div className="p-6">
+          <div className="mb-4">
+            <h2 className="text-lg font-semibold">
+              {SECTIONS.find(s => s.id === selectedSection)?.title}
+            </h2>
+          </div>
+          {renderSectionContent(selectedSection)}
+        </div>
+      </div>
+    </div>
   );
 };
