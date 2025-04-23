@@ -54,6 +54,8 @@ import { PostOfImportDetails } from './PostOfImportDetails';
 import { DistributionCenterDetails } from './DistributionCenterDetails';
 import { RetailShelfDetails } from './RetailShelfDetails';
 import { PortOfExportDetails } from './PortOfExportDetails';
+import { cn } from '@/lib/utils';
+import { InspectionSummary } from './InspectionSummary';
 
 interface InspectionDetailProps {
   inspection: Inspection;
@@ -123,11 +125,11 @@ export const InspectionDetail = ({ inspection }: InspectionDetailProps) => {
       <Card>
         <CardHeader>
           <CardTitle className="flex items-center">
-            {inspection.type} Inspection
+            {inspection.type} Inspection 
             <span className="ml-2">{getStatusIcon(inspection.status)}</span>
           </CardTitle>
           <CardDescription>
-            {formatDate(inspection.date)} • {inspection.location}
+            <InspectionSummary inspection={inspection} formatDate={formatDate} />
           </CardDescription>
         </CardHeader>
       </Card>

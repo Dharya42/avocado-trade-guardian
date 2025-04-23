@@ -118,7 +118,7 @@ const TradeDetail = () => {
               <InspectionTimeline
                 inspections={trade.inspections}
                 onSelectInspection={setSelectedInspection}
-                reverse={true}
+                reverse={false}
               />
             ) : (
               <div className="p-4 border rounded-lg bg-white text-center">
