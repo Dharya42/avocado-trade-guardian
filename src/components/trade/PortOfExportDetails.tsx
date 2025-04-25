@@ -1,113 +1,51 @@
-import {
-  Accordion,
-  AccordionContent,
-  AccordionItem,
-  AccordionTrigger,
-} from "@/components/ui/accordion";
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "@/components/ui/table";
-import {
-  UserCircle,
-  ClipboardCheck,
-  FileCheck,
-  Box,
-  Thermometer,
-  PackageOpen,
-  LockKeyhole,
-  CheckCircle2,
-  AlertCircle,
+import { useState } from 'react';
+import { PortOfExportInspection } from '@/types';
+import { 
+  CheckCircle,
+  AlertCircle as LucideAlertCircle,
   XCircle,
-  Image,
+  Truck, 
+  Box, 
+  Clipboard, 
+  FileText,
+  ThermometerSnowflake,
+  CalendarCheck
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
-interface PortOfExportDetails {
-  inspectorInfo: {
-    name: string;
-    inspectionDate: string;
-    inspectionTime: string;
-    affiliatedBody: string;
-    portLocation: string;
-    photos?: { type: string; url: string; }[];
-  };
-  consignmentInfo: {
-    bookingReference: string;
-    exporterName: string;
-    importerName: string;
-    containerId: string;
-    vesselInfo?: {
-      name: string;
-      voyageNumber: string;
-    };
-    phytosanitaryCertificate: boolean;
-    exportPermit: boolean;
-    photos?: { type: string; url: string; }[];
-  };
-  containerCondition: {
-    containerType: 'Reefer';
-    externalCondition: 'Pass' | 'Fail' | 'Needs Improvement';
-    internalCleanliness: 'Pass' | 'Fail' | 'Needs Improvement';
-    doorSealsCondition: 'Pass' | 'Fail' | 'Needs Improvement';
-    reeferUnitFunctionality: 'Pass' | 'Fail' | 'Needs Improvement';
-    photos?: { type: string; url: string; }[];
-  };
-  temperatureVerification: {
-    setTemperature: number;
-    actualTemperature: number;
-    preCooled: boolean | null;
-    pulpTemperatures: {
-      location1: number;
-      location2: number;
-      location3: number;
-      location4: number;
-      location5: number;
-      average: number;
-    };
-    temperatureLoggerPlaced: boolean | null;
-    loggerPosition?: string;
-    photos?: { type: string; url: string; }[];
-  };
-  loadingProcess: {
-    loadingMethod: string;
-    handlingPractices: 'Good' | 'Fair' | 'Poor';
-    stackingPattern: 'Pass' | 'Fail' | 'Needs Improvement';
-    cartonCondition: 'Good' | 'Fair' | 'Poor';
-    dunnageMaterial?: string;
-    timeframeAcceptable: boolean | null;
-    photos?: { type: string; url: string; }[];
-  };
-  finalSealing: {
-    totalUnits: {
-      pallets?: number;
-      cartons: number;
-    };
-    doorsClosed: boolean;
-    highSecuritySeal: boolean;
-    sealNumber: string;
-    sealType: 'Bolt' | 'Cable' | 'Other';
-    photos?: { type: string; url: string; }[];
-  };
-  overallAssessment: {
-    findings: string;
-    nonConformities?: string;
-    correctiveActions?: string;
-    exportClearance: boolean;
-  };
-}
-
 interface PortOfExportDetailsProps {
-  details: PortOfExportDetails;
+  details: PortOfExportInspection;
 }
 
-type SectionStatus = 'Compliant' | 'Pending Review' | 'Issues Found';
+type SectionStatus = 'Compliant' | 'Issues Found' | 'Not Compliant';
+
+type Section = {
+  id: string;
+  title: string;
+  icon: React.ReactNode;
+  key: keyof PortOfExportInspection;
+};
+
+const SECTIONS: Section[] = [
+  { id: 'logistics', title: 'Logistics & Documentation', icon: <Truck className="h-5 w-5" />, key: 'logistics' },
+  { id: 'packaging', title: 'Packaging & Labeling', icon: <Box className="h-5 w-5" />, key: 'packaging' },
+  { id: 'quality', title: 'Quality Inspection', icon: <Clipboard className="h-5 w-5" />, key: 'quality' },
+  { id: 'compliance', title: 'Export Compliance', icon: <FileText className="h-5 w-5" />, key: 'compliance' },
+  { id: 'temperature', title: 'Temperature & Conditions', icon: <ThermometerSnowflake className="h-5 w-5" />, key: 'temperature' },
+  { id: 'loading', title: 'Container Loading', icon: <CalendarCheck className="h-5 w-5" />, key: 'loading' },
+];
 
 export const PortOfExportDetails = ({ details }: PortOfExportDetailsProps) => {
+  const [selectedSection, setSelectedSection] = useState<string>(SECTIONS[0].id);
+
+  if (!details) {
+    return (
+      <div className="p-4 border rounded-lg bg-white text-center">
+        <p className="text-muted-foreground">No port of export inspection details available</p>
+      </div>
+    );
+  }
+
   const formatDate = (dateString: string) => {
     return new Date(dateString).toLocaleDateString(undefined, {
       year: 'numeric',
@@ -116,44 +54,43 @@ export const PortOfExportDetails = ({ details }: PortOfExportDetailsProps) => {
     });
   };
 
-  const getSectionStatus = (section: keyof PortOfExportDetails): SectionStatus => {
-    switch (section) {
-      case 'inspectorInfo':
-        return details.inspectorInfo.name && details.inspectorInfo.inspectionDate ? 'Compliant' : 'Issues Found';
+  const getSectionStatus = (sectionKey: keyof PortOfExportInspection): SectionStatus => {
+    switch (sectionKey) {
+      case 'logistics':
+        return details.logistics && details.logistics.documents && 
+               details.logistics.documents.length > 0 ? 'Compliant' : 'Issues Found';
       
-      case 'consignmentInfo':
-        return details.consignmentInfo.phytosanitaryCertificate && details.consignmentInfo.exportPermit ? 'Compliant' : 'Issues Found';
+      case 'packaging':
+        return details.packaging && details.packaging.condition === 'Good' ? 'Compliant' : 'Issues Found';
       
-      case 'containerCondition':
-        const allPassing = Object.values(details.containerCondition).every(val => val === 'Pass');
-        return allPassing ? 'Compliant' : 'Issues Found';
+      case 'quality':
+        return details.quality && details.quality.overallRating >= 4 ? 'Compliant' : 
+               details.quality && details.quality.overallRating >= 3 ? 'Issues Found' : 'Not Compliant';
       
-      case 'temperatureVerification':
-        const tempInRange = Math.abs(details.temperatureVerification.setTemperature - details.temperatureVerification.actualTemperature) <= 1;
-        return tempInRange ? 'Compliant' : 'Issues Found';
+      case 'compliance':
+        return details.compliance && details.compliance.exportPermit && 
+               details.compliance.phytosanitaryCertificate ? 'Compliant' : 'Not Compliant';
       
-      case 'loadingProcess':
-        return details.loadingProcess.handlingPractices === 'Good' && details.loadingProcess.stackingPattern === 'Pass'
-          ? 'Compliant' : 'Issues Found';
+      case 'temperature':
+        return details.temperature && 
+               details.temperature.readings.every(r => r.value >= 4 && r.value <= 6) ? 'Compliant' : 'Issues Found';
       
-      case 'finalSealing':
-        return details.finalSealing.doorsClosed && details.finalSealing.highSecuritySeal ? 'Compliant' : 'Issues Found';
-      
-      case 'overallAssessment':
-        return details.overallAssessment.exportClearance ? 'Compliant' : 'Issues Found';
+      case 'loading':
+        return details.loading && details.loading.containerCondition === 'Good' &&
+               details.loading.securitySeal ? 'Compliant' : 'Issues Found';
       
       default:
-        return 'Pending Review';
+        return 'Issues Found';
     }
   };
 
   const getStatusIcon = (status: SectionStatus) => {
     switch (status) {
       case 'Compliant':
-        return <CheckCircle2 className="h-4 w-4 text-green-500" />;
-      case 'Pending Review':
-        return <AlertCircle className="h-4 w-4 text-amber-500" />;
+        return <CheckCircle className="h-4 w-4 text-green-500" />;
       case 'Issues Found':
+        return <LucideAlertCircle className="h-4 w-4 text-amber-500" />;
+      case 'Not Compliant':
         return <XCircle className="h-4 w-4 text-red-500" />;
     }
   };
@@ -162,34 +99,21 @@ export const PortOfExportDetails = ({ details }: PortOfExportDetailsProps) => {
     switch (status) {
       case 'Compliant':
         return "bg-green-50 text-green-700 border-green-200";
-      case 'Pending Review':
-        return "bg-amber-50 text-amber-700 border-amber-200";
       case 'Issues Found':
+        return "bg-amber-50 text-amber-700 border-amber-200";
+      case 'Not Compliant':
         return "bg-red-50 text-red-700 border-red-200";
     }
   };
 
-  const renderStatusBadge = (section: keyof PortOfExportDetails) => {
-    const status = getSectionStatus(section);
-    return (
-      <div className={cn(
-        "flex items-center px-2 py-1 rounded-full border text-xs font-medium mr-3",
-        getStatusBadgeStyle(status)
-      )}>
-        {getStatusIcon(status)}
-        <span className="ml-1">{status}</span>
-      </div>
-    );
-  };
-
-  const renderPhotos = (photos?: { type: string; url: string; }[]) => {
-    if (!photos?.length) return null;
+  const renderPhotos = (photos: { type: string; url: string; }[] | undefined) => {
+    if (!photos || !photos.length) return null;
     
     return (
       <div className="mt-4 border-t pt-4">
         <div className="text-sm font-medium mb-2 flex items-center">
-          <Image className="h-4 w-4 mr-2" />
-          Photos & Evidence
+          <FileText className="h-4 w-4 mr-2" />
+          Photos
         </div>
         <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
           {photos.map((photo, index) => (
@@ -209,388 +133,363 @@ export const PortOfExportDetails = ({ details }: PortOfExportDetailsProps) => {
     );
   };
 
+  const renderSectionContent = () => {
+    const section = SECTIONS.find(s => s.id === selectedSection);
+    if (!section) return null;
+
+    switch (section.id) {
+      case 'logistics':
+        return (
+          <div>
+            <div className="grid grid-cols-2 gap-4 mb-4">
+              <div className="border rounded-md p-3">
+                <div className="text-sm text-muted-foreground mb-1">Inspection Date</div>
+                <div className="font-medium">{formatDate(details.inspectionDate)}</div>
+              </div>
+              <div className="border rounded-md p-3">
+                <div className="text-sm text-muted-foreground mb-1">Inspector</div>
+                <div className="font-medium">{details.inspector}</div>
+              </div>
+            </div>
+            
+            <div className="border rounded-md p-4 mb-4">
+              <h3 className="font-medium mb-2">Documentation</h3>
+              <ul className="space-y-2">
+                {details.logistics?.documents?.map((doc, index) => (
+                  <li key={index} className="flex items-center">
+                    <CheckCircle className="h-4 w-4 text-green-500 mr-2" />
+                    <span>{doc.type}: </span>
+                    <span className="ml-1 text-muted-foreground">{doc.number}</span>
+                  </li>
+                ))}
+              </ul>
+            </div>
+            
+            <div className="border rounded-md p-4">
+              <h3 className="font-medium mb-2">Shipping Details</h3>
+              <div className="grid grid-cols-2 gap-4">
+                <div>
+                  <div className="text-sm text-muted-foreground mb-1">Vessel/Flight</div>
+                  <div>{details.logistics?.vessel || 'N/A'}</div>
+                </div>
+                <div>
+                  <div className="text-sm text-muted-foreground mb-1">Departure Date</div>
+                  <div>{details.logistics?.departureDate ? formatDate(details.logistics.departureDate) : 'N/A'}</div>
+                </div>
+              </div>
+            </div>
+            
+            {renderPhotos(details.logistics?.photos)}
+          </div>
+        );
+        
+      case 'packaging':
+        return (
+          <div>
+            <div className="grid grid-cols-2 gap-4 mb-4">
+              <div className="border rounded-md p-3">
+                <div className="text-sm text-muted-foreground mb-1">Packaging Condition</div>
+                <div className="font-medium">{details.packaging?.condition || 'N/A'}</div>
+              </div>
+              <div className="border rounded-md p-3">
+                <div className="text-sm text-muted-foreground mb-1">Packaging Type</div>
+                <div className="font-medium">{details.packaging?.type || 'N/A'}</div>
+              </div>
+            </div>
+            
+            <div className="border rounded-md p-4 mb-4">
+              <h3 className="font-medium mb-2">Labeling Compliance</h3>
+              <ul className="space-y-2">
+                {details.packaging?.labelingCompliance?.map((item, index) => (
+                  <li key={index} className="flex items-center">
+                    {item.compliant ? 
+                      <CheckCircle className="h-4 w-4 text-green-500 mr-2" /> : 
+                      <XCircle className="h-4 w-4 text-red-500 mr-2" />
+                    }
+                    <span>{item.requirement}</span>
+                  </li>
+                ))}
+              </ul>
+            </div>
+            
+            {details.packaging?.notes && (
+              <div className="border rounded-md p-4 mb-4">
+                <h3 className="font-medium mb-2">Notes</h3>
+                <p className="text-muted-foreground">{details.packaging.notes}</p>
+              </div>
+            )}
+            
+            {renderPhotos(details.packaging?.photos)}
+          </div>
+        );
+        
+      case 'quality':
+        return (
+          <div>
+            <div className="grid grid-cols-2 gap-4 mb-4">
+              <div className="border rounded-md p-3">
+                <div className="text-sm text-muted-foreground mb-1">Overall Rating</div>
+                <div className="font-medium">{details.quality?.overallRating || 'N/A'}/5</div>
+              </div>
+              <div className="border rounded-md p-3">
+                <div className="text-sm text-muted-foreground mb-1">Sample Size</div>
+                <div className="font-medium">{details.quality?.sampleSize || 'N/A'} fruits</div>
+              </div>
+            </div>
+            
+            <div className="border rounded-md p-4 mb-4">
+              <h3 className="font-medium mb-2">Quality Metrics</h3>
+              <div className="space-y-3">
+                {details.quality?.metrics?.map((metric, index) => (
+                  <div key={index}>
+                    <div className="flex justify-between mb-1">
+                      <span>{metric.name}</span>
+                      <span className="font-medium">{metric.value}{metric.unit}</span>
+                    </div>
+                    <div className="w-full bg-gray-200 rounded-full h-2">
+                      <div 
+                        className="bg-primary rounded-full h-2" 
+                        style={{ width: `${(metric.value / metric.maxValue) * 100}%` }}
+                      ></div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+            
+            <div className="border rounded-md p-4 mb-4">
+              <h3 className="font-medium mb-2">Defects Found</h3>
+              <div className="grid grid-cols-2 gap-3">
+                {details.quality?.defects?.map((defect, index) => (
+                  <div key={index} className="flex items-center">
+                    <div className={cn(
+                      "w-2 h-2 rounded-full mr-2",
+                      defect.severity === 'High' ? "bg-red-500" :
+                      defect.severity === 'Medium' ? "bg-amber-500" : "bg-yellow-300"
+                    )}></div>
+                    <span>{defect.type}: </span>
+                    <span className="ml-1 text-muted-foreground">{defect.percentage}%</span>
+                  </div>
+                ))}
+              </div>
+            </div>
+            
+            {renderPhotos(details.quality?.photos)}
+          </div>
+        );
+        
+      case 'compliance':
+        return (
+          <div>
+            <div className="grid grid-cols-2 gap-4 mb-4">
+              <div className="border rounded-md p-3">
+                <div className="text-sm text-muted-foreground mb-1">Export Permit</div>
+                <div className="font-medium flex items-center">
+                  {details.compliance?.exportPermit ? 
+                    <><CheckCircle className="h-4 w-4 text-green-500 mr-2" /> Verified</> : 
+                    <><XCircle className="h-4 w-4 text-red-500 mr-2" /> Not Verified</>
+                  }
+                </div>
+              </div>
+              <div className="border rounded-md p-3">
+                <div className="text-sm text-muted-foreground mb-1">Phytosanitary Certificate</div>
+                <div className="font-medium flex items-center">
+                  {details.compliance?.phytosanitaryCertificate ? 
+                    <><CheckCircle className="h-4 w-4 text-green-500 mr-2" /> Verified</> : 
+                    <><XCircle className="h-4 w-4 text-red-500 mr-2" /> Not Verified</>
+                  }
+                </div>
+              </div>
+            </div>
+            
+            <div className="border rounded-md p-4 mb-4">
+              <h3 className="font-medium mb-2">Compliance Requirements</h3>
+              <ul className="space-y-2">
+                {details.compliance?.requirements?.map((req, index) => (
+                  <li key={index} className="flex items-center">
+                    {req.met ? 
+                      <CheckCircle className="h-4 w-4 text-green-500 mr-2" /> : 
+                      <XCircle className="h-4 w-4 text-red-500 mr-2" />
+                    }
+                    <span>{req.name}</span>
+                  </li>
+                ))}
+              </ul>
+            </div>
+            
+            {details.compliance?.notes && (
+              <div className="border rounded-md p-4 mb-4">
+                <h3 className="font-medium mb-2">Notes</h3>
+                <p className="text-muted-foreground">{details.compliance.notes}</p>
+              </div>
+            )}
+            
+            {renderPhotos(details.compliance?.photos)}
+          </div>
+        );
+        
+      case 'temperature':
+        return (
+          <div>
+            <div className="grid grid-cols-2 gap-4 mb-4">
+              <div className="border rounded-md p-3">
+                <div className="text-sm text-muted-foreground mb-1">Target Temperature</div>
+                <div className="font-medium">{details.temperature?.targetRange?.min}°C - {details.temperature?.targetRange?.max}°C</div>
+              </div>
+              <div className="border rounded-md p-3">
+                <div className="text-sm text-muted-foreground mb-1">Humidity</div>
+                <div className="font-medium">{details.temperature?.humidity || 'N/A'}%</div>
+              </div>
+            </div>
+            
+            <div className="border rounded-md p-4 mb-4">
+              <h3 className="font-medium mb-2">Temperature Readings</h3>
+              <div className="space-y-3">
+                {details.temperature?.readings?.map((reading, index) => (
+                  <div key={index}>
+                    <div className="flex justify-between mb-1">
+                      <span>{reading.location}</span>
+                      <span className={cn(
+                        "font-medium",
+                        reading.value < 4 || reading.value > 6 ? "text-red-500" : "text-green-500"
+                      )}>
+                        {reading.value}°C
+                      </span>
+                    </div>
+                    <div className="w-full bg-gray-200 rounded-full h-2">
+                      <div 
+                        className={cn(
+                          "rounded-full h-2",
+                          reading.value < 4 || reading.value > 6 ? "bg-red-500" : "bg-green-500"
+                        )}
+                        style={{ 
+                          width: `${Math.min(100, Math.max(0, ((reading.value - 0) / 10) * 100))}%` 
+                        }}
+                      ></div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+            
+            {details.temperature?.notes && (
+              <div className="border rounded-md p-4 mb-4">
+                <h3 className="font-medium mb-2">Notes</h3>
+                <p className="text-muted-foreground">{details.temperature.notes}</p>
+              </div>
+            )}
+            
+            {renderPhotos(details.temperature?.photos)}
+          </div>
+        );
+        
+      case 'loading':
+        return (
+          <div>
+            <div className="grid grid-cols-2 gap-4 mb-4">
+              <div className="border rounded-md p-3">
+                <div className="text-sm text-muted-foreground mb-1">Container Condition</div>
+                <div className="font-medium">{details.loading?.containerCondition || 'N/A'}</div>
+              </div>
+              <div className="border rounded-md p-3">
+                <div className="text-sm text-muted-foreground mb-1">Security Seal</div>
+                <div className="font-medium flex items-center">
+                  {details.loading?.securitySeal ? 
+                    <><CheckCircle className="h-4 w-4 text-green-500 mr-2" /> Applied</> : 
+                    <><XCircle className="h-4 w-4 text-red-500 mr-2" /> Not Applied</>
+                  }
+                </div>
+              </div>
+            </div>
+            
+            <div className="border rounded-md p-4 mb-4">
+              <h3 className="font-medium mb-2">Container Details</h3>
+              <div className="grid grid-cols-2 gap-4">
+                <div>
+                  <div className="text-sm text-muted-foreground mb-1">Container Number</div>
+                  <div>{details.loading?.containerNumber || 'N/A'}</div>
+                </div>
+                <div>
+                  <div className="text-sm text-muted-foreground mb-1">Seal Number</div>
+                  <div>{details.loading?.sealNumber || 'N/A'}</div>
+                </div>
+                <div>
+                  <div className="text-sm text-muted-foreground mb-1">Loading Date</div>
+                  <div>{details.loading?.loadingDate ? formatDate(details.loading.loadingDate) : 'N/A'}</div>
+                </div>
+                <div>
+                  <div className="text-sm text-muted-foreground mb-1">Loading Completion</div>
+                  <div>{details.loading?.loadingCompletion || 'N/A'}</div>
+                </div>
+              </div>
+            </div>
+            
+            {details.loading?.notes && (
+              <div className="border rounded-md p-4 mb-4">
+                <h3 className="font-medium mb-2">Notes</h3>
+                <p className="text-muted-foreground">{details.loading.notes}</p>
+              </div>
+            )}
+            
+            {renderPhotos(details.loading?.photos)}
+          </div>
+        );
+        
+      default:
+        return (
+          <div className="text-center p-4">
+            <p className="text-muted-foreground">No details available for this section</p>
+          </div>
+        );
+    }
+  };
+
   return (
-    <Accordion type="single" collapsible className="w-full space-y-4">
-      {/* Inspector Details */}
-      <AccordionItem value="inspector-info" className="border rounded-lg">
-        <AccordionTrigger className="px-4 hover:no-underline [&[data-state=open]>div]:text-primary">
-          <div className="flex items-center w-full">
-            {renderStatusBadge('inspectorInfo')}
-            <UserCircle className="h-5 w-5 mr-2" />
-            <span>Inspector Details</span>
-          </div>
-        </AccordionTrigger>
-        <AccordionContent className="px-4 pb-4">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <div>
-              <p className="text-sm font-medium">Inspector Name</p>
-              <p className="text-sm">{details.inspectorInfo.name}</p>
-            </div>
-            <div>
-              <p className="text-sm font-medium">Inspection Date & Time</p>
-              <p className="text-sm">
-                {formatDate(details.inspectorInfo.inspectionDate)} at {details.inspectorInfo.inspectionTime}
-              </p>
-            </div>
-            <div>
-              <p className="text-sm font-medium">Affiliated Body</p>
-              <p className="text-sm">{details.inspectorInfo.affiliatedBody}</p>
-            </div>
-            <div>
-              <p className="text-sm font-medium">Port Location</p>
-              <p className="text-sm">{details.inspectorInfo.portLocation}</p>
-            </div>
-          </div>
-          {renderPhotos(details.inspectorInfo.photos)}
-        </AccordionContent>
-      </AccordionItem>
-
-      {/* Consignment & Documentation */}
-      <AccordionItem value="consignment-info" className="border rounded-lg">
-        <AccordionTrigger className="px-4 hover:no-underline [&[data-state=open]>div]:text-primary">
-          <div className="flex items-center w-full">
-            {renderStatusBadge('consignmentInfo')}
-            <ClipboardCheck className="h-5 w-5 mr-2" />
-            <span>Consignment & Documentation</span>
-          </div>
-        </AccordionTrigger>
-        <AccordionContent className="px-4 pb-4">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <div>
-              <p className="text-sm font-medium">Booking Reference</p>
-              <p className="text-sm">{details.consignmentInfo.bookingReference}</p>
-            </div>
-            <div>
-              <p className="text-sm font-medium">Exporter Name</p>
-              <p className="text-sm">{details.consignmentInfo.exporterName}</p>
-            </div>
-            <div>
-              <p className="text-sm font-medium">Importer Name</p>
-              <p className="text-sm">{details.consignmentInfo.importerName}</p>
-            </div>
-            <div>
-              <p className="text-sm font-medium">Container ID</p>
-              <p className="text-sm">{details.consignmentInfo.containerId}</p>
-            </div>
-            {details.consignmentInfo.vesselInfo && (
-              <div>
-                <p className="text-sm font-medium">Vessel Details</p>
-                <p className="text-sm">
-                  {details.consignmentInfo.vesselInfo.name} / {details.consignmentInfo.vesselInfo.voyageNumber}
-                </p>
-              </div>
-            )}
-            <div>
-              <p className="text-sm font-medium">Documentation Status</p>
-              <div className="flex space-x-4">
-                <span className={cn(
-                  "text-sm px-2 py-1 rounded-full",
-                  details.consignmentInfo.phytosanitaryCertificate
-                    ? "bg-green-50 text-green-700"
-                    : "bg-red-50 text-red-700"
+    <div className="flex gap-6 w-full min-h-[600px]">
+      {/* Left Panel - Section List */}
+      <div className="w-1/3 border rounded-lg bg-white">
+        <div className="p-4 space-y-2">
+          {SECTIONS.map((section) => {
+            const status = getSectionStatus(section.key);
+            return (
+              <button
+                key={section.id}
+                onClick={() => setSelectedSection(section.id)}
+                className={cn(
+                  "w-full flex items-center p-3 rounded-lg text-left transition-colors",
+                  selectedSection === section.id
+                    ? "bg-primary/5 text-primary"
+                    : "hover:bg-muted"
+                )}
+              >
+                <div className={cn(
+                  "flex items-center px-2 py-1 rounded-full border text-xs font-medium mr-3",
+                  getStatusBadgeStyle(status)
                 )}>
-                  Phytosanitary: {details.consignmentInfo.phytosanitaryCertificate ? "✓" : "✗"}
-                </span>
-                <span className={cn(
-                  "text-sm px-2 py-1 rounded-full",
-                  details.consignmentInfo.exportPermit
-                    ? "bg-green-50 text-green-700"
-                    : "bg-red-50 text-red-700"
-                )}>
-                  Export Permit: {details.consignmentInfo.exportPermit ? "✓" : "✗"}
-                </span>
-              </div>
-            </div>
-          </div>
-          {renderPhotos(details.consignmentInfo.photos)}
-        </AccordionContent>
-      </AccordionItem>
+                  {getStatusIcon(status)}
+                  <span className="ml-1">{status}</span>
+                </div>
+                <div className="flex items-center gap-2">
+                  {section.icon}
+                  <span>{section.title}</span>
+                </div>
+              </button>
+            );
+          })}
+        </div>
+      </div>
 
-      {/* Container Condition */}
-      <AccordionItem value="container-condition" className="border rounded-lg">
-        <AccordionTrigger className="px-4 hover:no-underline [&[data-state=open]>div]:text-primary">
-          <div className="flex items-center w-full">
-            {renderStatusBadge('containerCondition')}
-            <Box className="h-5 w-5 mr-2" />
-            <span>Container Condition</span>
+      {/* Right Panel - Section Details */}
+      <div className="flex-1 border rounded-lg bg-white">
+        <div className="p-6">
+          <div className="mb-4">
+            <h2 className="text-lg font-semibold">
+              {SECTIONS.find(s => s.id === selectedSection)?.title}
+            </h2>
           </div>
-        </AccordionTrigger>
-        <AccordionContent className="px-4 pb-4">
-          <Table>
-            <TableHeader>
-              <TableRow>
-                <TableHead>Inspection Point</TableHead>
-                <TableHead>Status</TableHead>
-              </TableRow>
-            </TableHeader>
-            <TableBody>
-              <TableRow>
-                <TableCell>External Condition</TableCell>
-                <TableCell>
-                  <span className={cn(
-                    "px-2 py-1 rounded-full text-sm",
-                    details.containerCondition.externalCondition === 'Pass'
-                      ? "bg-green-50 text-green-700"
-                      : details.containerCondition.externalCondition === 'Fail'
-                      ? "bg-red-50 text-red-700"
-                      : "bg-amber-50 text-amber-700"
-                  )}>
-                    {details.containerCondition.externalCondition}
-                  </span>
-                </TableCell>
-              </TableRow>
-              <TableRow>
-                <TableCell>Internal Cleanliness</TableCell>
-                <TableCell>
-                  <span className={cn(
-                    "px-2 py-1 rounded-full text-sm",
-                    details.containerCondition.internalCleanliness === 'Pass'
-                      ? "bg-green-50 text-green-700"
-                      : details.containerCondition.internalCleanliness === 'Fail'
-                      ? "bg-red-50 text-red-700"
-                      : "bg-amber-50 text-amber-700"
-                  )}>
-                    {details.containerCondition.internalCleanliness}
-                  </span>
-                </TableCell>
-              </TableRow>
-              <TableRow>
-                <TableCell>Door Seals Condition</TableCell>
-                <TableCell>
-                  <span className={cn(
-                    "px-2 py-1 rounded-full text-sm",
-                    details.containerCondition.doorSealsCondition === 'Pass'
-                      ? "bg-green-50 text-green-700"
-                      : details.containerCondition.doorSealsCondition === 'Fail'
-                      ? "bg-red-50 text-red-700"
-                      : "bg-amber-50 text-amber-700"
-                  )}>
-                    {details.containerCondition.doorSealsCondition}
-                  </span>
-                </TableCell>
-              </TableRow>
-              <TableRow>
-                <TableCell>Reefer Unit Functionality</TableCell>
-                <TableCell>
-                  <span className={cn(
-                    "px-2 py-1 rounded-full text-sm",
-                    details.containerCondition.reeferUnitFunctionality === 'Pass'
-                      ? "bg-green-50 text-green-700"
-                      : details.containerCondition.reeferUnitFunctionality === 'Fail'
-                      ? "bg-red-50 text-red-700"
-                      : "bg-amber-50 text-amber-700"
-                  )}>
-                    {details.containerCondition.reeferUnitFunctionality}
-                  </span>
-                </TableCell>
-              </TableRow>
-            </TableBody>
-          </Table>
-          {renderPhotos(details.containerCondition.photos)}
-        </AccordionContent>
-      </AccordionItem>
-
-      {/* Temperature Verification */}
-      <AccordionItem value="temperature-verification" className="border rounded-lg">
-        <AccordionTrigger className="px-4 hover:no-underline [&[data-state=open]>div]:text-primary">
-          <div className="flex items-center w-full">
-            {renderStatusBadge('temperatureVerification')}
-            <Thermometer className="h-5 w-5 mr-2" />
-            <span>Temperature Verification</span>
-          </div>
-        </AccordionTrigger>
-        <AccordionContent className="px-4 pb-4">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <div>
-              <p className="text-sm font-medium">Temperature Settings</p>
-              <div className="space-y-2">
-                <p className="text-sm">Set Temperature: {details.temperatureVerification.setTemperature}°C</p>
-                <p className="text-sm">Actual Temperature: {details.temperatureVerification.actualTemperature}°C</p>
-                <p className="text-sm">Pre-cooled: {
-                  details.temperatureVerification.preCooled === null
-                    ? "N/A"
-                    : details.temperatureVerification.preCooled ? "Yes" : "No"
-                }</p>
-              </div>
-            </div>
-            <div>
-              <p className="text-sm font-medium">Pulp Temperatures</p>
-              <div className="space-y-1">
-                <p className="text-sm">Location 1: {details.temperatureVerification.pulpTemperatures.location1}°C</p>
-                <p className="text-sm">Location 2: {details.temperatureVerification.pulpTemperatures.location2}°C</p>
-                <p className="text-sm">Location 3: {details.temperatureVerification.pulpTemperatures.location3}°C</p>
-                <p className="text-sm">Location 4: {details.temperatureVerification.pulpTemperatures.location4}°C</p>
-                <p className="text-sm">Location 5: {details.temperatureVerification.pulpTemperatures.location5}°C</p>
-                <p className="text-sm font-medium">Average: {details.temperatureVerification.pulpTemperatures.average}°C</p>
-              </div>
-            </div>
-            <div>
-              <p className="text-sm font-medium">Temperature Logger</p>
-              <p className="text-sm">
-                Logger Placed: {
-                  details.temperatureVerification.temperatureLoggerPlaced === null
-                    ? "N/A"
-                    : details.temperatureVerification.temperatureLoggerPlaced ? "Yes" : "No"
-                }
-                {details.temperatureVerification.loggerPosition && ` (${details.temperatureVerification.loggerPosition})`}
-              </p>
-            </div>
-          </div>
-          {renderPhotos(details.temperatureVerification.photos)}
-        </AccordionContent>
-      </AccordionItem>
-
-      {/* Loading Process */}
-      <AccordionItem value="loading-process" className="border rounded-lg">
-        <AccordionTrigger className="px-4 hover:no-underline [&[data-state=open]>div]:text-primary">
-          <div className="flex items-center w-full">
-            {renderStatusBadge('loadingProcess')}
-            <PackageOpen className="h-5 w-5 mr-2" />
-            <span>Loading Process</span>
-          </div>
-        </AccordionTrigger>
-        <AccordionContent className="px-4 pb-4">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <div>
-              <p className="text-sm font-medium">Loading Method</p>
-              <p className="text-sm">{details.loadingProcess.loadingMethod}</p>
-            </div>
-            <div>
-              <p className="text-sm font-medium">Handling Practices</p>
-              <span className={cn(
-                "px-2 py-1 rounded-full text-sm",
-                details.loadingProcess.handlingPractices === 'Good'
-                  ? "bg-green-50 text-green-700"
-                  : details.loadingProcess.handlingPractices === 'Poor'
-                  ? "bg-red-50 text-red-700"
-                  : "bg-amber-50 text-amber-700"
-              )}>
-                {details.loadingProcess.handlingPractices}
-              </span>
-            </div>
-            <div>
-              <p className="text-sm font-medium">Stacking Pattern</p>
-              <span className={cn(
-                "px-2 py-1 rounded-full text-sm",
-                details.loadingProcess.stackingPattern === 'Pass'
-                  ? "bg-green-50 text-green-700"
-                  : details.loadingProcess.stackingPattern === 'Fail'
-                  ? "bg-red-50 text-red-700"
-                  : "bg-amber-50 text-amber-700"
-              )}>
-                {details.loadingProcess.stackingPattern}
-              </span>
-            </div>
-            <div>
-              <p className="text-sm font-medium">Carton Condition</p>
-              <span className={cn(
-                "px-2 py-1 rounded-full text-sm",
-                details.loadingProcess.cartonCondition === 'Good'
-                  ? "bg-green-50 text-green-700"
-                  : details.loadingProcess.cartonCondition === 'Poor'
-                  ? "bg-red-50 text-red-700"
-                  : "bg-amber-50 text-amber-700"
-              )}>
-                {details.loadingProcess.cartonCondition}
-              </span>
-            </div>
-            {details.loadingProcess.dunnageMaterial && (
-              <div>
-                <p className="text-sm font-medium">Dunnage Material</p>
-                <p className="text-sm">{details.loadingProcess.dunnageMaterial}</p>
-              </div>
-            )}
-            <div>
-              <p className="text-sm font-medium">Loading Timeframe</p>
-              <p className="text-sm">{
-                details.loadingProcess.timeframeAcceptable === null
-                  ? "N/A"
-                  : details.loadingProcess.timeframeAcceptable
-                  ? "Within Acceptable Range"
-                  : "Exceeded Acceptable Range"
-              }</p>
-            </div>
-          </div>
-          {renderPhotos(details.loadingProcess.photos)}
-        </AccordionContent>
-      </AccordionItem>
-
-      {/* Final Sealing */}
-      <AccordionItem value="final-sealing" className="border rounded-lg">
-        <AccordionTrigger className="px-4 hover:no-underline [&[data-state=open]>div]:text-primary">
-          <div className="flex items-center w-full">
-            {renderStatusBadge('finalSealing')}
-            <LockKeyhole className="h-5 w-5 mr-2" />
-            <span>Final Sealing</span>
-          </div>
-        </AccordionTrigger>
-        <AccordionContent className="px-4 pb-4">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <div>
-              <p className="text-sm font-medium">Total Units</p>
-              <p className="text-sm">
-                {details.finalSealing.totalUnits.pallets && `${details.finalSealing.totalUnits.pallets} Pallets, `}
-                {details.finalSealing.totalUnits.cartons} Cartons
-              </p>
-            </div>
-            <div>
-              <p className="text-sm font-medium">Door Status</p>
-              <p className="text-sm">{details.finalSealing.doorsClosed ? "Properly Closed" : "Issue Detected"}</p>
-            </div>
-            <div>
-              <p className="text-sm font-medium">Security Seal</p>
-              <div className="space-y-1">
-                <p className="text-sm">High-Security Seal: {details.finalSealing.highSecuritySeal ? "Applied" : "Not Applied"}</p>
-                <p className="text-sm">Seal Number: {details.finalSealing.sealNumber}</p>
-                <p className="text-sm">Type: {details.finalSealing.sealType}</p>
-              </div>
-            </div>
-          </div>
-          {renderPhotos(details.finalSealing.photos)}
-        </AccordionContent>
-      </AccordionItem>
-
-      {/* Overall Assessment */}
-      <AccordionItem value="overall-assessment" className="border rounded-lg">
-        <AccordionTrigger className="px-4 hover:no-underline [&[data-state=open]>div]:text-primary">
-          <div className="flex items-center w-full">
-            {renderStatusBadge('overallAssessment')}
-            <FileCheck className="h-5 w-5 mr-2" />
-            <span>Overall Assessment</span>
-          </div>
-        </AccordionTrigger>
-        <AccordionContent className="px-4 pb-4">
-          <div className="space-y-4">
-            <div>
-              <p className="text-sm font-medium">Summary of Findings</p>
-              <p className="text-sm whitespace-pre-wrap">{details.overallAssessment.findings}</p>
-            </div>
-            {details.overallAssessment.nonConformities && (
-              <div>
-                <p className="text-sm font-medium">Non-Conformities</p>
-                <p className="text-sm whitespace-pre-wrap">{details.overallAssessment.nonConformities}</p>
-              </div>
-            )}
-            {details.overallAssessment.correctiveActions && (
-              <div>
-                <p className="text-sm font-medium">Corrective Actions</p>
-                <p className="text-sm whitespace-pre-wrap">{details.overallAssessment.correctiveActions}</p>
-              </div>
-            )}
-            <div>
-              <p className="text-sm font-medium">Export Clearance Status</p>
-              <span className={cn(
-                "px-2 py-1 rounded-full text-sm",
-                details.overallAssessment.exportClearance
-                  ? "bg-green-50 text-green-700"
-                  : "bg-red-50 text-red-700"
-              )}>
-                {details.overallAssessment.exportClearance ? "Cleared for Export" : "Not Cleared"}
-              </span>
-            </div>
-          </div>
-        </AccordionContent>
-      </AccordionItem>
-    </Accordion>
+          {renderSectionContent()}
+        </div>
+      </div>
+    </div>
   );
-}; 
+};
