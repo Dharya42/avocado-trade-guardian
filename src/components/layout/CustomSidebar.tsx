@@ -1,4 +1,3 @@
-
 import { useState } from 'react';
 import { NavLink, useLocation, useMatch, useNavigate } from 'react-router-dom';
 import { 
@@ -10,7 +9,8 @@ import {
   Menu, 
   LogOut, 
   ClipboardList,
-  Truck  // New import for Avocado Imports icon
+  Truck,
+  Gauge  // Added Gauge icon for Cockpit
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { useMobile } from '@/hooks/use-mobile';
@@ -59,6 +59,16 @@ export const CustomSidebar = ({ collapsed, setCollapsed }: { collapsed: boolean,
         title: 'Avocado Imports',
         icon: <Truck className="w-5 h-5" />,
         path: `${rolePrefix}/avocado-imports`,
+      },
+      {
+        title: 'Dashboard',
+        icon: <Truck className="w-5 h-5" />,
+        path: `${rolePrefix}/dashboard`,
+      },
+      {
+        title: 'Cockpit',
+        icon: <Gauge className="w-5 h-5" />,
+        path: `${rolePrefix}/cockpit`,
       }
     ] : [
       {
