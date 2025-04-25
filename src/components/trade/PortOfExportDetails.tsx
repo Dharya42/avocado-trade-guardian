@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { PortOfExportInspection } from '@/types';
+import { PortOfExportDetails as PortOfExportDetailsType } from '@/types';
 import { 
   CheckCircle,
   AlertCircle as LucideAlertCircle,
@@ -14,7 +14,7 @@ import {
 import { cn } from '@/lib/utils';
 
 interface PortOfExportDetailsProps {
-  details: PortOfExportInspection;
+  details: PortOfExportDetailsType;
 }
 
 type SectionStatus = 'Compliant' | 'Issues Found' | 'Not Compliant';
@@ -23,7 +23,7 @@ type Section = {
   id: string;
   title: string;
   icon: React.ReactNode;
-  key: keyof PortOfExportInspection;
+  key: keyof PortOfExportDetailsType;
 };
 
 const SECTIONS: Section[] = [
@@ -54,7 +54,7 @@ export const PortOfExportDetails = ({ details }: PortOfExportDetailsProps) => {
     });
   };
 
-  const getSectionStatus = (sectionKey: keyof PortOfExportInspection): SectionStatus => {
+  const getSectionStatus = (sectionKey: keyof PortOfExportDetailsType): SectionStatus => {
     switch (sectionKey) {
       case 'logistics':
         return details.logistics && details.logistics.documents && 

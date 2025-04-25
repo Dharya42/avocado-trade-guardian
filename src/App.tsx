@@ -1,3 +1,4 @@
+
 import { Toaster as RadixToaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
@@ -14,6 +15,7 @@ import { LoginSelection } from "./components/auth/LoginSelection";
 import { RoleWrapper } from "./components/auth/RoleWrapper";
 import PurchaseOrders from "./pages/tfc/PurchaseOrders";
 import PurchaseOrderDetail from "./pages/tfc/PurchaseOrderDetail";
+import AvocadoImports from "./pages/tfc/AvocadoImports";
 
 const queryClient = new QueryClient();
 
@@ -31,6 +33,7 @@ const AppRoutes = () => {
             <Route path="trade/:id" element={<TradeDetail />} />
             <Route path="purchase-orders" element={<PurchaseOrders />} />
             <Route path="purchase-orders/:orderId" element={<PurchaseOrderDetail />} />
+            <Route path="avocado-imports" element={<AvocadoImports />} />
             <Route path="kpis" element={<KPI />} />
             <Route path="tracker" element={<Tracker />} />
           </Routes>
