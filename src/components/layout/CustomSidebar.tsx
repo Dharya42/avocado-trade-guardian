@@ -1,6 +1,17 @@
+
 import { useState } from 'react';
 import { NavLink, useLocation, useMatch, useNavigate } from 'react-router-dom';
-import { LayoutGrid, BarChart3, AlertCircle, ChevronLeft, ChevronRight, Menu, LogOut, ClipboardList } from 'lucide-react';
+import { 
+  LayoutGrid, 
+  BarChart3, 
+  AlertCircle, 
+  ChevronLeft, 
+  ChevronRight, 
+  Menu, 
+  LogOut, 
+  ClipboardList,
+  Truck  // New import for Avocado Imports icon
+} from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { useMobile } from '@/hooks/use-mobile';
 import {
@@ -43,6 +54,11 @@ export const CustomSidebar = ({ collapsed, setCollapsed }: { collapsed: boolean,
         title: 'Purchase Orders',
         icon: <ClipboardList className="w-5 h-5" />,
         path: `${rolePrefix}/purchase-orders`,
+      },
+      {
+        title: 'Avocado Imports',
+        icon: <Truck className="w-5 h-5" />,
+        path: `${rolePrefix}/avocado-imports`,
       }
     ] : [
       {
