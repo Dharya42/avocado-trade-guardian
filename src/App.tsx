@@ -16,7 +16,7 @@ import PurchaseOrders from "./pages/tfc/PurchaseOrders";
 import PurchaseOrderDetail from "./pages/tfc/PurchaseOrderDetail";
 import AvocadoImports from "./pages/tfc/AvocadoImports";
 import Dashboard from "./pages/tfc/Dashboard";
-import Cockpit from "./pages/tfc/Cockpit";
+// import Cockpit from "./pages/tfc/Cockpit";
 
 const queryClient = new QueryClient();
 
@@ -36,7 +36,7 @@ const AppRoutes = () => {
             <Route path="purchase-orders/:orderId" element={<PurchaseOrderDetail />} />
             <Route path="avocado-imports" element={<AvocadoImports />} />
             <Route path="dashboard" element={<Dashboard />} />
-            <Route path="cockpit" element={<Cockpit />} />
+            {/* <Route path="cockpit" element={<Cockpit />} /> */}
             <Route path="kpis" element={<KPI />} />
             <Route path="tracker" element={<Tracker />} />
           </Routes>

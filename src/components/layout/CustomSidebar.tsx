@@ -65,11 +65,11 @@ export const CustomSidebar = ({ collapsed, setCollapsed }: { collapsed: boolean,
         icon: <Truck className="w-5 h-5" />,
         path: `${rolePrefix}/dashboard`,
       },
-      {
-        title: 'Cockpit',
-        icon: <Gauge className="w-5 h-5" />,
-        path: `${rolePrefix}/cockpit`,
-      }
+      // {
+      //   title: 'Cockpit',
+      //   icon: <Gauge className="w-5 h-5" />,
+      //   path: `${rolePrefix}/cockpit`,
+      // }
     ] : [
       {
         title: 'Orders',
