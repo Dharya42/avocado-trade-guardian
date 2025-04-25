@@ -40,6 +40,11 @@ export const CustomSidebar = ({ collapsed, setCollapsed }: { collapsed: boolean,
     },
     ...(isTFC ? [
       {
+        title: 'Dashboard',
+        icon: <BarChart3 className="w-5 h-5" />,
+        path: `${rolePrefix}/avocado-imports-dashboard`,
+      },
+      {
         title: 'Purchase Orders',
         icon: <ClipboardList className="w-5 h-5" />,
         path: `${rolePrefix}/purchase-orders`,
