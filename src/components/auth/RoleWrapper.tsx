@@ -1,5 +1,5 @@
 interface RoleWrapperProps {
-  role: 'tfc' | 'supplier';
+  role: 'dj' | 'dx';
   children: React.ReactNode;
 }
 
@@ -10,7 +10,7 @@ export const RoleWrapper = ({ role, children }: RoleWrapperProps) => {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between h-16 items-center">
             <h1 className="text-xl font-semibold">
-              Avocado Trace ({role === 'tfc' ? 'TFC' : 'Supplier'})
+              Avocado Trace ({role === 'dj' ? 'TFC' : 'Supplier'})
             </h1>
           </div>
         </div>

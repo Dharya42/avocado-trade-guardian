@@ -26,8 +26,8 @@ const AppRoutes = () => {
       <Route path="/" element={<LoginSelection />} />
       
       {/* TFC Routes */}
-      <Route path="/tfc/*" element={
-        <RoleWrapper role="tfc">
+      <Route path="/dj/*" element={
+        <RoleWrapper role="dj">
           <Routes>
             <Route path="/" element={<Navigate to="trades" replace />} />
             <Route path="trades" element={<Trade />} />
@@ -44,8 +44,8 @@ const AppRoutes = () => {
       } />
 
       {/* Supplier Routes */}
-      <Route path="/supplier/*" element={
-        <RoleWrapper role="supplier">
+      <Route path="/dx/*" element={
+        <RoleWrapper role="dx">
           <Routes>
             <Route path="/" element={<Navigate to="trades" replace />} />
             <Route path="trades" element={<Trade />} />
