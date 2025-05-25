@@ -56,15 +56,15 @@ export const CustomSidebar = ({ collapsed, setCollapsed }: { collapsed: boolean,
         path: `${rolePrefix}/purchase-orders`,
       },
       {
-        title: 'Avocado Imports',
+        title: 'Dashboard',
         icon: <Truck className="w-5 h-5" />,
         path: `${rolePrefix}/avocado-imports`,
       },
-      {
-        title: 'Dashboard',
-        icon: <Truck className="w-5 h-5" />,
-        path: `${rolePrefix}/dashboard`,
-      },
+      // {
+      //   title: 'Dashboard',
+      //   icon: <Truck className="w-5 h-5" />,
+      //   path: `${rolePrefix}/dashboard`,
+      // },
       // {
       //   title: 'Cockpit',
       //   icon: <Gauge className="w-5 h-5" />,
@@ -164,6 +164,13 @@ export const CustomSidebar = ({ collapsed, setCollapsed }: { collapsed: boolean,
             <LogOut className="h-4 w-4" />
             {!collapsed && <span>Logout</span>}
           </Button>
+          {
+            !collapsed && (
+              <div className="text-center mt-8 text-gray-500 text-sm">
+                Made with ❤️ by <a href="https://www.linkedin.com/in/dharya-jasuja-63071a248/" target="_blank" rel="noopener noreferrer" className="text-green-600 hover:underline">Dharya Jasuja</a>
+              </div>
+            )
+          }
         </div>
       </div>
 

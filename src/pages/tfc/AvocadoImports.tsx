@@ -5,6 +5,7 @@ import { DocumentTitle } from "@/components/ui/document-title";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { ArrowDown, ArrowUp, TrendingDown, TrendingUp, ArrowRight } from 'lucide-react';
+import { useCopilotReadable } from "@copilotkit/react-core"; 
 import { 
   LineChart, 
   Line, 
@@ -19,7 +20,7 @@ import {
   Cell
 } from 'recharts';
 import { cn } from '@/lib/utils';
-
+import { CopilotPopup } from "@copilotkit/react-ui";
 // Mock data for the dashboard
 const mockData = {
   qualityKPIs: {
@@ -133,6 +134,10 @@ const mockData = {
 };
 
 const AvocadoImports = () => {
+  useCopilotReadable({
+    description: "This is the data for the dashboard ",
+    value: mockData,
+  });
   const [selectedSupplier, setSelectedSupplier] = useState<string>('All');
   
   // Function to render the trend indicator
@@ -567,7 +572,15 @@ const AvocadoImports = () => {
           </TabsContent>
         </Tabs>
       </div>
+      <CopilotPopup
+        instructions={"You are assisting the user as best as you can. Answer in the best way possible given the data you have."}
+        labels={{
+          title: "Assistant",
+          initial: "Hi Dj! \n how can i assist you today?",
+        }}
+      />
     </Layout>
+    
   );
 };
 

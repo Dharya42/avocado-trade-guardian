@@ -1,5 +1,5 @@
 interface RoleWrapperProps {
-  role: 'dj' | 'dx';
+  role: 'dj' | 'dx' | 'tfc' | 'supplier';
   children: React.ReactNode;
 }
 

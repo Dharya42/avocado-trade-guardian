@@ -17,17 +17,17 @@ import PurchaseOrderDetail from "./pages/tfc/PurchaseOrderDetail";
 import AvocadoImports from "./pages/tfc/AvocadoImports";
 import Dashboard from "./pages/tfc/Dashboard";
 // import Cockpit from "./pages/tfc/Cockpit";
-
+import { CopilotKit } from "@copilotkit/react-core"; 
 const queryClient = new QueryClient();
-
+import "@copilotkit/react-ui/styles.css";
 const AppRoutes = () => {
   return (
     <Routes>
       <Route path="/" element={<LoginSelection />} />
       
       {/* TFC Routes */}
-      <Route path="/dj/*" element={
-        <RoleWrapper role="dj">
+      <Route path="/tfc/*" element={
+        <RoleWrapper role="tfc">
           <Routes>
             <Route path="/" element={<Navigate to="trades" replace />} />
             <Route path="trades" element={<Trade />} />
@@ -44,8 +44,8 @@ const AppRoutes = () => {
       } />
 
       {/* Supplier Routes */}
-      <Route path="/dx/*" element={
-        <RoleWrapper role="dx">
+      <Route path="/supplier/*" element={
+        <RoleWrapper role="supplier">
           <Routes>
             <Route path="/" element={<Navigate to="trades" replace />} />
             <Route path="trades" element={<Trade />} />
@@ -65,15 +65,19 @@ const AppRoutes = () => {
 
 const App = () => {
   return (
-    <BrowserRouter>
-      <QueryClientProvider client={queryClient}>
-        <TooltipProvider>
-          <AppRoutes />
-          <RadixToaster />
-          <Sonner />
-        </TooltipProvider>
-      </QueryClientProvider>
-    </BrowserRouter>
+    <CopilotKit publicApiKey="ck_pub_db71de4c659debb053f37e3c3dba63b6">
+
+      <BrowserRouter>
+        <QueryClientProvider client={queryClient}>
+          <TooltipProvider>
+            <AppRoutes />
+            <RadixToaster />
+            <Sonner />
+          </TooltipProvider>
+        </QueryClientProvider>
+      </BrowserRouter>
+    
+    </CopilotKit>
   );
 };
 
