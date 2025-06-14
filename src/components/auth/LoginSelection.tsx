@@ -1,96 +1,94 @@
+
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { useNavigate } from "react-router-dom";
-import { Building2, Users } from "lucide-react";
-import { AlertTriangle, Sparkles } from "lucide-react"
+import { Building2, Users, Leaf } from "lucide-react";
+
 export const LoginSelection = () => {
   const navigate = useNavigate();
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-50">
-      <div className="max-w-4xl w-full px-4">
-        <h1 className="text-3xl font-bold text-center mb-8 text-gray-800">
-          Avocado Trade Guardian
-        </h1>
-        <div className="grid md:grid-cols-2 gap-6">
+    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-avocado-50 to-avocado-100">
+      <div className="max-w-5xl w-full px-6">
+        {/* Header Section */}
+        <div className="text-center mb-12">
+          <div className="flex items-center justify-center mb-6">
+            <div className="bg-avocado-500 p-4 rounded-full shadow-lg">
+              <Leaf className="h-12 w-12 text-white" />
+            </div>
+          </div>
+          <h1 className="text-5xl font-bold text-avocado-900 mb-4">
+            Avocado Trade Guardian
+          </h1>
+          <p className="text-xl text-avocado-700 max-w-2xl mx-auto">
+            Quality & Compliance Inspection for Global Avocado Trade
+          </p>
+          <div className="w-24 h-1 bg-avocado-500 mx-auto mt-6 rounded-full"></div>
+        </div>
+
+        {/* Login Cards */}
+        <div className="grid md:grid-cols-2 gap-8 max-w-4xl mx-auto">
           {/* TFC Card */}
           <Card 
-            className="cursor-pointer hover:shadow-lg transition-shadow"
+            className="cursor-pointer hover:shadow-2xl transition-all duration-300 hover:scale-105 border-2 border-avocado-200 bg-white/80 backdrop-blur-sm"
             onClick={() => navigate('/tfc')}
           >
-            <CardHeader>
-              <CardTitle className="flex items-center justify-center space-x-2">
-                <Building2 className="h-6 w-6" />
-                <span>Login as TFC</span>
+            <CardHeader className="pb-4">
+              <div className="flex items-center justify-center mb-4">
+                <div className="bg-avocado-500 p-3 rounded-full">
+                  <Building2 className="h-8 w-8 text-white" />
+                </div>
+              </div>
+              <CardTitle className="text-center text-2xl font-bold text-avocado-900">
+                Trade Facilitation Center
               </CardTitle>
             </CardHeader>
-            <CardContent>
-              <p className="text-center text-muted-foreground">
-                Access the Trade Facilitation Center dashboard
+            <CardContent className="pt-0">
+              <p className="text-center text-avocado-700 text-lg leading-relaxed">
+                Access comprehensive trade monitoring, quality control dashboards, and supplier performance analytics
               </p>
+              <div className="mt-6 flex justify-center">
+                <div className="bg-avocado-100 px-4 py-2 rounded-full">
+                  <span className="text-avocado-800 font-medium text-sm">TFC Portal</span>
+                </div>
+              </div>
             </CardContent>
           </Card>
 
           {/* Supplier Card */}
           <Card 
-            className="cursor-pointer hover:shadow-lg transition-shadow"
+            className="cursor-pointer hover:shadow-2xl transition-all duration-300 hover:scale-105 border-2 border-avocado-200 bg-white/80 backdrop-blur-sm"
             onClick={() => navigate('/supplier')}
           >
-            <CardHeader>
-              <CardTitle className="flex items-center justify-center space-x-2">
-                <Users className="h-6 w-6" />
-                <span>Login as Supplier</span>
+            <CardHeader className="pb-4">
+              <div className="flex items-center justify-center mb-4">
+                <div className="bg-avocado-600 p-3 rounded-full">
+                  <Users className="h-8 w-8 text-white" />
+                </div>
+              </div>
+              <CardTitle className="text-center text-2xl font-bold text-avocado-900">
+                Supplier Portal
               </CardTitle>
             </CardHeader>
-            <CardContent>
-              <p className="text-center text-muted-foreground">
-                Access the Supplier dashboard
+            <CardContent className="pt-0">
+              <p className="text-center text-avocado-700 text-lg leading-relaxed">
+                Manage your shipments, track quality metrics, and monitor order fulfillment status
               </p>
+              <div className="mt-6 flex justify-center">
+                <div className="bg-avocado-100 px-4 py-2 rounded-full">
+                  <span className="text-avocado-800 font-medium text-sm">Supplier Dashboard</span>
+                </div>
+              </div>
             </CardContent>
           </Card>
+        </div>
+
+        {/* Footer */}
+        <div className="text-center mt-12">
+          <p className="text-avocado-600">
+            Ensuring quality from farm to table across Kenya → UAE trade routes
+          </p>
         </div>
       </div>
     </div>
   );
-
-  //==============error=================
-  // return (
-  //   <div className="flex min-h-screen items-center justify-center bg-gradient-to-br from-fuchsia-500 via-purple-600 to-indigo-700 p-4">
-  //     <div className="relative max-w-md overflow-hidden rounded-2xl border border-white/20 bg-black/80 p-8 shadow-xl backdrop-blur-sm">
-  //       <div className="absolute -right-8 -top-8 h-24 w-24 rounded-full bg-yellow-300 opacity-60 blur-2xl" />
-  //       <div className="absolute -bottom-12 -left-12 h-32 w-32 rounded-full bg-pink-500 opacity-60 blur-3xl" />
-
-  //       <div className="relative z-10 flex flex-col items-center text-center">
-  //         <div className="mb-4 flex items-center justify-center gap-2 rounded-full bg-red-500/20 px-4 py-2 text-red-300">
-  //           <AlertTriangle className="h-5 w-5" />
-  //           <span className="text-sm font-medium uppercase tracking-wider">Site Unavailable</span>
-  //         </div>
-
-  //         <h1 className="mb-2 text-4xl font-black tracking-tight text-white">
-  //           <span className="inline-block animate-pulse text-transparent bg-clip-text bg-gradient-to-r from-pink-500 to-violet-500">
-  //             Oops!
-  //           </span>{" "}
-  //           Site Down
-  //         </h1>
-
-  //         <p className="mb-6 text-lg text-white/80">The site is currently down. We're working on it!</p>
-
-  //         <div className="mb-8 w-full rounded-lg border border-white/10 bg-white/5 p-4">
-  //           <p className="text-sm text-white/70">Please contact:</p>
-  //           <div className="mt-2 flex items-center justify-center gap-2">
-  //             <Sparkles className="h-4 w-4 text-yellow-300" />
-  //             <span className="text-xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-teal-300">
-  //               Dharya Jasuja
-  //             </span>
-  //             <Sparkles className="h-4 w-4 text-yellow-300" />
-  //           </div>
-  //         </div>
-
-  //         <button className="group relative overflow-hidden rounded-full bg-white/10 px-6 py-2 font-medium text-white transition-all hover:bg-white/20">
-  //           <span className="relative z-10">Try Again Later</span>
-  //           <span className="absolute inset-0 -z-10 translate-y-full bg-gradient-to-t from-teal-400 to-cyan-300 opacity-0 transition-all duration-300 group-hover:translate-y-0 group-hover:opacity-20"></span>
-  //         </button>
-  //       </div>
-  //     </div>
-  //   </div>
-  // )
-}; 
+};
