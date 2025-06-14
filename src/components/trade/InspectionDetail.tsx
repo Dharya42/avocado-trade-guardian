@@ -112,43 +112,43 @@ export const InspectionDetail = ({ inspection }: InspectionDetailProps) => {
       case 'Post-Harvest':
         return inspection.postHarvestDetails ? (
           <div className="mt-4">
-            <PostHarvestDetails details={inspection.postHarvestDetails} onlyLastAccordion />
+            <PostHarvestDetails details={inspection.postHarvestDetails} />
           </div>
         ) : null;
       case 'Pre-Shipment':
         return inspection.preShipmentDetails ? (
           <div className="mt-4">
-            <PreShipmentDetails details={inspection.preShipmentDetails} onlyLastAccordion />
+            <PreShipmentDetails details={inspection.preShipmentDetails} />
           </div>
         ) : null;
       case 'Port-Export':
         return inspection.portOfExportDetails ? (
           <div className="mt-4">
-            <PortOfExportDetails details={inspection.portOfExportDetails} onlyLastAccordion />
+            <PortOfExportDetails details={inspection.portOfExportDetails} />
           </div>
         ) : null;
       case 'Transit':
         return inspection.transitDetails ? (
           <div className="mt-4">
-            <TransitDetails details={inspection.transitDetails} onlyLastAccordion />
+            <TransitDetails details={inspection.transitDetails} />
           </div>
         ) : null;
       case 'On-Arrival':
         return inspection.postOfImportDetails ? (
           <div className="mt-4">
-            <PostOfImportDetails details={inspection.postOfImportDetails} onlyLastAccordion />
+            <PostOfImportDetails details={inspection.postOfImportDetails} />
           </div>
         ) : null;
       case 'Warehouse':
         return inspection.distributionCenterDetails ? (
           <div className="mt-4">
-            <DistributionCenterDetails details={inspection.distributionCenterDetails} onlyLastAccordion />
+            <DistributionCenterDetails details={inspection.distributionCenterDetails} />
           </div>
         ) : null;
       case 'Retail':
         return inspection.retailShelfDetails ? (
           <div className="mt-4">
-            <RetailShelfDetails details={inspection.retailShelfDetails} onlyLastAccordion />
+            <RetailShelfDetails details={inspection.retailShelfDetails} />
           </div>
         ) : null;
       default:
