@@ -142,7 +142,7 @@ export const CustomSidebar = ({ collapsed, setCollapsed }: { collapsed: boolean,
                   "flex items-center space-x-2 px-3 py-2 rounded-md transition-colors",
                   {
                     "bg-primary text-primary-foreground": isActive,
-                    "hover:bg-muted": !isActive,
+                    "hover:bg-green-100 hover:text-green-700": !isActive,
                     "justify-center": collapsed,
                   }
                 )
@@ -157,7 +157,7 @@ export const CustomSidebar = ({ collapsed, setCollapsed }: { collapsed: boolean,
         <div className="p-4 border-t">
           <Button
             variant="ghost"
-            className={cn("w-full flex items-center space-x-2", {
+            className={cn("w-full flex items-center space-x-2 hover:bg-green-100 hover:text-green-700", {
               "justify-center": collapsed,
             })}
             onClick={handleLogout}
