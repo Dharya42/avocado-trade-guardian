@@ -3,8 +3,8 @@ import {
   Card,
   CardContent,
   CardHeader,
-  CardTitle,
 } from "@/components/ui/card";
+import { FileText } from 'lucide-react';
 
 interface InspectionNotesProps {
   notes: string;
@@ -12,12 +12,17 @@ interface InspectionNotesProps {
 
 export const InspectionNotes = ({ notes }: InspectionNotesProps) => {
   return (
-    <Card>
-      <CardHeader>
-        <CardTitle className="text-lg">Notes</CardTitle>
+    <Card className="shadow-sm">
+      <CardHeader className="pb-3">
+        <div className="text-base font-medium flex items-center">
+          <FileText className="mr-2 h-4 w-4" />
+          Notes
+        </div>
       </CardHeader>
-      <CardContent>
-        <p className="text-muted-foreground">{notes}</p>
+      <CardContent className="pt-0">
+        <div className="p-3 rounded-md bg-muted/30 border">
+          <p className="text-sm text-muted-foreground leading-relaxed">{notes}</p>
+        </div>
       </CardContent>
     </Card>
   );

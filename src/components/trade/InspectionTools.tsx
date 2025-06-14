@@ -3,7 +3,6 @@ import {
   Card,
   CardContent,
   CardHeader,
-  CardTitle,
 } from "@/components/ui/card";
 import { Wrench } from 'lucide-react';
 
@@ -13,18 +12,21 @@ interface InspectionToolsProps {
 
 export const InspectionTools = ({ tools }: InspectionToolsProps) => {
   return (
-    <Card>
-      <CardHeader>
-        <CardTitle className="text-lg flex items-center">
-          <Wrench className="mr-2 h-5 w-5" />
+    <Card className="shadow-sm">
+      <CardHeader className="pb-3">
+        <div className="text-base font-medium flex items-center">
+          <Wrench className="mr-2 h-4 w-4" />
           Inspection Tools
-        </CardTitle>
+        </div>
       </CardHeader>
-      <CardContent>
+      <CardContent className="pt-0">
         <div className="flex flex-wrap gap-2">
           {tools.map((tool, index) => (
-            <div key={index} className="bg-muted text-muted-foreground px-3 py-1 rounded-full text-sm flex items-center">
-              <Wrench className="h-4 w-4 mr-1" />
+            <div 
+              key={index} 
+              className="bg-muted/50 text-muted-foreground px-3 py-1.5 rounded-md text-sm flex items-center border"
+            >
+              <Wrench className="h-3 w-3 mr-1.5 opacity-70" />
               {tool}
             </div>
           ))}
