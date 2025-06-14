@@ -18,12 +18,14 @@ interface InspectionDetailProps {
 
 export const InspectionDetail = ({ inspection }: InspectionDetailProps) => {
   return (
-    <div className="space-y-6">
+    <div className="space-y-4">
       <Card>
         <InspectionHeader inspection={inspection} />
-        <CardContent className="pt-0">
-          <QualityChecksTable qualityChecks={inspection.qualityChecks} />
-          <ComplianceTable compliances={inspection.compliances} />
+        <CardContent className="pt-0 space-y-6">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+            <QualityChecksTable qualityChecks={inspection.qualityChecks} />
+            <ComplianceTable compliances={inspection.compliances} />
+          </div>
           <InspectionTypeDetails inspection={inspection} />
         </CardContent>
       </Card>
