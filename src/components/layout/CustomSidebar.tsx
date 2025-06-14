@@ -1,3 +1,4 @@
+
 import { useState } from 'react';
 import { NavLink, useLocation, useMatch, useNavigate } from 'react-router-dom';
 import { 
@@ -113,7 +114,7 @@ export const CustomSidebar = ({ collapsed, setCollapsed }: { collapsed: boolean,
       >
         <div className="p-4 flex items-center justify-between border-b">
           {!collapsed && (
-            <h1 className="text-xl font-semibold">
+            <h1 className="text-xl font-semibold whitespace-nowrap">
               Avocado Trace
             </h1>
           )}
