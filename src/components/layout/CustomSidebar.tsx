@@ -18,7 +18,7 @@ export const CustomSidebar = () => {
   const isMobile = useMobile();
   const location = useLocation();
   const navigate = useNavigate();
-  const [isOpen, setIsOpen] = useState(false);
+  const [isExpanded, setIsExpanded] = useState(false);
 
   // Check if we're in TFC or Supplier route
   const isTFC = useMatch('/tfc/*');
@@ -33,23 +33,18 @@ export const CustomSidebar = () => {
     if (isMobile) return;
 
     const handleMouseMove = (e: MouseEvent) => {
-      // Open sidebar when hovering near left edge (within 50px)
-      if (e.clientX <= 50 && !isOpen) {
-        setIsOpen(true);
+      // Expand sidebar when hovering near left edge (within 70px to account for collapsed width)
+      if (e.clientX <= 70 && !isExpanded) {
+        setIsExpanded(true);
       }
     };
 
-    const handleMouseLeave = () => {
-      setIsOpen(false);
-    };
-
-    // Add mouse move listener to detect hover near left edge
     document.addEventListener('mousemove', handleMouseMove);
 
     return () => {
       document.removeEventListener('mousemove', handleMouseMove);
     };
-  }, [isMobile, isOpen]);
+  }, [isMobile, isExpanded]);
 
   const menuItems = [
     {
@@ -93,17 +88,23 @@ export const CustomSidebar = () => {
         className={cn(
           "fixed inset-y-0 left-0 z-40 flex flex-col bg-background border-r transition-all duration-300 ease-in-out",
           {
-            "w-64 translate-x-0": isOpen,
-            "w-64 -translate-x-full": !isOpen,
+            "w-64": isExpanded,
+            "w-16": !isExpanded,
           }
         )}
-        onMouseEnter={() => !isMobile && setIsOpen(true)}
-        onMouseLeave={() => !isMobile && setIsOpen(false)}
+        onMouseEnter={() => !isMobile && setIsExpanded(true)}
+        onMouseLeave={() => !isMobile && setIsExpanded(false)}
       >
-        <div className="p-4 flex items-center border-b">
-          <h1 className="text-xl font-semibold whitespace-nowrap">
-            Avocado Trace
-          </h1>
+        <div className="p-4 flex items-center border-b min-h-[60px]">
+          {isExpanded ? (
+            <h1 className="text-xl font-semibold whitespace-nowrap">
+              Avocado Trace
+            </h1>
+          ) : (
+            <div className="w-8 h-8 bg-green-600 rounded flex items-center justify-center">
+              <span className="text-white font-bold text-sm">A</span>
+            </div>
+          )}
         </div>
 
         <nav className="flex-1 p-2 space-y-1">
@@ -113,16 +114,18 @@ export const CustomSidebar = () => {
               to={item.path}
               className={({ isActive }) =>
                 cn(
-                  "flex items-center space-x-2 px-3 py-2 rounded-md transition-colors",
+                  "flex items-center px-3 py-2 rounded-md transition-colors",
                   {
                     "bg-primary text-primary-foreground": isActive,
                     "hover:bg-accent hover:text-accent-foreground": !isActive,
+                    "justify-center": !isExpanded,
+                    "space-x-2": isExpanded,
                   }
                 )
               }
             >
               {item.icon}
-              <span>{item.title}</span>
+              {isExpanded && <span>{item.title}</span>}
             </NavLink>
           ))}
         </nav>
@@ -130,23 +133,31 @@ export const CustomSidebar = () => {
         <div className="p-4 border-t">
           <Button
             variant="ghost"
-            className="w-full flex items-center space-x-2 hover:bg-accent hover:text-accent-foreground"
+            className={cn(
+              "flex items-center hover:bg-accent hover:text-accent-foreground",
+              {
+                "w-full space-x-2": isExpanded,
+                "w-8 h-8 p-0 justify-center": !isExpanded,
+              }
+            )}
             onClick={handleLogout}
           >
             <LogOut className="h-4 w-4" />
-            <span>Logout</span>
+            {isExpanded && <span>Logout</span>}
           </Button>
-          <div className="text-center mt-8 text-gray-500 text-sm">
-            Made with ❤️ by <a href="https://www.linkedin.com/in/dharya-jasuja-63071a248/" target="_blank" rel="noopener noreferrer" className="text-green-600 hover:underline">Dharya Jasuja</a>
-          </div>
+          {isExpanded && (
+            <div className="text-center mt-8 text-gray-500 text-sm">
+              Made with ❤️ by <a href="https://www.linkedin.com/in/dharya-jasuja-63071a248/" target="_blank" rel="noopener noreferrer" className="text-green-600 hover:underline">Dharya Jasuja</a>
+            </div>
+          )}
         </div>
       </div>
 
-      {/* Overlay for mobile when sidebar is open */}
-      {isMobile && isOpen && (
+      {/* Overlay for mobile when sidebar is expanded */}
+      {isMobile && isExpanded && (
         <div
           className="fixed inset-0 bg-black/50 z-30"
-          onClick={() => setIsOpen(false)}
+          onClick={() => setIsExpanded(false)}
         />
       )}
     </>
