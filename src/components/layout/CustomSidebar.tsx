@@ -1,48 +1,55 @@
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { NavLink, useLocation, useMatch, useNavigate } from 'react-router-dom';
 import { 
   LayoutGrid, 
   BarChart3, 
   AlertCircle, 
-  ChevronLeft, 
-  ChevronRight, 
-  Menu, 
   LogOut, 
   ClipboardList,
   Truck,
-  Gauge  // Added Gauge icon for Cockpit
+  Gauge
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { useMobile } from '@/hooks/use-mobile';
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from "@/components/ui/popover";
 import { Button } from "@/components/ui/button";
 
-export const CustomSidebar = ({ collapsed, setCollapsed }: { collapsed: boolean, setCollapsed: (collapsed: boolean) => void }) => {
+export const CustomSidebar = () => {
   const isMobile = useMobile();
   const location = useLocation();
   const navigate = useNavigate();
-  const [isSidebarOpen, setIsSidebarOpen] = useState(!isMobile);
+  const [isOpen, setIsOpen] = useState(false);
 
   // Check if we're in TFC or Supplier route
   const isTFC = useMatch('/tfc/*');
   const rolePrefix = isTFC ? '/tfc' : '/supplier';
-  const roleName = isTFC ? 'TFC' : 'Supplier';
 
   const handleLogout = () => {
     navigate('/');
   };
 
-  const toggleSidebar = () => {
-    setIsSidebarOpen(!isSidebarOpen);
-    if (!isMobile) {
-      setCollapsed(!collapsed);
-    }
-  };
+  // Handle mouse events for hover behavior
+  useEffect(() => {
+    if (isMobile) return;
+
+    const handleMouseMove = (e: MouseEvent) => {
+      // Open sidebar when hovering near left edge (within 50px)
+      if (e.clientX <= 50 && !isOpen) {
+        setIsOpen(true);
+      }
+    };
+
+    const handleMouseLeave = () => {
+      setIsOpen(false);
+    };
+
+    // Add mouse move listener to detect hover near left edge
+    document.addEventListener('mousemove', handleMouseMove);
+
+    return () => {
+      document.removeEventListener('mousemove', handleMouseMove);
+    };
+  }, [isMobile, isOpen]);
 
   const menuItems = [
     {
@@ -61,16 +68,6 @@ export const CustomSidebar = ({ collapsed, setCollapsed }: { collapsed: boolean,
         icon: <Truck className="w-5 h-5" />,
         path: `${rolePrefix}/avocado-imports`,
       },
-      // {
-      //   title: 'Dashboard',
-      //   icon: <Truck className="w-5 h-5" />,
-      //   path: `${rolePrefix}/dashboard`,
-      // },
-      // {
-      //   title: 'Cockpit',
-      //   icon: <Gauge className="w-5 h-5" />,
-      //   path: `${rolePrefix}/cockpit`,
-      // }
     ] : [
       {
         title: 'Orders',
@@ -92,44 +89,21 @@ export const CustomSidebar = ({ collapsed, setCollapsed }: { collapsed: boolean,
 
   return (
     <>
-      {isMobile && (
-        <Button
-          variant="ghost"
-          size="icon"
-          className="fixed top-4 left-4 z-50"
-          onClick={toggleSidebar}
-        >
-          <Menu className="h-5 w-5" />
-        </Button>
-      )}
-
       <div
         className={cn(
-          "fixed inset-y-0 left-0 z-40 flex flex-col bg-background border-r transition-all duration-300",
+          "fixed inset-y-0 left-0 z-40 flex flex-col bg-background border-r transition-all duration-300 ease-in-out",
           {
-            "w-64": !collapsed,
-            "w-16": collapsed,
+            "w-64 translate-x-0": isOpen,
+            "w-64 -translate-x-full": !isOpen,
           }
         )}
+        onMouseEnter={() => !isMobile && setIsOpen(true)}
+        onMouseLeave={() => !isMobile && setIsOpen(false)}
       >
-        <div className="p-4 flex items-center justify-between border-b">
-          {!collapsed && (
-            <h1 className="text-xl font-semibold whitespace-nowrap">
-              Avocado Trace
-            </h1>
-          )}
-          <Button
-            variant="ghost"
-            size="icon"
-            onClick={toggleSidebar}
-            className={collapsed ? "mx-auto" : ""}
-          >
-            {collapsed ? (
-              <ChevronRight className="h-4 w-4" />
-            ) : (
-              <ChevronLeft className="h-4 w-4" />
-            )}
-          </Button>
+        <div className="p-4 flex items-center border-b">
+          <h1 className="text-xl font-semibold whitespace-nowrap">
+            Avocado Trace
+          </h1>
         </div>
 
         <nav className="flex-1 p-2 space-y-1">
@@ -143,13 +117,12 @@ export const CustomSidebar = ({ collapsed, setCollapsed }: { collapsed: boolean,
                   {
                     "bg-primary text-primary-foreground": isActive,
                     "hover:bg-accent hover:text-accent-foreground": !isActive,
-                    "justify-center": collapsed,
                   }
                 )
               }
             >
               {item.icon}
-              {!collapsed && <span>{item.title}</span>}
+              <span>{item.title}</span>
             </NavLink>
           ))}
         </nav>
@@ -157,28 +130,23 @@ export const CustomSidebar = ({ collapsed, setCollapsed }: { collapsed: boolean,
         <div className="p-4 border-t">
           <Button
             variant="ghost"
-            className={cn("w-full flex items-center space-x-2 hover:bg-accent hover:text-accent-foreground", {
-              "justify-center": collapsed,
-            })}
+            className="w-full flex items-center space-x-2 hover:bg-accent hover:text-accent-foreground"
             onClick={handleLogout}
           >
             <LogOut className="h-4 w-4" />
-            {!collapsed && <span>Logout</span>}
+            <span>Logout</span>
           </Button>
-          {
-            !collapsed && (
-              <div className="text-center mt-8 text-gray-500 text-sm">
-                Made with ❤️ by <a href="https://www.linkedin.com/in/dharya-jasuja-63071a248/" target="_blank" rel="noopener noreferrer" className="text-green-600 hover:underline">Dharya Jasuja</a>
-              </div>
-            )
-          }
+          <div className="text-center mt-8 text-gray-500 text-sm">
+            Made with ❤️ by <a href="https://www.linkedin.com/in/dharya-jasuja-63071a248/" target="_blank" rel="noopener noreferrer" className="text-green-600 hover:underline">Dharya Jasuja</a>
+          </div>
         </div>
       </div>
 
-      {isMobile && isSidebarOpen && (
+      {/* Overlay for mobile when sidebar is open */}
+      {isMobile && isOpen && (
         <div
           className="fixed inset-0 bg-black/50 z-30"
-          onClick={toggleSidebar}
+          onClick={() => setIsOpen(false)}
         />
       )}
     </>
