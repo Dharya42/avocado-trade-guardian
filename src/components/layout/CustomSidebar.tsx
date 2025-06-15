@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from 'react';
 import { NavLink, useLocation, useMatch, useNavigate } from 'react-router-dom';
 import { 
@@ -72,8 +71,8 @@ export const CustomSidebar = ({ collapsed, setCollapsed }: { collapsed: boolean,
     }
   };
 
-  // Determine if sidebar should be visible
-  const shouldShowSidebar = isMobile ? isSidebarOpen : (isHoverOpen || !collapsed);
+  // Determine if sidebar should be visible - always show full width when hovering
+  const shouldShowSidebar = isMobile ? isSidebarOpen : isHoverOpen;
 
   const menuItems = [
     {
@@ -138,8 +137,7 @@ export const CustomSidebar = ({ collapsed, setCollapsed }: { collapsed: boolean,
         className={cn(
           "fixed inset-y-0 left-0 z-40 flex flex-col bg-background border-r transition-all duration-300 ease-in-out",
           {
-            "w-64": shouldShowSidebar && !collapsed,
-            "w-16": shouldShowSidebar && collapsed,
+            "w-64": shouldShowSidebar,
             "w-0 -translate-x-full": !shouldShowSidebar,
           }
         )}
@@ -147,7 +145,7 @@ export const CustomSidebar = ({ collapsed, setCollapsed }: { collapsed: boolean,
         onMouseLeave={handleSidebarMouseLeave}
       >
         <div className="p-4 flex items-center justify-between border-b">
-          {shouldShowSidebar && !collapsed && (
+          {shouldShowSidebar && (
             <h1 className="text-xl font-semibold whitespace-nowrap">
               Avocado Trace
             </h1>
@@ -156,9 +154,9 @@ export const CustomSidebar = ({ collapsed, setCollapsed }: { collapsed: boolean,
             variant="ghost"
             size="icon"
             onClick={toggleSidebar}
-            className={collapsed ? "mx-auto" : ""}
+            className={!shouldShowSidebar ? "mx-auto" : ""}
           >
-            {collapsed ? (
+            {!shouldShowSidebar ? (
               <ChevronRight className="h-4 w-4" />
             ) : (
               <ChevronLeft className="h-4 w-4" />
@@ -177,13 +175,13 @@ export const CustomSidebar = ({ collapsed, setCollapsed }: { collapsed: boolean,
                   {
                     "bg-primary text-primary-foreground": isActive,
                     "hover:bg-accent hover:text-accent-foreground": !isActive,
-                    "justify-center": collapsed,
+                    "justify-center": !shouldShowSidebar,
                   }
                 )
               }
             >
               {item.icon}
-              {shouldShowSidebar && !collapsed && <span>{item.title}</span>}
+              {shouldShowSidebar && <span>{item.title}</span>}
             </NavLink>
           ))}
         </nav>
@@ -192,15 +190,15 @@ export const CustomSidebar = ({ collapsed, setCollapsed }: { collapsed: boolean,
           <Button
             variant="ghost"
             className={cn("w-full flex items-center space-x-2 hover:bg-accent hover:text-accent-foreground", {
-              "justify-center": collapsed,
+              "justify-center": !shouldShowSidebar,
             })}
             onClick={handleLogout}
           >
             <LogOut className="h-4 w-4" />
-            {shouldShowSidebar && !collapsed && <span>Logout</span>}
+            {shouldShowSidebar && <span>Logout</span>}
           </Button>
           {
-            shouldShowSidebar && !collapsed && (
+            shouldShowSidebar && (
               <div className="text-center mt-8 text-gray-500 text-sm">
                 Made with ❤️ by <a href="https://www.linkedin.com/in/dharya-jasuja-63071a248/" target="_blank" rel="noopener noreferrer" className="text-green-600 hover:underline">Dharya Jasuja</a>
               </div>
