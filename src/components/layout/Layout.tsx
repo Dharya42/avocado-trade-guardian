@@ -7,12 +7,12 @@ interface LayoutProps {
 }
 
 export const Layout = ({ children }: LayoutProps) => {
-  const [collapsed, setCollapsed] = useState(true); // Start collapsed by default
+  const [collapsed, setCollapsed] = useState(false);
   
   return (
     <div className="flex h-screen bg-background">
       <CustomSidebar collapsed={collapsed} setCollapsed={setCollapsed} />
-      <main className="flex-1 transition-all duration-300">
+      <main className={`flex-1 transition-all duration-300 ${collapsed ? 'ml-16' : 'ml-64'}`}>
         {children}
       </main>
     </div>

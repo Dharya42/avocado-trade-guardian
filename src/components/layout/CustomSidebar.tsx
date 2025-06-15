@@ -1,5 +1,5 @@
 
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { NavLink, useLocation, useMatch, useNavigate } from 'react-router-dom';
 import { 
   LayoutGrid, 
@@ -27,7 +27,6 @@ export const CustomSidebar = ({ collapsed, setCollapsed }: { collapsed: boolean,
   const location = useLocation();
   const navigate = useNavigate();
   const [isSidebarOpen, setIsSidebarOpen] = useState(!isMobile);
-  const [isHoverOpen, setIsHoverOpen] = useState(false);
 
   // Check if we're in TFC or Supplier route
   const isTFC = useMatch('/tfc/*');
@@ -44,36 +43,6 @@ export const CustomSidebar = ({ collapsed, setCollapsed }: { collapsed: boolean,
       setCollapsed(!collapsed);
     }
   };
-
-  // Enhanced hover detection for left edge
-  useEffect(() => {
-    if (isMobile) return;
-
-    const handleMouseMove = (e: MouseEvent) => {
-      // Detect hover near left edge (within 20px)
-      if (e.clientX <= 20 && !isHoverOpen) {
-        setIsHoverOpen(true);
-      }
-    };
-
-    document.addEventListener('mousemove', handleMouseMove);
-    return () => document.removeEventListener('mousemove', handleMouseMove);
-  }, [isHoverOpen, isMobile]);
-
-  const handleSidebarMouseEnter = () => {
-    if (!isMobile) {
-      setIsHoverOpen(true);
-    }
-  };
-
-  const handleSidebarMouseLeave = () => {
-    if (!isMobile) {
-      setIsHoverOpen(false);
-    }
-  };
-
-  // Determine if sidebar should be visible
-  const shouldShowSidebar = isMobile ? isSidebarOpen : (isHoverOpen || !collapsed);
 
   const menuItems = [
     {
@@ -136,18 +105,15 @@ export const CustomSidebar = ({ collapsed, setCollapsed }: { collapsed: boolean,
 
       <div
         className={cn(
-          "fixed inset-y-0 left-0 z-40 flex flex-col bg-background border-r transition-all duration-300 ease-in-out",
+          "fixed inset-y-0 left-0 z-40 flex flex-col bg-background border-r transition-all duration-300",
           {
-            "w-64": shouldShowSidebar && !collapsed,
-            "w-16": shouldShowSidebar && collapsed,
-            "w-0 -translate-x-full": !shouldShowSidebar,
+            "w-64": !collapsed,
+            "w-16": collapsed,
           }
         )}
-        onMouseEnter={handleSidebarMouseEnter}
-        onMouseLeave={handleSidebarMouseLeave}
       >
         <div className="p-4 flex items-center justify-between border-b">
-          {shouldShowSidebar && !collapsed && (
+          {!collapsed && (
             <h1 className="text-xl font-semibold whitespace-nowrap">
               Avocado Trace
             </h1>
@@ -183,7 +149,7 @@ export const CustomSidebar = ({ collapsed, setCollapsed }: { collapsed: boolean,
               }
             >
               {item.icon}
-              {shouldShowSidebar && !collapsed && <span>{item.title}</span>}
+              {!collapsed && <span>{item.title}</span>}
             </NavLink>
           ))}
         </nav>
@@ -197,10 +163,10 @@ export const CustomSidebar = ({ collapsed, setCollapsed }: { collapsed: boolean,
             onClick={handleLogout}
           >
             <LogOut className="h-4 w-4" />
-            {shouldShowSidebar && !collapsed && <span>Logout</span>}
+            {!collapsed && <span>Logout</span>}
           </Button>
           {
-            shouldShowSidebar && !collapsed && (
+            !collapsed && (
               <div className="text-center mt-8 text-gray-500 text-sm">
                 Made with ❤️ by <a href="https://www.linkedin.com/in/dharya-jasuja-63071a248/" target="_blank" rel="noopener noreferrer" className="text-green-600 hover:underline">Dharya Jasuja</a>
               </div>
